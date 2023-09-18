@@ -111,9 +111,9 @@ void Player::update(int deltaTime)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
-void Player::render()
+void Player::render(Camera camera)
 {
-	sprite->render();
+	sprite->render(camera);
 }
 
 void Player::setTileMap(TileMap *tileMap)
@@ -125,6 +125,10 @@ void Player::setPosition(const glm::vec2 &pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
+
+glm::vec2 Player::getPosition() {
+    return posPlayer;
 }
 
 

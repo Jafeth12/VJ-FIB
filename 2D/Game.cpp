@@ -22,15 +22,15 @@ void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	scene.render();
+	scene.render(camera);
 }
 
 void Game::keyPressed(int key)
 {
 	if(key == 27) {// Escape code
-		// bPlay = false;
-        if (wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		bPlay = false;
+        // if (wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         wireframe = !wireframe;
     }

@@ -30,7 +30,7 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -45,18 +45,27 @@ void Scene::update(int deltaTime)
 	player->update(deltaTime);
 }
 
-void Scene::render()
-{
-	glm::mat4 modelview;
+void Scene::render(Camera camera) {
+
+    // feofeo borrar el hardcodeo ese
+    glm::vec2 newpos = glm::vec2(player->getPosition().x - (INIT_PLAYER_X_TILES * map->getTileSize()), player->getPosition().y - (INIT_PLAYER_Y_TILES * map->getTileSize()));
+    camera.setXPosition(newpos.x);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 view = camera.getViewMatrix();
+
+	glm::mat4 modelview = view * model;
 
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+
 	map->render();
-	player->render();
+	player->render(camera);
+
+	// text.render("l", glm::vec2(10, 480-20), 32, glm::vec4(1, 1, 1, 1));
 }
 
 void Scene::initShaders()

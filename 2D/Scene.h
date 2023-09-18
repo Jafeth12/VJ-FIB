@@ -3,6 +3,7 @@
 
 
 #include <glm/glm.hpp>
+#include "Camera.h"
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
@@ -21,7 +22,7 @@ public:
 
 	void init();
 	void update(int deltaTime);
-	void render();
+	void render(Camera camera);
 
 private:
 	void initShaders();
