@@ -5,17 +5,23 @@
 
 void Game::init()
 {
+    currentSceneIndex = 0;
 	bPlay = true;
     wireframe = true;
 	glClearColor(0.45, 0.45f, 1.0f, 1.0f);
     camera = Camera(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
     initShaders();
-	scene.init(shaderProgram);
+
+    // create scenes
+    scenes.push_back(new Scene());
+    scenes.push_back(new Scene());
+	scenes[currentSceneIndex]->init(shaderProgram, camera, "levels/level01.txt");
+	scenes[currentSceneIndex+1]->init(shaderProgram, camera, "levels/level02.txt");
 }
 
 bool Game::update(int deltaTime)
 {
-	scene.update(deltaTime);
+    scenes[currentSceneIndex]->update(deltaTime);
 	
 	return bPlay;
 }
@@ -24,7 +30,7 @@ void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	scene.render(camera);
+	scenes[currentSceneIndex]->render();
 }
 
 void Game::keyPressed(int key)
@@ -37,8 +43,16 @@ void Game::keyPressed(int key)
         else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         wireframe = !wireframe;
+    } else if (key == '1') {
+        currentSceneIndex = 0;
+    } else if (key == '2') {
+        currentSceneIndex = 1;
     }
 	keys[key] = true;
+}
+
+void Game::changeScene(int sceneIndex) {
+    currentSceneIndex = sceneIndex;
 }
 
 void Game::keyReleased(int key)

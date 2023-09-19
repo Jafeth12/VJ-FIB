@@ -48,14 +48,18 @@ public:
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
 
+    void changeScene(int sceneIndex);
+
 private:
     bool wireframe;
 	bool bPlay;                       // Continue to play game?
-	Scene scene;                      // Scene to render
+	Scene sceneold;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
     Camera camera;
     ShaderProgram shaderProgram;
+    std::vector<Scene*> scenes;
+    int currentSceneIndex;
 };
 
 

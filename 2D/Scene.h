@@ -20,9 +20,9 @@ public:
 	Scene();
 	~Scene();
 
-	void init(ShaderProgram &shaderProgram);
+	void init(ShaderProgram &shaderProgram, Camera &camera, std::string levelFilename);
 	void update(int deltaTime);
-	void render(Camera &camera);
+	void render();
 
 private:
 	void initShaders();
@@ -32,7 +32,7 @@ private:
 	Player *player;
 	ShaderProgram *texProgram;
 	float currentTime;
-
+    Camera *camera;
 };
 
 

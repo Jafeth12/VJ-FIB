@@ -27,15 +27,16 @@ Scene::~Scene()
 }
 
 
-void Scene::init(ShaderProgram &shaderProgram)
+void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFilename)
 {
     texProgram = &shaderProgram;
 	// initShaders();
-	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), *texProgram);
+	map = TileMap::createTileMap(levelFilename, glm::vec2(SCREEN_X, SCREEN_Y), *texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), *texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+    camera = &cam;
 	currentTime = 0.0f;
 }
 
@@ -43,18 +44,15 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+
+    glm::vec2 playerPos = player->getPosition();
+    camera->setXPosition(playerPos.x - INIT_PLAYER_X_TILES * map->getTileSize());
 }
 
-void Scene::render(Camera& camera) {
-    // mario horizontal scrolling effect 
-    glm::vec2 playerPos = player->getPosition();
-
-    // camera follows player
-    camera.setXPosition(playerPos.x - INIT_PLAYER_X_TILES * map->getTileSize());
-
+void Scene::render() {
     glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 view = camera.getViewMatrix();
-    glm::mat4 projection = camera.getProjectionMatrix();
+    glm::mat4 view = camera->getViewMatrix();
+    glm::mat4 projection = camera->getProjectionMatrix();
 
 	texProgram->use();
 	texProgram->setUniformMatrix4f("model", model);
