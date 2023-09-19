@@ -25,9 +25,6 @@ public:
 	void render();
 
 private:
-	void initShaders();
-
-private:
 	TileMap *map;
 	Player *player;
 	ShaderProgram *texProgram;
