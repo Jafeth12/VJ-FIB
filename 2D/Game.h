@@ -2,8 +2,11 @@
 #define _GAME_INCLUDE
 
 
+#include <iostream>
+
 #include "Camera.h"
 #include "Scene.h"
+#include "ShaderProgram.h"
 
 
 #define SCREEN_WIDTH 640
@@ -18,6 +21,8 @@ class Game
 
 private:
 	Game() {}
+
+    void initShaders();
 	
 public:
 	static Game &instance()
@@ -50,6 +55,7 @@ private:
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
     Camera camera;
+    ShaderProgram shaderProgram;
 };
 
 

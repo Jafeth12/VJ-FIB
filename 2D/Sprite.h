@@ -25,7 +25,7 @@ public:
 	static Sprite *createSprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program);
 
 	void update(int deltaTime);
-	void render(Camera camera) const;
+	void render() const;
 	void free();
 
 	void setNumberAnimations(int nAnimations);

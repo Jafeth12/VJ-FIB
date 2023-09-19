@@ -3,7 +3,6 @@
 Camera::Camera() {
     position = glm::vec2(0.0f);
     velocity = glm::vec2(0.0f);
-    view = glm::mat4(1.0f);
 
     // TODO feo af (quitalo)
     projection = glm::ortho(0.f, 640.0f-1, 480.0f-1, 0.f);
@@ -13,7 +12,6 @@ Camera::Camera(float left, float right, float bottom, float top) {
     position = glm::vec2(0.0f);
     velocity = glm::vec2(0.0f);
 
-    view = glm::mat4(1.0f);
     projection = glm::ortho(left, right, bottom, top);
 }
 

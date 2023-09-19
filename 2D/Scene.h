@@ -20,9 +20,9 @@ public:
 	Scene();
 	~Scene();
 
-	void init();
+	void init(ShaderProgram &shaderProgram);
 	void update(int deltaTime);
-	void render(Camera camera);
+	void render(Camera &camera);
 
 private:
 	void initShaders();
@@ -30,9 +30,8 @@ private:
 private:
 	TileMap *map;
 	Player *player;
-	ShaderProgram texProgram;
+	ShaderProgram *texProgram;
 	float currentTime;
-	glm::mat4 projection;
 
 };
 

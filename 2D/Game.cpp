@@ -7,8 +7,10 @@ void Game::init()
 {
 	bPlay = true;
     wireframe = true;
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	scene.init();
+	glClearColor(0.45, 0.45f, 1.0f, 1.0f);
+    camera = Camera(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+    initShaders();
+	scene.init(shaderProgram);
 }
 
 bool Game::update(int deltaTime)
@@ -29,8 +31,10 @@ void Game::keyPressed(int key)
 {
 	if(key == 27) {// Escape code
 		bPlay = false;
-        // if (wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        // else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    } else if (key == 'w') {
+        if (wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         wireframe = !wireframe;
     }
@@ -75,6 +79,35 @@ bool Game::getSpecialKey(int key) const
 }
 
 
+void Game::initShaders()
+{
+	Shader vShader, fShader;
+
+	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
+	if(!vShader.isCompiled())
+	{
+		cout << "Vertex Shader Error" << endl;
+		cout << "" << vShader.log() << endl << endl;
+	}
+	fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
+	if(!fShader.isCompiled())
+	{
+		cout << "Fragment Shader Error" << endl;
+		cout << "" << fShader.log() << endl << endl;
+	}
+	shaderProgram.init();
+	shaderProgram.addShader(vShader);
+	shaderProgram.addShader(fShader);
+	shaderProgram.link();
+	if(!shaderProgram.isLinked())
+	{
+		cout << "Shader Linking Error" << endl;
+		cout << "" << shaderProgram.log() << endl << endl;
+	}
+	shaderProgram.bindFragmentOutput("outColor");
+	vShader.free();
+	fShader.free();
+}
 
 
 

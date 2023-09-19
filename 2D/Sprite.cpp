@@ -48,12 +48,10 @@ void Sprite::update(int deltaTime)
 	}
 }
 
-void Sprite::render(Camera camera) const
+void Sprite::render() const
 {
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.f));
-    glm::mat4 view = camera.getViewMatrix();
-    glm::mat4 modelview = view * model;
-	shaderProgram->setUniformMatrix4f("modelview", modelview);
+	shaderProgram->setUniformMatrix4f("model", model);
 	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
 	glEnable(GL_TEXTURE_2D);
 	texture->use();

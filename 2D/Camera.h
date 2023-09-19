@@ -27,7 +27,6 @@ private:
     glm::vec2 position;
     glm::vec2 velocity;
 
-    glm::mat4 view;
     glm::mat4 projection;
 };
 

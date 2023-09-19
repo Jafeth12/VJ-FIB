@@ -27,15 +27,15 @@ Scene::~Scene()
 }
 
 
-void Scene::init()
+void Scene::init(ShaderProgram &shaderProgram)
 {
-	initShaders();
-	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+    texProgram = &shaderProgram;
+	// initShaders();
+	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), *texProgram);
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), *texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
 
@@ -45,57 +45,56 @@ void Scene::update(int deltaTime)
 	player->update(deltaTime);
 }
 
-void Scene::render(Camera camera) {
+void Scene::render(Camera& camera) {
+    // mario horizontal scrolling effect 
+    glm::vec2 playerPos = player->getPosition();
 
-    // feofeo borrar el hardcodeo ese
-    glm::vec2 newpos = glm::vec2(player->getPosition().x - (INIT_PLAYER_X_TILES * map->getTileSize()), player->getPosition().y - (INIT_PLAYER_Y_TILES * map->getTileSize()));
-    camera.setXPosition(newpos.x);
+    // camera follows player
+    camera.setXPosition(playerPos.x - INIT_PLAYER_X_TILES * map->getTileSize());
 
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = camera.getViewMatrix();
+    glm::mat4 projection = camera.getProjectionMatrix();
 
-	glm::mat4 modelview = view * model;
-
-	texProgram.use();
-	texProgram.setUniformMatrix4f("projection", projection);
-	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	texProgram.setUniformMatrix4f("modelview", modelview);
-	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+	texProgram->use();
+	texProgram->setUniformMatrix4f("model", model);
+	texProgram->setUniformMatrix4f("view", view);
+	texProgram->setUniformMatrix4f("projection", projection);
+	texProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+	texProgram->setUniform2f("texCoordDispl", 0.f, 0.f);
 
 	map->render();
-	player->render(camera);
-
-	// text.render("l", glm::vec2(10, 480-20), 32, glm::vec4(1, 1, 1, 1));
+	player->render();
 }
 
 void Scene::initShaders()
 {
-	Shader vShader, fShader;
-
-	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
-	if(!vShader.isCompiled())
-	{
-		cout << "Vertex Shader Error" << endl;
-		cout << "" << vShader.log() << endl << endl;
-	}
-	fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
-	if(!fShader.isCompiled())
-	{
-		cout << "Fragment Shader Error" << endl;
-		cout << "" << fShader.log() << endl << endl;
-	}
-	texProgram.init();
-	texProgram.addShader(vShader);
-	texProgram.addShader(fShader);
-	texProgram.link();
-	if(!texProgram.isLinked())
-	{
-		cout << "Shader Linking Error" << endl;
-		cout << "" << texProgram.log() << endl << endl;
-	}
-	texProgram.bindFragmentOutput("outColor");
-	vShader.free();
-	fShader.free();
+	// Shader vShader, fShader;
+	//
+	// vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
+	// if(!vShader.isCompiled())
+	// {
+	// 	cout << "Vertex Shader Error" << endl;
+	// 	cout << "" << vShader.log() << endl << endl;
+	// }
+	// fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
+	// if(!fShader.isCompiled())
+	// {
+	// 	cout << "Fragment Shader Error" << endl;
+	// 	cout << "" << fShader.log() << endl << endl;
+	// }
+	// texProgram.init();
+	// texProgram.addShader(vShader);
+	// texProgram.addShader(fShader);
+	// texProgram.link();
+	// if(!texProgram.isLinked())
+	// {
+	// 	cout << "Shader Linking Error" << endl;
+	// 	cout << "" << texProgram.log() << endl << endl;
+	// }
+	// texProgram.bindFragmentOutput("outColor");
+	// vShader.free();
+	// fShader.free();
 }
 
 
