@@ -7,6 +7,8 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "ShaderProgram.h"
+#include "Player.h"
+#include "TileMap.h"
 
 
 #define SCREEN_WIDTH 640
@@ -60,6 +62,7 @@ private:
     ShaderProgram shaderProgram;
     std::vector<Scene*> scenes;
     int currentSceneIndex;
+    Player *player;
 };
 
 

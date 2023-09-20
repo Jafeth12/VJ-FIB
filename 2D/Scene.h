@@ -21,12 +21,12 @@ public:
 	~Scene();
 
 	void init(ShaderProgram &shaderProgram, Camera &camera, std::string levelFilename);
-	void update(int deltaTime);
+	void update(int deltaTime, Player *player);
 	void render();
+    TileMap* getMap();
 
 private:
 	TileMap *map;
-	Player *player;
 	ShaderProgram *texProgram;
 	float currentTime;
     Camera *camera;

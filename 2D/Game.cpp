@@ -2,6 +2,12 @@
 #include <GL/glut.h>
 #include "Game.h"
 
+#define SCREEN_X 32
+#define SCREEN_Y 16
+
+#define INIT_PLAYER_X_TILES 4
+#define INIT_PLAYER_Y_TILES 25
+
 
 void Game::init()
 {
@@ -17,11 +23,19 @@ void Game::init()
     scenes.push_back(new Scene());
 	scenes[currentSceneIndex]->init(shaderProgram, camera, "levels/level01.txt");
 	scenes[currentSceneIndex+1]->init(shaderProgram, camera, "levels/level02.txt");
+
+    TileMap *map = scenes[currentSceneIndex]->getMap();
+
+    player = new Player();
+
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), shaderProgram);
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	player->setTileMap(map);
 }
 
 bool Game::update(int deltaTime)
 {
-    scenes[currentSceneIndex]->update(deltaTime);
+    scenes[currentSceneIndex]->update(deltaTime, player);
 	
 	return bPlay;
 }
@@ -31,6 +45,7 @@ void Game::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	scenes[currentSceneIndex]->render();
+    player->render();
 }
 
 void Game::keyPressed(int key)
