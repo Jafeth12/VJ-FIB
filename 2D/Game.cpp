@@ -59,15 +59,19 @@ void Game::keyPressed(int key)
 
         wireframe = !wireframe;
     } else if (key == '1') {
-        currentSceneIndex = 0;
+        changeScene(0);
     } else if (key == '2') {
-        currentSceneIndex = 1;
+        changeScene(1);
     }
 	keys[key] = true;
 }
 
 void Game::changeScene(int sceneIndex) {
     currentSceneIndex = sceneIndex;
+
+    // Change the map on the player
+    TileMap *newTileMap = scenes[currentSceneIndex]->getMap();
+    player->setTileMap(newTileMap);
 }
 
 void Game::keyReleased(int key)
