@@ -1,4 +1,5 @@
 #include <cmath>
+#include <glm/fwd.hpp>
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -6,8 +7,9 @@
 #include "Game.h"
 
 
-#define JUMP_HEIGHT 96.f
-#define JUMP_TIME .75f
+#define PLAYER_SIZE glm::ivec2(32, 32)
+#define JUMP_HEIGHT 115.f
+#define JUMP_TIME 0.75f
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
 
 
@@ -87,10 +89,15 @@ void Player::update(int deltaTime)
     // Update Y position of the player
     float deltaTimef = float(deltaTime) / 1000.f;
     bool upPressed = Game::instance().getSpecialKey(GLUT_KEY_UP);
-    bool collisionDown = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
-    float g;
+    bool onGround = map->onGround(posPlayer, PLAYER_SIZE);
+    float g = 0.f;
 
-    // Actu uppon the state of the player
+    // Change the current state, based on a couple variables
+    this->updateYState(upPressed, onGround);
+
+    std::cout << "inTile: " << map->inTile(posPlayer, PLAYER_SIZE) << " | onGround: " << onGround << " | " << (yState == FLOOR ? "FLOOR" : (yState == UPWARDS ? "UPWARDS" : "DOWNWARDS")) << std::endl;
+
+    // Change vars based on the state
     switch (yState)
     {
         case FLOOR:
@@ -100,8 +107,9 @@ void Player::update(int deltaTime)
 
         case UPWARDS:
             g = GRAVITY_ACC;
-            if (upPressed && collisionDown)
+            if (upPressed && onGround) {
                 yVelocity = sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT);
+            }
             break;
 
         case DOWNWARDS:
@@ -112,36 +120,24 @@ void Player::update(int deltaTime)
             break;
     }
     
-    std::cout << "CD: " << collisionDown << " | PUP: " << upPressed << " | " << ((yState == 0) ? "FLOOR" : ((yState == 1) ? "UPWARDS" : "DOWNWARDS")) << std::endl;
-
-    // Update the player state
-    posPlayer.y -= int(yVelocity * deltaTimef);
+    // Act uppon state and the vars
     yVelocity += g * deltaTimef;
 
-    // Change to next state, once the variables have been updated
-    switch (yState)
+    int yNextPos = posPlayer.y - int(yVelocity * deltaTimef);
+    if (yState == DOWNWARDS)
     {
-        case FLOOR:
-            if (upPressed && collisionDown)
-                yState = UPWARDS;
-            if (!collisionDown)
-                yState = DOWNWARDS;
-            break;
-
-        case UPWARDS:
-            if (!upPressed || yVelocity < 0.f)
-                yState = DOWNWARDS;
-            break;
-
-        case DOWNWARDS:
-            if (collisionDown)
-                yState = FLOOR;
-            break;
+        if (map->inTile(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE)) {
+            map->correctPosition(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE, &yNextPos);
+        }
+        posPlayer.y = yNextPos;
+    }
+    else {
+        posPlayer.y = yNextPos;
     }
 
-
-	
+	// Set the new position of the player
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
 }
 
 void Player::render()
@@ -162,4 +158,27 @@ void Player::setPosition(const glm::vec2 &pos)
 
 glm::vec2 Player::getPosition() {
     return posPlayer;
+}
+
+void Player::updateYState(bool upPressed, bool onGround)
+{
+    switch (yState)
+    {
+        case FLOOR:
+            if (onGround && upPressed)
+                yState = UPWARDS;
+            if (!onGround)
+                yState = DOWNWARDS;
+            break;
+
+        case UPWARDS:
+            if (!upPressed || yVelocity <= 0.f)
+                yState = DOWNWARDS;
+            break;
+
+        case DOWNWARDS:
+            if (onGround)
+                yState = FLOOR;
+            break;
+    }
 }

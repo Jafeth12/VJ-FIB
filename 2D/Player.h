@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Sprite.h"
 #include "TileMap.h"
+#include <glm/fwd.hpp>
 
 enum PlayerVerticalState { FLOOR, UPWARDS, DOWNWARDS };
 
@@ -19,13 +20,16 @@ public:
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void update(int deltaTime);
 	void render();
-	
+
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 
     glm::vec2 getPosition();
-	
+
 private:
+
+    void updateYState(bool upPressed, bool onGround);
+
 	bool bJumping;
 	glm::ivec2 tileMapDispl, posPlayer;
 	int jumpAngle, startY;
@@ -39,5 +43,3 @@ private:
 
 
 #endif // _PLAYER_INCLUDE
-
-
