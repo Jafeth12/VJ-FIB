@@ -40,7 +40,7 @@ private:
 	TileMap *map;
 
     PlayerVerticalState yState;
-    float yVelocity;
+    glm::vec2 velPlayer;
 };
 
 

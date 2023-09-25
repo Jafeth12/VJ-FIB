@@ -22,7 +22,7 @@ enum PlayerAnims
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
-    yVelocity = 0.0f;
+    velPlayer = glm::vec2(0.0f);
     yState = FLOOR;
 	spritesheet.loadFromFile("images/bub.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.25), &spritesheet, &shaderProgram);
@@ -100,13 +100,13 @@ void Player::update(int deltaTime)
     {
         case FLOOR:
             g = 0.f;
-            yVelocity = 0.f;
+            velPlayer.y = 0.f;
             break;
 
         case UPWARDS:
             g = GRAVITY_ACC;
             if (upPressed && onGround) {
-                yVelocity = sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT);
+                velPlayer.y = sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT);
             }
             break;
 
@@ -149,12 +149,12 @@ glm::vec2 Player::getPosition() {
 
 void Player::updateVelocity(glm::vec2 acc, float deltaTime)
 {
-    yVelocity += acc.y * deltaTime;
+    velPlayer += acc.y * deltaTime;
 }
 
 void Player::updatePosition(float deltaTime)
 {
-    int yNextPos = posPlayer.y - int(yVelocity * deltaTime);
+    int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
     if (yState == DOWNWARDS)
     {
         if (map->inTile(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE)) {
@@ -180,7 +180,7 @@ void Player::updateYState(bool upPressed, bool onGround)
             break;
 
         case UPWARDS:
-            if (!upPressed || yVelocity <= 0.f)
+            if (!upPressed || velPlayer.y <= 0.f)
                 yState = DOWNWARDS;
             break;
 
