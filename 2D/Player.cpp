@@ -8,7 +8,7 @@
 
 
 #define PLAYER_SIZE glm::ivec2(32, 32)
-#define JUMP_HEIGHT 115.f
+#define JUMP_HEIGHT 120.f
 #define JUMP_TIME 0.75f
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
 
@@ -93,9 +93,7 @@ void Player::update(int deltaTime)
     float g = 0.f;
 
     // Change the current state, based on a couple variables
-    this->updateYState(upPressed, onGround);
-
-    std::cout << "inTile: " << map->inTile(posPlayer, PLAYER_SIZE) << " | onGround: " << onGround << " | " << (yState == FLOOR ? "FLOOR" : (yState == UPWARDS ? "UPWARDS" : "DOWNWARDS")) << std::endl;
+    updateYState(upPressed, onGround);
 
     // Change vars based on the state
     switch (yState)
@@ -121,19 +119,8 @@ void Player::update(int deltaTime)
     }
     
     // Act uppon state and the vars
-    yVelocity += g * deltaTimef;
-
-    int yNextPos = posPlayer.y - int(yVelocity * deltaTimef);
-    if (yState == DOWNWARDS)
-    {
-        if (map->inTile(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE)) {
-            map->correctPosition(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE, &yNextPos);
-        }
-        posPlayer.y = yNextPos;
-    }
-    else {
-        posPlayer.y = yNextPos;
-    }
+    updateVelocity(glm::vec2(0.f, g), deltaTimef);
+    updatePosition(deltaTimef);
 
 	// Set the new position of the player
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -158,6 +145,27 @@ void Player::setPosition(const glm::vec2 &pos)
 
 glm::vec2 Player::getPosition() {
     return posPlayer;
+}
+
+void Player::updateVelocity(glm::vec2 acc, float deltaTime)
+{
+    yVelocity += acc.y * deltaTime;
+}
+
+void Player::updatePosition(float deltaTime)
+{
+    int yNextPos = posPlayer.y - int(yVelocity * deltaTime);
+    if (yState == DOWNWARDS)
+    {
+        if (map->inTile(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE)) {
+            map->correctPosition(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE, &yNextPos);
+        }
+        posPlayer.y = yNextPos;
+    }
+    else {
+        posPlayer.y = yNextPos;
+    }
+
 }
 
 void Player::updateYState(bool upPressed, bool onGround)

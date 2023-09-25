@@ -28,6 +28,8 @@ public:
 
 private:
 
+    void updateVelocity(glm::vec2 acc, float deltaTime);
+    void updatePosition(float deltaTime);
     void updateYState(bool upPressed, bool onGround);
 
 	bool bJumping;
