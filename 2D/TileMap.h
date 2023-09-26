@@ -27,14 +27,20 @@ public:
 
 	void render() const;
 	void free();
-	
+
 	int getTileSize() const { return tileSize; }
     glm::ivec2 getMapSize() const { return mapSize; }
 
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	
+
+    // Used for collisions instead of collisionMoveDown
+    bool onGround(const glm::ivec2 &pos, const glm::ivec2 &size);
+    bool inTile(const glm::ivec2 &pos, const glm::ivec2 &size);
+    void correctPosition(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY);
+
+
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);

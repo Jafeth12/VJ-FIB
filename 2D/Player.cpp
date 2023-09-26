@@ -1,4 +1,5 @@
 #include <cmath>
+#include <glm/fwd.hpp>
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -6,11 +7,12 @@
 #include "Game.h"
 
 
-#define SIZE 18
-#define SPEED 16
-#define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 96
-#define FALL_STEP 4
+#define SPEED 16 //FIXME SPEED -> ANIM_SPEED
+#define PLAYER_SIZE glm::ivec2(32, 32)
+#define JUMP_HEIGHT 120.f
+#define JUMP_TIME 0.5f
+#define N_FALL_GRAVITY 3.f
+#define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
 
 
 enum PlayerAnims
@@ -35,8 +37,10 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     // cada sprite es de 16x16, así que el size es 16/128 = 0.125
 
     float size = 0.125f;
-	sprite = Sprite::createSprite(glm::ivec2(SIZE, SIZE), glm::vec2(size, size), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(PLAYER_SIZE, glm::vec2(size, size), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(6);
+    velPlayer = glm::vec2(0.0f);
+    yState = FLOOR;
 	
 		sprite->setAnimationSpeed(STAND_LEFT, SPEED);
 		sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f * size, 0.f * size));
@@ -68,13 +72,16 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 void Player::update(int deltaTime)
 {
+    // Animations and stuff
 	sprite->update(deltaTime);
+
+    // Update the X position of the player
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
 		if(sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
 		posPlayer.x -= 2;
-		if(map->collisionMoveLeft(posPlayer, glm::ivec2(SIZE, SIZE)))
+		if(map->collisionMoveLeft(posPlayer, PLAYER_SIZE))
 		{
 			posPlayer.x += 2;
 			sprite->changeAnimation(STAND_LEFT);
@@ -85,7 +92,7 @@ void Player::update(int deltaTime)
 		if(sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
 		posPlayer.x += 2;
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(SIZE, SIZE)))
+		if(map->collisionMoveRight(posPlayer, PLAYER_SIZE))
 		{
 			posPlayer.x -= 2;
 			sprite->changeAnimation(STAND_RIGHT);
@@ -99,44 +106,53 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(STAND_RIGHT);
 	}
 	
-	if(bJumping)
-	{
+    // Update Y position of the player
+    float deltaTimef = float(deltaTime) / 1000.f;
+    bool upPressed = Game::instance().getSpecialKey(GLUT_KEY_UP);
+    bool onGround = map->onGround(posPlayer, PLAYER_SIZE);
+    float g = 0.f;
+
+    // Change the current state, based on a couple variables
+    updateYState(upPressed, onGround);
+
+
+    // Change vars based on the state
+    switch (yState)
+    {
+        case FLOOR:
+            g = 0.f;
+            velPlayer.y = 0.f;
+            break;
+
+        case UPWARDS:
+            g = GRAVITY_ACC;
+            if (upPressed && onGround) {
+                velPlayer.y = sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT);
+            }
+            break;
+
+        case DOWNWARDS:
+            g = N_FALL_GRAVITY * GRAVITY_ACC;
+            break;
+
+        default:
+            break;
+    }
+
+    if (yState == UPWARDS || yState == DOWNWARDS) {
         if (sprite->animation() == STAND_LEFT) sprite->changeAnimation(JUMP_LEFT);
         else if (sprite->animation() == STAND_RIGHT) sprite->changeAnimation(JUMP_RIGHT);
         else if (sprite->animation() == MOVE_LEFT) sprite->changeAnimation(JUMP_LEFT);
         else if (sprite->animation() == MOVE_RIGHT) sprite->changeAnimation(JUMP_RIGHT);
+    }
+    
+    // Act uppon state and the vars
+    updateVelocity(glm::vec2(0.f, g), deltaTimef);
+    updatePosition(deltaTimef);
 
-		jumpAngle += JUMP_ANGLE_STEP;
-		if(jumpAngle == 180)
-		{
-			bJumping = false;
-			posPlayer.y = startY;
-		}
-		else
-		{
-			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
-			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(SIZE, SIZE), &posPlayer.y);
-		}
-	}
-	else
-	{
-        if (sprite->animation() == JUMP_LEFT) sprite->changeAnimation(STAND_LEFT);
-        else if (sprite->animation() == JUMP_RIGHT) sprite->changeAnimation(STAND_RIGHT);
-
-		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, glm::ivec2(SIZE, SIZE), &posPlayer.y))
-		{
-			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
-			{
-				bJumping = true;
-				jumpAngle = 0;
-				startY = posPlayer.y;
-			}
-		}
-	}
-	
+	// Set the new position of the player
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
 }
 
 void Player::render()
@@ -159,6 +175,46 @@ glm::vec2 Player::getPosition() {
     return posPlayer;
 }
 
+void Player::updateVelocity(glm::vec2 acc, float deltaTime)
+{
+    velPlayer += acc.y * deltaTime;
+}
 
+void Player::updatePosition(float deltaTime)
+{
+    int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
+    if (yState == DOWNWARDS)
+    {
+        if (map->inTile(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE)) {
+            map->correctPosition(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE, &yNextPos);
+        }
+        posPlayer.y = yNextPos;
+    }
+    else {
+        posPlayer.y = yNextPos;
+    }
 
+}
 
+void Player::updateYState(bool upPressed, bool onGround)
+{
+    switch (yState)
+    {
+        case FLOOR:
+            if (onGround && upPressed)
+                yState = UPWARDS;
+            if (!onGround)
+                yState = DOWNWARDS;
+            break;
+
+        case UPWARDS:
+            if (!upPressed || velPlayer.y <= 0.f)
+                yState = DOWNWARDS;
+            break;
+
+        case DOWNWARDS:
+            if (onGround)
+                yState = FLOOR;
+            break;
+    }
+}
