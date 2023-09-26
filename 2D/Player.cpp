@@ -9,7 +9,8 @@
 
 #define PLAYER_SIZE glm::ivec2(32, 32)
 #define JUMP_HEIGHT 120.f
-#define JUMP_TIME 0.75f
+#define JUMP_TIME 0.5f
+#define N_FALL_GRAVITY 3.f
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
 
 
@@ -95,6 +96,7 @@ void Player::update(int deltaTime)
     // Change the current state, based on a couple variables
     updateYState(upPressed, onGround);
 
+
     // Change vars based on the state
     switch (yState)
     {
@@ -111,7 +113,7 @@ void Player::update(int deltaTime)
             break;
 
         case DOWNWARDS:
-            g = 3 * GRAVITY_ACC;
+            g = N_FALL_GRAVITY * GRAVITY_ACC;
             break;
 
         default:
