@@ -73,7 +73,6 @@ static void idleCallback()
 	
 	if(deltaTime > TIME_PER_FRAME)
 	{
-        cout << "deltaTime: " << deltaTime << " | T_per_F: " << TIME_PER_FRAME << endl;
 		// Every time we enter here is equivalent to a game loop execution
 		if(!Game::instance().update(deltaTime))
 			exit(0);

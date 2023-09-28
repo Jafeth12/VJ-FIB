@@ -114,8 +114,6 @@ void Player::update(float deltaTime)
     // Change the current state, based on a couple variables
     updateYState(upPressed, onGround);
 
-    std::cout << "Player height: " << 400 - posPlayer.y << std::endl;
-
     // Change vars based on the state
     switch (yState)
     {
