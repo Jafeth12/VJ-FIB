@@ -35,7 +35,7 @@ public:
 	}
 	
 	void init();
-	bool update(int deltaTime);
+	bool update(float deltaTime);
 	void render();
 	
 	// Input callback methods

@@ -9,7 +9,7 @@
 
 #define SPEED 16 //FIXME SPEED -> ANIM_SPEED
 #define PLAYER_SIZE glm::ivec2(32, 32)
-#define JUMP_HEIGHT 120.f
+#define JUMP_HEIGHT 115.f
 #define JUMP_TIME 0.5f
 #define N_FALL_GRAVITY 3.f
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
@@ -70,7 +70,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	
 }
 
-void Player::update(int deltaTime)
+void Player::update(float deltaTime)
 {
     // Animations and stuff
 	sprite->update(deltaTime);
@@ -107,14 +107,12 @@ void Player::update(int deltaTime)
 	}
 	
     // Update Y position of the player
-    float deltaTimef = float(deltaTime) / 1000.f;
     bool upPressed = Game::instance().getSpecialKey(GLUT_KEY_UP);
     bool onGround = map->onGround(posPlayer, PLAYER_SIZE);
     float g = 0.f;
 
     // Change the current state, based on a couple variables
     updateYState(upPressed, onGround);
-
 
     // Change vars based on the state
     switch (yState)
@@ -147,8 +145,8 @@ void Player::update(int deltaTime)
     }
     
     // Act uppon state and the vars
-    updateVelocity(glm::vec2(0.f, g), deltaTimef);
-    updatePosition(deltaTimef);
+    updateVelocity(glm::vec2(0.f, g), deltaTime);
+    updatePosition(deltaTime);
 
 	// Set the new position of the player
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
