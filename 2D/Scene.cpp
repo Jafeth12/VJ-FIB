@@ -30,8 +30,13 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFil
 	map = TileMap::createTileMap(levelFilename, glm::vec2(SCREEN_X, SCREEN_Y), *texProgram);
     camera = &cam;
 
-    // text = Text::createText("The quick brown fox jumps over the lazy dog", &shaderProgram);
-    text = Text::createText("0123456789", &shaderProgram);
+    texts.push_back(Text::createText("Mario", &shaderProgram, glm::vec2(48, 16)));
+    texts.push_back(Text::createText("000000", &shaderProgram, glm::vec2(48, 32)));
+    texts.push_back(Text::createText("0x00", &shaderProgram, glm::vec2(208, 32)));
+    texts.push_back(Text::createText("World", &shaderProgram, glm::vec2(384, 16)));
+    texts.push_back(Text::createText("1-1", &shaderProgram, glm::vec2(400, 32)));
+    texts.push_back(Text::createText("Time", &shaderProgram, glm::vec2(496, 16)));
+    texts.push_back(Text::createText("400", &shaderProgram, glm::vec2(512, 32)));
 	currentTime = 0.0f;
 }
 
@@ -51,15 +56,21 @@ void Scene::render() {
 
 	texProgram->use();
 	texProgram->setUniformMatrix4f("projection", projection);
-
-    text->render();
-
 	texProgram->setUniformMatrix4f("model", model);
 	texProgram->setUniformMatrix4f("view", view);
 	texProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	texProgram->setUniform2f("texCoordDispl", 0.f, 0.f);
 
 	map->render();
+
+    render_texts();
+	texProgram->setUniformMatrix4f("view", view);
+}
+
+void Scene::render_texts() {
+    for (size_t i = 0; i < texts.size(); ++i) {
+        texts[i]->render();
+    }
 }
 
 TileMap* Scene::getMap() {

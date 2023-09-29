@@ -30,8 +30,10 @@ private:
 	TileMap *map;
 	ShaderProgram *texProgram;
 	float currentTime;
-    Text *text;
+    std::vector<Text*> texts;
     Camera *camera;
+
+    void render_texts();
 };
 
 

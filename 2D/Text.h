@@ -18,10 +18,10 @@ struct text_vertex {
 
 class Text {
 public: 
-    Text(string texto, ShaderProgram *program);
+    Text(string texto, ShaderProgram *program, glm::vec2 pos);
     ~Text();
 
-    static Text* createText(string texto, ShaderProgram *program);
+    static Text* createText(string texto, ShaderProgram *program, glm::vec2 pos);
     static void init();
     static void destroy();
 
@@ -31,18 +31,19 @@ public:
 
 
 private:
-    static Texture *fontTexture;
+    static Texture *s_fontTexture;
 
 	ShaderProgram *shaderProgram;
-	GLuint vao;
-	GLuint vbo;
+	GLuint vao, vbo, ibo;
+    unsigned int numIndices;
 	GLint posLocation, texCoordLocation;
 
     string text;
+    char font_size;
 	glm::vec2 position;
 
     void getUVsFromChar(char c, float *uvs);
-    void mesh(string new_text);
+    void mesh();
 };
 
 
