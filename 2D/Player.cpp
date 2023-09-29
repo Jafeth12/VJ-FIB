@@ -8,7 +8,7 @@
 
 
 #define SPEED 16 //FIXME SPEED -> ANIM_SPEED
-#define PLAYER_SIZE glm::ivec2(32, 32)
+#define PLAYER_SIZE glm::ivec2(18, 18)
 #define JUMP_HEIGHT 120.f
 #define JUMP_TIME 0.5f
 #define N_FALL_GRAVITY 3.f

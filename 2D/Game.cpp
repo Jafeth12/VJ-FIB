@@ -17,6 +17,7 @@ void Game::init()
 	glClearColor(0.45, 0.45f, 1.0f, 1.0f);
     camera = Camera(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
     initShaders();
+    Text::init();
 
     // create scenes
     scenes.push_back(new Scene());

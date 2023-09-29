@@ -7,6 +7,7 @@
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
+#include "Text.h"
 
 
 // Scene contains all the entities of our game.
@@ -29,6 +30,7 @@ private:
 	TileMap *map;
 	ShaderProgram *texProgram;
 	float currentTime;
+    Text *text;
     Camera *camera;
 };
 

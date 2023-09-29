@@ -29,6 +29,9 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFil
 	// initShaders();
 	map = TileMap::createTileMap(levelFilename, glm::vec2(SCREEN_X, SCREEN_Y), *texProgram);
     camera = &cam;
+
+    // text = Text::createText("The quick brown fox jumps over the lazy dog", &shaderProgram);
+    text = Text::createText("0123456789", &shaderProgram);
 	currentTime = 0.0f;
 }
 
@@ -47,9 +50,12 @@ void Scene::render() {
     glm::mat4 projection = camera->getProjectionMatrix();
 
 	texProgram->use();
+	texProgram->setUniformMatrix4f("projection", projection);
+
+    text->render();
+
 	texProgram->setUniformMatrix4f("model", model);
 	texProgram->setUniformMatrix4f("view", view);
-	texProgram->setUniformMatrix4f("projection", projection);
 	texProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	texProgram->setUniform2f("texCoordDispl", 0.f, 0.f);
 
