@@ -311,7 +311,7 @@ bool TileMap::collidesWithMap(const glm::ivec2 &pos0, glm::ivec2 *pos1, const gl
         y1 = pos0.y / tileSize;
     }
 
-    for (int y = y0; y <= y1; y += dirY)
+    for (int y = y0; y != y1+dirY; y += dirY)
         for (int x = x0; x<=x1; ++x)
             if (map[y * mapSize.x + x] != 0) {
                 if (dirY == 1) // DOWN: Ens coloquem just sobre la colisió
