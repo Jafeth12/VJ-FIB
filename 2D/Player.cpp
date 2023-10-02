@@ -182,9 +182,9 @@ void Player::updatePosition(float deltaTime)
 {
     if (yState == DOWNWARDS || yState == UPWARDS) {
         int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
-        std::cout << "nextPos: " << yNextPos / 16 << std::endl;
         glm::ivec2 nextPos = glm::ivec2(posPlayer.x, yNextPos);
-        map->collidesWithMap(posPlayer, &nextPos, PLAYER_SIZE);
+        if(map->collidesWithMap(posPlayer, &nextPos, PLAYER_SIZE))
+            velPlayer.y = 0.0f;
 
         posPlayer.y = nextPos.y;
     }
@@ -202,12 +202,8 @@ void Player::updateYState(bool upPressed, bool onGround, bool headUnderTile)
             break;
 
         case UPWARDS:
-            if (!upPressed || velPlayer.y <= 0.f)
+            if (!upPressed || velPlayer.y <= 0.f || headUnderTile)
                 yState = DOWNWARDS;
-            if (headUnderTile) {
-                yState = DOWNWARDS;
-                velPlayer.y = 0.0f;
-            }
             break;
 
         case DOWNWARDS:
