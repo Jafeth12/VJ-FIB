@@ -8,11 +8,12 @@
 
 
 #define SPEED 16 //FIXME SPEED -> ANIM_SPEED
-#define PLAYER_SIZE glm::ivec2(32, 32)
+#define PLAYER_SIZE glm::ivec2(16, 16)
 #define JUMP_HEIGHT 115.f
-#define JUMP_TIME 0.5f
+#define JUMP_TIME .5f
 #define N_FALL_GRAVITY 3.f
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
+#define JUMP_VEL sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT)
 
 
 enum PlayerAnims
@@ -125,7 +126,7 @@ void Player::update(float deltaTime)
         case UPWARDS:
             g = GRAVITY_ACC;
             if (upPressed && onGround) {
-                velPlayer.y = sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT);
+                velPlayer.y = JUMP_VEL;
             }
             break;
 
@@ -180,18 +181,14 @@ void Player::updateVelocity(glm::vec2 acc, float deltaTime)
 
 void Player::updatePosition(float deltaTime)
 {
-    int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
-    if (yState == DOWNWARDS)
-    {
-        if (map->inTile(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE)) {
-            map->correctPosition(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE, &yNextPos);
-        }
-        posPlayer.y = yNextPos;
-    }
-    else {
-        posPlayer.y = yNextPos;
-    }
+    if (yState == DOWNWARDS || yState == UPWARDS) {
+        int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
+        std::cout << "nextPos: " << yNextPos / 16 << std::endl;
+        glm::ivec2 nextPos = glm::ivec2(posPlayer.x, yNextPos);
+        map->collidesWithMap(posPlayer, &nextPos, PLAYER_SIZE);
 
+        posPlayer.y = nextPos.y;
+    }
 }
 
 void Player::updateYState(bool upPressed, bool onGround)
@@ -208,6 +205,10 @@ void Player::updateYState(bool upPressed, bool onGround)
         case UPWARDS:
             if (!upPressed || velPlayer.y <= 0.f)
                 yState = DOWNWARDS;
+            if (map->headUnderTile(posPlayer, PLAYER_SIZE)) {
+                yState = DOWNWARDS;
+                velPlayer.y = 0.0f;
+            }
             break;
 
         case DOWNWARDS:
