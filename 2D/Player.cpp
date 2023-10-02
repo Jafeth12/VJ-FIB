@@ -110,14 +110,14 @@ void Player::update(float deltaTime)
     // Update Y position of the player
     bool upPressed = Game::instance().getSpecialKey(GLUT_KEY_UP);
     bool onGround = map->onGround(posPlayer, PLAYER_SIZE);
+    bool headUnderTile = map->headUnderTile(posPlayer, PLAYER_SIZE);
     float g = 0.f;
 
     // Change the current state, based on a couple variables
-    updateYState(upPressed, onGround);
+    updateYState(upPressed, onGround, headUnderTile);
 
     // Change vars based on the state
-    switch (yState)
-    {
+    switch (yState) {
         case FLOOR:
             g = 0.f;
             velPlayer.y = 0.f;
@@ -125,9 +125,8 @@ void Player::update(float deltaTime)
 
         case UPWARDS:
             g = GRAVITY_ACC;
-            if (upPressed && onGround) {
+            if (upPressed && onGround)
                 velPlayer.y = JUMP_VEL;
-            }
             break;
 
         case DOWNWARDS:
@@ -191,7 +190,7 @@ void Player::updatePosition(float deltaTime)
     }
 }
 
-void Player::updateYState(bool upPressed, bool onGround)
+void Player::updateYState(bool upPressed, bool onGround, bool headUnderTile)
 {
     switch (yState)
     {
@@ -205,7 +204,7 @@ void Player::updateYState(bool upPressed, bool onGround)
         case UPWARDS:
             if (!upPressed || velPlayer.y <= 0.f)
                 yState = DOWNWARDS;
-            if (map->headUnderTile(posPlayer, PLAYER_SIZE)) {
+            if (headUnderTile) {
                 yState = DOWNWARDS;
                 velPlayer.y = 0.0f;
             }
