@@ -121,12 +121,17 @@ void Player::update(float deltaTime)
         case FLOOR:
             g = 0.f;
             velPlayer.y = 0.f;
+            if (!upPressed) {
+                bJumping = false;
+            }
             break;
 
         case UPWARDS:
             g = GRAVITY_ACC;
-            if (upPressed && onGround)
+            if (upPressed && onGround && !bJumping) {
                 velPlayer.y = JUMP_VEL;
+                bJumping = true;
+            }
             break;
 
         case DOWNWARDS:
@@ -142,6 +147,10 @@ void Player::update(float deltaTime)
         else if (sprite->animation() == STAND_RIGHT) sprite->changeAnimation(JUMP_RIGHT);
         else if (sprite->animation() == MOVE_LEFT) sprite->changeAnimation(JUMP_LEFT);
         else if (sprite->animation() == MOVE_RIGHT) sprite->changeAnimation(JUMP_RIGHT);
+    }
+    else {
+        if (sprite->animation() == JUMP_LEFT) sprite->changeAnimation(STAND_LEFT);
+        else if (sprite->animation() == JUMP_RIGHT) sprite->changeAnimation(STAND_RIGHT);
     }
     
     // Act uppon state and the vars
