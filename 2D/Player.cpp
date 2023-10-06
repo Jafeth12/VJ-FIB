@@ -204,7 +204,7 @@ void Player::updateYState(bool upPressed, bool onGround, bool headUnderTile)
     switch (yState)
     {
         case FLOOR:
-            if (onGround && upPressed)
+            if (onGround && upPressed && !bJumping)
                 yState = UPWARDS;
             if (!onGround)
                 yState = DOWNWARDS;
