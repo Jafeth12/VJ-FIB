@@ -99,7 +99,7 @@ void Player::update(float deltaTime)
     updateAnimation(leftPressed, rightPressed);
 
 	// Set the new position of the player
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+    setPosition(posPlayer);
 
 }
 
