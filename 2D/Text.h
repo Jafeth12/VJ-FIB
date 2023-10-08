@@ -12,8 +12,8 @@
 #define FONT_SIZE 16
 
 struct text_vertex {
-    glm::vec2 pos;
-    glm::vec2 texCoords;
+    float pos[2];
+    float texCoords[2];
 };
 
 class Text {
@@ -25,10 +25,9 @@ public:
     static void init();
     static void destroy();
 
-    void move(glm::vec2 pos);
+    void updatePosition(glm::vec2 pos);
     void updateText(string new_text);
     void render();
-
 
 private:
     static Texture *s_fontTexture;
@@ -43,7 +42,8 @@ private:
 	glm::vec2 position;
 
     void getUVsFromChar(char c, float *uvs);
-    void mesh();
+    void mesh(vector<text_vertex> &vertices, vector<unsigned int> &indices);
+    void addChar(vector<text_vertex> &vertices, string textt, int i);
 };
 
 

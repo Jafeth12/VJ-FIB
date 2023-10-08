@@ -30,13 +30,15 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFil
 	map = TileMap::createTileMap(levelFilename, glm::vec2(SCREEN_X, SCREEN_Y), *texProgram);
     camera = &cam;
 
+    time_left = 400;
+
     texts.push_back(Text::createText("Mario", &shaderProgram, glm::vec2(48, 16)));
     texts.push_back(Text::createText("000000", &shaderProgram, glm::vec2(48, 32)));
     texts.push_back(Text::createText("0x00", &shaderProgram, glm::vec2(208, 32)));
     texts.push_back(Text::createText("World", &shaderProgram, glm::vec2(384, 16)));
     texts.push_back(Text::createText("1-1", &shaderProgram, glm::vec2(400, 32)));
     texts.push_back(Text::createText("Time", &shaderProgram, glm::vec2(496, 16)));
-    texts.push_back(Text::createText("400", &shaderProgram, glm::vec2(512, 32)));
+    texts.push_back(Text::createText(std::to_string(time_left), &shaderProgram, glm::vec2(512, 32)));
 	currentTime = 0.0f;
 }
 
@@ -44,6 +46,9 @@ void Scene::update(int deltaTime, Player *player)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+
+    --time_left;
+    texts[6]->updateText(std::to_string(time_left));
 
     glm::vec2 playerPos = player->getPosition();
     camera->setXPosition(playerPos.x - INIT_PLAYER_X_TILES * map->getTileSize());

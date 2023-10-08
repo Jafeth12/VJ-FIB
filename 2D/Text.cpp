@@ -39,9 +39,14 @@ Text::Text(string texto, ShaderProgram *program, glm::vec2 pos) {
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
-	glGenBuffers(1, &vbo);
 
-    mesh();
+	glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ibo);
+
+    vector<text_vertex> vertices;
+    vector<unsigned int> indices;
+
+    mesh(vertices, indices);
 }
 
 Text* Text::createText(string texto, ShaderProgram *program, glm::vec2 pos) {
@@ -50,81 +55,109 @@ Text* Text::createText(string texto, ShaderProgram *program, glm::vec2 pos) {
     return t;
 }
 
-void Text::mesh() {
-    struct vertex {
-        float pos[2];
-        float texCoords[2];
-    };
-
-    vector<vertex> vertices;
-    vector<unsigned int> indices;
-
+void Text::addChar(vector<text_vertex> &vertices, string textt, int i) {
     float texSize = s_fontTexture->width();
     float uvStep = FONT_SIZE_IN_TEXTURE/texSize;
-    int size = text.size();
-    for (int i = 0; i < size; ++i) {
-        char c = text[i];
-        vertex v;
 
-        float base_uvs[2];
-        getUVsFromChar(c, base_uvs);
-        if (base_uvs[0] == -1) {
-            cout << "ERROR: character " << c << " not found in font" << endl;
-            exit(-1);
-        }
-
-        // first triangle
-        indices.push_back(vertices.size() + 0);
-        indices.push_back(vertices.size() + 1);
-        indices.push_back(vertices.size() + 2);
-
-        // second triangle
-        indices.push_back(vertices.size() + 2);
-        indices.push_back(vertices.size() + 1);
-        indices.push_back(vertices.size() + 3);
-
-        // up left vertex
-        v.pos[0] = i*FONT_SIZE;
-        v.pos[1] = 0;
-        v.texCoords[0] = base_uvs[0];
-        v.texCoords[1] = base_uvs[1];
-        vertices.push_back(v);
-
-        // up right vertex
-        v.pos[0] = i*FONT_SIZE + FONT_SIZE;
-        v.pos[1] = 0;
-        v.texCoords[0] = base_uvs[0] + uvStep;
-        v.texCoords[1] = base_uvs[1];
-        vertices.push_back(v);
-
-        // down left vertex
-        v.pos[0] = i*FONT_SIZE;
-        v.pos[1] = FONT_SIZE;
-        v.texCoords[0] = base_uvs[0];
-        v.texCoords[1] = base_uvs[1] + uvStep;
-        vertices.push_back(v);
-
-        // down right vertex
-        v.pos[0] = i*FONT_SIZE + FONT_SIZE;
-        v.pos[1] = FONT_SIZE;
-        v.texCoords[0] = base_uvs[0] + uvStep;
-        v.texCoords[1] = base_uvs[1] + uvStep;
-        vertices.push_back(v);
+    float base_uvs[2];
+    getUVsFromChar(textt[i], base_uvs);
+    if (base_uvs[0] == -1) {
+        cout << "ERROR: character " << textt[i] << " not found in font" << endl;
+        exit(-1);
     }
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    text_vertex v;
 
-    glGenBuffers(1, &ibo);
+    // up left vertex
+    v.pos[0] = i*FONT_SIZE;
+    v.pos[1] = 0;
+    v.texCoords[0] = base_uvs[0];
+    v.texCoords[1] = base_uvs[1];
+    vertices.push_back(v);
+
+    // up right vertex
+    v.pos[0] = i*FONT_SIZE + FONT_SIZE;
+    v.pos[1] = 0;
+    v.texCoords[0] = base_uvs[0] + uvStep;
+    v.texCoords[1] = base_uvs[1];
+    vertices.push_back(v);
+
+    // down left vertex
+    v.pos[0] = i*FONT_SIZE;
+    v.pos[1] = FONT_SIZE;
+    v.texCoords[0] = base_uvs[0];
+    v.texCoords[1] = base_uvs[1] + uvStep;
+    vertices.push_back(v);
+
+    // down right vertex
+    v.pos[0] = i*FONT_SIZE + FONT_SIZE;
+    v.pos[1] = FONT_SIZE;
+    v.texCoords[0] = base_uvs[0] + uvStep;
+    v.texCoords[1] = base_uvs[1] + uvStep;
+    vertices.push_back(v);
+}
+
+void Text::mesh(vector<text_vertex> &vertices, vector<unsigned int> &indices) {
+    int size = text.size();
+    for (int i = 0; i < size; ++i) {
+
+        // first triangle
+            indices.push_back(vertices.size() + 0); // up left
+            indices.push_back(vertices.size() + 1); // up right
+            indices.push_back(vertices.size() + 2); // down left
+
+        // second triangle
+            indices.push_back(vertices.size() + 2); // down left
+            indices.push_back(vertices.size() + 1); // up right
+            indices.push_back(vertices.size() + 3); // down right
+
+        addChar(vertices, text, i);
+    }
+
+    glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(text_vertex)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indices.size(), &indices[0], GL_STATIC_DRAW);
     numIndices = indices.size();
 
-	posLocation = shaderProgram->bindVertexAttribute("position", 2, 4*sizeof(float), 0);
-	texCoordLocation = shaderProgram->bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
+    posLocation = shaderProgram->bindVertexAttribute("position", 2, 4*sizeof(float), 0);
+    texCoordLocation = shaderProgram->bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
 }
 
-void Text::move(glm::vec2 pos) {
+void Text::updateText(string new_text) {
+    int old_size = text.size();
+    int new_size = new_text.size();
+    string old_text = text;
+
+    text = new_text;
+
+    if (old_size != new_size) {
+        glDeleteBuffers(1, &vbo);
+        glDeleteBuffers(1, &ibo);
+
+        glGenBuffers(1, &vbo);
+        glGenBuffers(1, &ibo);
+        vector<text_vertex> vertices;
+        vector<unsigned int> indices;
+        mesh(vertices, indices);
+
+    } else {
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+        for (int i = 0; i < new_size; ++i) {
+            if (old_text[i] == new_text[i]) continue;
+
+            vector<text_vertex> vertices_for_this_char;
+            addChar(vertices_for_this_char, new_text, i);
+
+            glBufferSubData(GL_ARRAY_BUFFER, i*4*sizeof(text_vertex), 4*sizeof(text_vertex), &vertices_for_this_char[0]);
+        }
+    }
+}
+
+void Text::updatePosition(glm::vec2 pos) {
     position = pos;
 }
 

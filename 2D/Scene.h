@@ -32,6 +32,7 @@ private:
 	float currentTime;
     std::vector<Text*> texts;
     Camera *camera;
+    int time_left;
 
     void render_texts();
 };
