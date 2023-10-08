@@ -19,16 +19,28 @@
 #define X_ACC  500.f
 #define X_DRAG 500.f
 
-enum PlayerAnims
+
+enum VerticalAnims
 {
-	STAND_LEFT,
-    STAND_RIGHT,
-    MOVE_LEFT,
-    MOVE_RIGHT,
-    JUMP_LEFT,
-    JUMP_RIGHT
+    STAND=0,
+    MOVE,
+    JUMP,
+};
+ enum LateralAnims
+{
+    LEFT=0,
+    RIGHT,
 };
 
+enum PlayerAnims
+{
+	STAND_LEFT=0,
+    MOVE_LEFT,
+    JUMP_LEFT,
+    STAND_RIGHT=3,
+    MOVE_RIGHT,
+    JUMP_RIGHT
+};
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
@@ -210,18 +222,33 @@ bool Player::updateYState(bool upPressed)
 
 void Player::updateAnimation(bool leftPressed, bool rightPressed)
 {
-    PlayerAnims currentAnimation = (PlayerAnims)sprite->animation();
-
-    if (yState == UPWARDS || yState == DOWNWARDS) {
-        if (currentAnimation == STAND_LEFT) sprite->changeAnimation(JUMP_LEFT);
-        else if (currentAnimation == STAND_RIGHT) sprite->changeAnimation(JUMP_RIGHT);
-        else if (currentAnimation == MOVE_LEFT) sprite->changeAnimation(JUMP_LEFT);
-        else if (currentAnimation == MOVE_RIGHT) sprite->changeAnimation(JUMP_RIGHT);
+    // Figure out components of the current animation
+    PlayerAnims currentAnim = (PlayerAnims)sprite->animation();
+    VerticalAnims verticalAnim = (VerticalAnims)(currentAnim % 3);
+    LateralAnims lateralAnim = (LateralAnims)(currentAnim / 3);
+    // Setup components for the next animation
+    VerticalAnims nextVerticalAnim = verticalAnim;
+    LateralAnims nextLateralAnim = lateralAnim;
+    // Figure out next vertical animation
+    switch (yState) {
+        case FLOOR:
+            if (!leftPressed && !rightPressed) nextVerticalAnim = STAND;
+            else nextVerticalAnim = MOVE;
+            break;
+        case UPWARDS:
+        case DOWNWARDS:
+            nextVerticalAnim = JUMP;
+            break;
+        default:
+            break;
     }
-    else {
-        if (currentAnimation == JUMP_LEFT) sprite->changeAnimation(STAND_LEFT);
-        else if (currentAnimation == JUMP_RIGHT) sprite->changeAnimation(STAND_RIGHT);
-    }
+    // Firgure out animation direction
+    if (leftPressed && !rightPressed) nextLateralAnim = LEFT;
+    else if (rightPressed && !leftPressed) nextLateralAnim = RIGHT;
+    // Update the animation only if it changed
+    PlayerAnims nextAnimation = (PlayerAnims)(nextVerticalAnim + 3 * nextLateralAnim);
+    if (nextAnimation != currentAnim)
+        sprite->changeAnimation(nextAnimation);
 }
 
 glm::vec2 Player::getAcceleration(bool leftPressed, bool rightPressed)
