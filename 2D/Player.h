@@ -28,9 +28,11 @@ public:
 
 private:
 
-    void updateVelocity(glm::vec2 acc, float deltaTime);
+    void updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime);
     void updatePosition(float deltaTime);
-    void updateYState(bool upPressed, bool onGround, bool headUnderTile);
+    bool updateYState(bool upPressed);
+    void updateAnimation(bool leftPressed, bool rightPressed);
+    glm::vec2 getAcceleration(bool leftPressed, bool rightPressed);
 
 	bool bJumping;
 	glm::ivec2 tileMapDispl, posPlayer;
