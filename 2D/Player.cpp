@@ -232,8 +232,12 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed)
     // Figure out next vertical animation
     switch (yState) {
         case FLOOR:
-            if (!leftPressed && !rightPressed) nextVerticalAnim = STAND;
-            else nextVerticalAnim = MOVE;
+            // Both keys pressed or none pressed. Stand still
+            if ((!leftPressed && !rightPressed) || (leftPressed && rightPressed))
+                nextVerticalAnim = STAND;
+            // Only one key pressed. Move
+            else
+                nextVerticalAnim = MOVE;
             break;
         case UPWARDS:
         case DOWNWARDS:
@@ -243,8 +247,10 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed)
             break;
     }
     // Firgure out animation direction
-    if (leftPressed && !rightPressed) nextLateralAnim = LEFT;
-    else if (rightPressed && !leftPressed) nextLateralAnim = RIGHT;
+    if (leftPressed && !rightPressed)
+        nextLateralAnim = LEFT;
+    else if (rightPressed && !leftPressed)
+        nextLateralAnim = RIGHT;
     // Update the animation only if it changed
     PlayerAnims nextAnimation = (PlayerAnims)(nextVerticalAnim + 3 * nextLateralAnim);
     if (nextAnimation != currentAnim)
@@ -256,9 +262,9 @@ glm::vec2 Player::getAcceleration(bool leftPressed, bool rightPressed)
     glm::vec2 acc = glm::vec2(0.f);
 
     // Figure out X acceleration
-	if (leftPressed) acc.x = -X_ACC;
-	else if (rightPressed) acc.x = X_ACC;
-    // No lateral key pressed. Apply drag
+	if (leftPressed && !rightPressed) acc.x = -X_ACC;
+	else if (rightPressed && !leftPressed) acc.x = X_ACC;
+    // No lateral key pressed or both pressed at the same time. Apply drag
 	else {
         if (velPlayer.x > 0.f) acc.x = -X_DRAG;
         else if (velPlayer.x < 0.f) acc.x = X_DRAG;
