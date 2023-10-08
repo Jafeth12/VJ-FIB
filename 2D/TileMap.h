@@ -33,13 +33,11 @@ public:
 
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 
     // Used for collisions instead of collisionMoveDown
     bool onGround(const glm::ivec2 &pos, const glm::ivec2 &size);
-    bool inTile(const glm::ivec2 &pos, const glm::ivec2 &size);
-    void correctPosition(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY);
-
+    bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
+    bool collidesWithMap(const glm::ivec2 &pos0, glm::ivec2 *pos1, const glm::ivec2 &playerSize);
 
 private:
 	bool loadLevel(const string &levelFile);

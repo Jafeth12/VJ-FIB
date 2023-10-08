@@ -8,11 +8,12 @@
 
 
 #define SPEED 16 //FIXME SPEED -> ANIM_SPEED
-#define PLAYER_SIZE glm::ivec2(32, 32)
+#define PLAYER_SIZE glm::ivec2(16, 16)
 #define JUMP_HEIGHT 115.f
-#define JUMP_TIME 0.5f
+#define JUMP_TIME .5f
 #define N_FALL_GRAVITY 3.f
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
+#define JUMP_VEL sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT)
 
 
 enum PlayerAnims
@@ -109,23 +110,27 @@ void Player::update(float deltaTime)
     // Update Y position of the player
     bool upPressed = Game::instance().getSpecialKey(GLUT_KEY_UP);
     bool onGround = map->onGround(posPlayer, PLAYER_SIZE);
+    bool headUnderTile = map->headUnderTile(posPlayer, PLAYER_SIZE);
     float g = 0.f;
 
     // Change the current state, based on a couple variables
-    updateYState(upPressed, onGround);
+    updateYState(upPressed, onGround, headUnderTile);
 
     // Change vars based on the state
-    switch (yState)
-    {
+    switch (yState) {
         case FLOOR:
             g = 0.f;
             velPlayer.y = 0.f;
+            if (!upPressed) {
+                bJumping = false;
+            }
             break;
 
         case UPWARDS:
             g = GRAVITY_ACC;
-            if (upPressed && onGround) {
-                velPlayer.y = sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT);
+            if (upPressed && onGround && !bJumping) {
+                velPlayer.y = JUMP_VEL;
+                bJumping = true;
             }
             break;
 
@@ -142,6 +147,10 @@ void Player::update(float deltaTime)
         else if (sprite->animation() == STAND_RIGHT) sprite->changeAnimation(JUMP_RIGHT);
         else if (sprite->animation() == MOVE_LEFT) sprite->changeAnimation(JUMP_LEFT);
         else if (sprite->animation() == MOVE_RIGHT) sprite->changeAnimation(JUMP_RIGHT);
+    }
+    else {
+        if (sprite->animation() == JUMP_LEFT) sprite->changeAnimation(STAND_LEFT);
+        else if (sprite->animation() == JUMP_RIGHT) sprite->changeAnimation(STAND_RIGHT);
     }
     
     // Act uppon state and the vars
@@ -180,33 +189,29 @@ void Player::updateVelocity(glm::vec2 acc, float deltaTime)
 
 void Player::updatePosition(float deltaTime)
 {
-    int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
-    if (yState == DOWNWARDS)
-    {
-        if (map->inTile(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE)) {
-            map->correctPosition(glm::ivec2(posPlayer.x, yNextPos), PLAYER_SIZE, &yNextPos);
-        }
-        posPlayer.y = yNextPos;
-    }
-    else {
-        posPlayer.y = yNextPos;
-    }
+    if (yState == DOWNWARDS || yState == UPWARDS) {
+        int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
+        glm::ivec2 nextPos = glm::ivec2(posPlayer.x, yNextPos);
+        if(map->collidesWithMap(posPlayer, &nextPos, PLAYER_SIZE))
+            velPlayer.y = 0.0f;
 
+        posPlayer.y = nextPos.y;
+    }
 }
 
-void Player::updateYState(bool upPressed, bool onGround)
+void Player::updateYState(bool upPressed, bool onGround, bool headUnderTile)
 {
     switch (yState)
     {
         case FLOOR:
-            if (onGround && upPressed)
+            if (onGround && upPressed && !bJumping)
                 yState = UPWARDS;
             if (!onGround)
                 yState = DOWNWARDS;
             break;
 
         case UPWARDS:
-            if (!upPressed || velPlayer.y <= 0.f)
+            if (!upPressed || velPlayer.y <= 0.f || headUnderTile)
                 yState = DOWNWARDS;
             break;
 
