@@ -30,15 +30,15 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFil
 	map = TileMap::createTileMap(levelFilename, glm::vec2(SCREEN_X, SCREEN_Y), *texProgram);
     camera = &cam;
 
-    time_left = 400;
+    timeLeft = 400;
 
-    texts.push_back(Text::createText("Mario", &shaderProgram, glm::vec2(48, 16)));
-    texts.push_back(Text::createText("000000", &shaderProgram, glm::vec2(48, 32)));
-    texts.push_back(Text::createText("0x00", &shaderProgram, glm::vec2(208, 32)));
-    texts.push_back(Text::createText("World", &shaderProgram, glm::vec2(384, 16)));
-    texts.push_back(Text::createText("1-1", &shaderProgram, glm::vec2(400, 32)));
-    texts.push_back(Text::createText("Time", &shaderProgram, glm::vec2(496, 16)));
-    texts.push_back(Text::createText(std::to_string(time_left), &shaderProgram, glm::vec2(512, 32)));
+    texts["mario"] = Text::createText("Mario", &shaderProgram, glm::vec2(3, 1));
+    texts["score"] = Text::createText("000000", &shaderProgram, glm::vec2(3, 2));
+    texts["coins"] = Text::createText("0x00", &shaderProgram, glm::vec2(13, 2));
+    texts["worldText"] = Text::createText("World", &shaderProgram, glm::vec2(24, 1));
+    texts["worldNumber"] = Text::createText("1-1", &shaderProgram, glm::vec2(25, 2));
+    texts["timeText"] = Text::createText("Time", &shaderProgram, glm::vec2(31, 1));
+    texts["timeNumber"] = Text::createText(std::to_string(timeLeft), &shaderProgram, glm::vec2(32, 2));
 	currentTime = 0.0f;
 }
 
@@ -47,8 +47,20 @@ void Scene::update(int deltaTime, Player *player)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 
-    --time_left;
-    texts[6]->updateText(std::to_string(time_left));
+    // TODO quitar todo esto, es de prueba
+
+    --timeLeft;
+
+    if (timeLeft == 0) {
+        timeLeft = 400;
+    }
+
+    if (timeLeft <= 100)
+        texts["timeNumber"]->updateText("0" + std::to_string(timeLeft));
+    else if (timeLeft <= 10)
+        texts["timeNumber"]->updateText("00" + std::to_string(timeLeft));
+    else
+        texts["timeNumber"]->updateText(std::to_string(timeLeft));
 
     glm::vec2 playerPos = player->getPosition();
     camera->setXPosition(playerPos.x - INIT_PLAYER_X_TILES * map->getTileSize());
@@ -69,12 +81,14 @@ void Scene::render() {
 	map->render();
 
     render_texts();
-	texProgram->setUniformMatrix4f("view", view);
+
+	texProgram->setUniformMatrix4f("view", view);   // esto está aquí porque el render de player necesita la view matrix de la cámara
+                                                    // el player se renderiza justo después de esto. habría que mirárselo.
 }
 
 void Scene::render_texts() {
-    for (size_t i = 0; i < texts.size(); ++i) {
-        texts[i]->render();
+    for (auto it = texts.begin(); it != texts.end(); ++it) {
+        it->second->render();
     }
 }
 

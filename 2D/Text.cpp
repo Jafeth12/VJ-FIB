@@ -32,9 +32,9 @@ void Text::getUVsFromChar(char c, float *uvs) {
     uvs[1] = (row*FONT_SIZE_IN_TEXTURE)/(float)s_fontTexture->height();
 }
 
-Text::Text(string texto, ShaderProgram *program, glm::vec2 pos) {
+Text::Text(std::string texto, ShaderProgram *program, glm::vec2 pos) {
     text = texto;
-    position = pos;
+    position = glm::vec2(pos.x*FONT_SIZE, pos.y*FONT_SIZE);
 	shaderProgram = program;
 
 	glGenVertexArrays(1, &vao);
@@ -43,19 +43,19 @@ Text::Text(string texto, ShaderProgram *program, glm::vec2 pos) {
 	glGenBuffers(1, &vbo);
     glGenBuffers(1, &ibo);
 
-    vector<text_vertex> vertices;
-    vector<unsigned int> indices;
+    std::vector<text_vertex> vertices;
+    std::vector<unsigned int> indices;
 
     mesh(vertices, indices);
 }
 
-Text* Text::createText(string texto, ShaderProgram *program, glm::vec2 pos) {
+Text* Text::createText(std::string texto, ShaderProgram *program, glm::vec2 pos) {
     Text *t = new Text(texto, program, pos);
 
     return t;
 }
 
-void Text::addChar(vector<text_vertex> &vertices, string textt, int i) {
+void Text::addChar(std::vector<text_vertex> &vertices, std::string textt, int i) {
     float texSize = s_fontTexture->width();
     float uvStep = FONT_SIZE_IN_TEXTURE/texSize;
 
@@ -97,7 +97,7 @@ void Text::addChar(vector<text_vertex> &vertices, string textt, int i) {
     vertices.push_back(v);
 }
 
-void Text::mesh(vector<text_vertex> &vertices, vector<unsigned int> &indices) {
+void Text::mesh(std::vector<text_vertex> &vertices, std::vector<unsigned int> &indices) {
     int size = text.size();
     for (int i = 0; i < size; ++i) {
 
@@ -126,10 +126,10 @@ void Text::mesh(vector<text_vertex> &vertices, vector<unsigned int> &indices) {
     texCoordLocation = shaderProgram->bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
 }
 
-void Text::updateText(string new_text) {
+void Text::updateText(std::string new_text) {
     int old_size = text.size();
     int new_size = new_text.size();
-    string old_text = text;
+    std::string old_text = text;
 
     text = new_text;
 
@@ -139,8 +139,8 @@ void Text::updateText(string new_text) {
 
         glGenBuffers(1, &vbo);
         glGenBuffers(1, &ibo);
-        vector<text_vertex> vertices;
-        vector<unsigned int> indices;
+        std::vector<text_vertex> vertices;
+        std::vector<unsigned int> indices;
         mesh(vertices, indices);
 
     } else {
@@ -149,7 +149,7 @@ void Text::updateText(string new_text) {
         for (int i = 0; i < new_size; ++i) {
             if (old_text[i] == new_text[i]) continue;
 
-            vector<text_vertex> vertices_for_this_char;
+            std::vector<text_vertex> vertices_for_this_char;
             addChar(vertices_for_this_char, new_text, i);
 
             glBufferSubData(GL_ARRAY_BUFFER, i*4*sizeof(text_vertex), 4*sizeof(text_vertex), &vertices_for_this_char[0]);

@@ -3,6 +3,7 @@
 
 
 #include <glm/glm.hpp>
+#include <map>
 #include "Camera.h"
 #include "ShaderProgram.h"
 #include "TileMap.h"
@@ -30,9 +31,11 @@ private:
 	TileMap *map;
 	ShaderProgram *texProgram;
 	float currentTime;
-    std::vector<Text*> texts;
+
+    std::map<std::string, Text*> texts;
+
     Camera *camera;
-    int time_left;
+    int timeLeft;
 
     void render_texts();
 };
