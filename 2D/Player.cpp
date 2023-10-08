@@ -15,6 +15,9 @@
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
 #define JUMP_VEL sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT)
 
+#define X_TOP_SPEED 500.f
+#define X_ACC  500.f
+#define X_DRAG 500.f
 
 enum PlayerAnims
 {
@@ -76,42 +79,38 @@ void Player::update(float deltaTime)
     // Animations and stuff
 	sprite->update(deltaTime);
 
-    // Update the X position of the player
-	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
-	{
-		if(sprite->animation() != MOVE_LEFT)
+    glm::vec2 acc = glm::vec2(0.f);
+    bool leftPressed = Game::instance().getSpecialKey(GLUT_KEY_LEFT);
+    bool rightPressed = Game::instance().getSpecialKey(GLUT_KEY_RIGHT);
+
+    // Update X accelerattion and animation
+	if (leftPressed) {
+        // Apply acceleration
+        acc.x = -X_ACC;
+        // Change animation
+		if (sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
-		posPlayer.x -= 2;
-		if(map->collisionMoveLeft(posPlayer, PLAYER_SIZE))
-		{
-			posPlayer.x += 2;
-			sprite->changeAnimation(STAND_LEFT);
-		}
-	}
-	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
-	{
-		if(sprite->animation() != MOVE_RIGHT)
+	} else if (rightPressed) {
+        // Apply acceleration
+        acc.x = X_ACC;
+        // Change animation
+		if (sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
-		posPlayer.x += 2;
-		if(map->collisionMoveRight(posPlayer, PLAYER_SIZE))
-		{
-			posPlayer.x -= 2;
-			sprite->changeAnimation(STAND_RIGHT);
-		}
-	}
-	else
-	{
-		if(sprite->animation() == MOVE_LEFT)
+	} else { // No lateral key pressed
+        // Apply drag
+        if (velPlayer.x > 0.f) acc.x = -X_DRAG;
+        else if (velPlayer.x < 0.f) acc.x = X_DRAG;
+        // Change animation
+		if (sprite->animation() == MOVE_LEFT)
 			sprite->changeAnimation(STAND_LEFT);
-		else if(sprite->animation() == MOVE_RIGHT)
+		else if (sprite->animation() == MOVE_RIGHT)
 			sprite->changeAnimation(STAND_RIGHT);
 	}
-	
+
     // Update Y position of the player
     bool upPressed = Game::instance().getSpecialKey(GLUT_KEY_UP);
     bool onGround = map->onGround(posPlayer, PLAYER_SIZE);
     bool headUnderTile = map->headUnderTile(posPlayer, PLAYER_SIZE);
-    float g = 0.f;
 
     // Change the current state, based on a couple variables
     updateYState(upPressed, onGround, headUnderTile);
@@ -119,7 +118,7 @@ void Player::update(float deltaTime)
     // Change vars based on the state
     switch (yState) {
         case FLOOR:
-            g = 0.f;
+            acc.y = 0.f;
             velPlayer.y = 0.f;
             if (!upPressed) {
                 bJumping = false;
@@ -127,7 +126,7 @@ void Player::update(float deltaTime)
             break;
 
         case UPWARDS:
-            g = GRAVITY_ACC;
+            acc.y = GRAVITY_ACC;
             if (upPressed && onGround && !bJumping) {
                 velPlayer.y = JUMP_VEL;
                 bJumping = true;
@@ -135,7 +134,7 @@ void Player::update(float deltaTime)
             break;
 
         case DOWNWARDS:
-            g = N_FALL_GRAVITY * GRAVITY_ACC;
+            acc.y = N_FALL_GRAVITY * GRAVITY_ACC;
             break;
 
         default:
@@ -154,7 +153,7 @@ void Player::update(float deltaTime)
     }
     
     // Act uppon state and the vars
-    updateVelocity(glm::vec2(0.f, g), deltaTime);
+    updateVelocity(acc, deltaTime);
     updatePosition(deltaTime);
 
 	// Set the new position of the player
@@ -184,17 +183,41 @@ glm::vec2 Player::getPosition() {
 
 void Player::updateVelocity(glm::vec2 acc, float deltaTime)
 {
-    velPlayer += acc.y * deltaTime;
+    // Update and limit X
+    velPlayer.x += acc.x * deltaTime;
+    if (velPlayer.x < -X_TOP_SPEED) velPlayer.x = -X_TOP_SPEED;
+    if (velPlayer.x > X_TOP_SPEED) velPlayer.x = X_TOP_SPEED;
+
+    // Update and limit Y
+    velPlayer.y += acc.y * deltaTime;
 }
 
 void Player::updatePosition(float deltaTime)
 {
-    if (yState == DOWNWARDS || yState == UPWARDS) {
+    // Update X
+    // Calculate teoretical next position
+    int xNextPos = posPlayer.x + int(velPlayer.x * deltaTime);
+    glm::ivec2 nextPos = glm::ivec2(xNextPos, posPlayer.y);
+    // Check for collisions
+    bool collisions = false;
+    if (velPlayer.x < 0.f) collisions = map->collisionMoveLeft(nextPos, PLAYER_SIZE);
+    else if (velPlayer.x > 0.f) collisions = map->collisionMoveRight(nextPos, PLAYER_SIZE);
+    // Make the player come to a stop if there was a collision
+    if (collisions) velPlayer.x = 0.0f;
+    // Only apply the new position if there was no collision
+    else posPlayer.x = xNextPos;
+
+    // Update Y
+    // We only check for collisions if we are not on the floor
+    if (yState != FLOOR) {
+        // Calculate theoretical next position
         int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
         glm::ivec2 nextPos = glm::ivec2(posPlayer.x, yNextPos);
+        // Correct the position if we collide
         if(map->collidesWithMap(posPlayer, &nextPos, PLAYER_SIZE))
+            // Make the player come to a stop if there was a collision
             velPlayer.y = 0.0f;
-
+        // Apply the new position
         posPlayer.y = nextPos.y;
     }
 }
