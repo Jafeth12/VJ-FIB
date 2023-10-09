@@ -7,10 +7,11 @@
 // #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
 
-#define TIME_PER_FRAME 1000.f / 60.f // Approx. 60 fps
+#define TIME_PER_FRAME 1.f / 60.f // Approx. 60 fps
+#define CURRENT_SECONDS ((float)clock() / CLOCKS_PER_SEC)
 
 
-static int prevTime;
+static float prevTime = 0.0f;
 
 
 // If a key is pressed this callback is called
@@ -66,8 +67,9 @@ static void drawCallback()
 
 static void idleCallback()
 {
-	int currentTime = glutGet(GLUT_ELAPSED_TIME);
-	int deltaTime = currentTime - prevTime;
+    float currentTime = CURRENT_SECONDS;
+    float deltaTime = currentTime - prevTime;
+    
 	
 	if(deltaTime > TIME_PER_FRAME)
 	{
@@ -104,7 +106,7 @@ int main(int argc, char **argv)
 	
 	// Game instance initialization
 	Game::instance().init();
-	prevTime = glutGet(GLUT_ELAPSED_TIME);
+    prevTime = CURRENT_SECONDS;
 	// GLUT gains control of the application
 	glutMainLoop();
 

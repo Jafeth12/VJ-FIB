@@ -7,7 +7,7 @@
 #include "TileMap.h"
 #include <glm/fwd.hpp>
 
-enum PlayerVerticalState { FLOOR, UPWARDS, DOWNWARDS };
+enum PlayerYState { FLOOR, UPWARDS, DOWNWARDS };
 
 // Player is basically a Sprite that represents the player. As such it has
 // all properties it needs to track its movement, jumping, and collisions.
@@ -18,7 +18,7 @@ class Player
 
 public:
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
-	void update(int deltaTime);
+	void update(float deltaTime);
 	void render();
 
 	void setTileMap(TileMap *tileMap);
@@ -30,16 +30,15 @@ private:
 
     void updateVelocity(glm::vec2 acc, float deltaTime);
     void updatePosition(float deltaTime);
-    void updateYState(bool upPressed, bool onGround);
+    void updateYState(bool upPressed, bool onGround, bool headUnderTile);
 
 	bool bJumping;
 	glm::ivec2 tileMapDispl, posPlayer;
-	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
 
-    PlayerVerticalState yState;
+    PlayerYState yState;
     glm::vec2 velPlayer;
 };
 

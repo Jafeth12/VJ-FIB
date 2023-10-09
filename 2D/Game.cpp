@@ -34,7 +34,7 @@ void Game::init()
 	player->setTileMap(map);
 }
 
-bool Game::update(int deltaTime)
+bool Game::update(float deltaTime)
 {
     scenes[currentSceneIndex]->update(deltaTime, player);
 	

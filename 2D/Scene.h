@@ -23,7 +23,7 @@ public:
 	~Scene();
 
 	void init(ShaderProgram &shaderProgram, Camera &camera, std::string levelFilename);
-	void update(int deltaTime, Player *player);
+	void update(float deltaTime, Player *player);
 	void render();
     TileMap* getMap();
 
