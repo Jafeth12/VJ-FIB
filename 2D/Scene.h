@@ -3,10 +3,12 @@
 
 
 #include <glm/glm.hpp>
+#include <map>
 #include "Camera.h"
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
+#include "Text.h"
 
 
 // Scene contains all the entities of our game.
@@ -29,7 +31,13 @@ private:
 	TileMap *map;
 	ShaderProgram *texProgram;
 	float currentTime;
+
+    std::map<std::string, Text*> texts;
+
     Camera *camera;
+    int timeLeft;
+
+    void render_texts();
 };
 
 
