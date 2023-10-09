@@ -19,19 +19,21 @@
 #define X_ACC  500.f
 #define X_DRAG 500.f
 
-
+// Components of the animation
 enum VerticalAnims
 {
     STAND=0,
     MOVE,
     JUMP,
 };
- enum LateralAnims
+enum LateralAnims
 {
     LEFT=0,
     RIGHT,
 };
 
+// Combination of all of those animations components
+// The order is important (un poco bit-hacky, pero funciona)
 enum PlayerAnims
 {
 	STAND_LEFT=0,
