@@ -9,6 +9,7 @@
 #include "ShaderProgram.h"
 #include "Player.h"
 #include "TileMap.h"
+#include "Text.h"
 
 
 #define SCREEN_WIDTH 640
