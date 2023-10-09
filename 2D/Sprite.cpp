@@ -21,6 +21,7 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 												quadSize.x, quadSize.y, sizeInSpritesheet.x, sizeInSpritesheet.y, 
 												0.f, quadSize.y, 0.f, sizeInSpritesheet.y};
 
+    sizeInsideSpritesheet = sizeInSpritesheet;
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	glGenBuffers(1, &vbo);
@@ -81,8 +82,9 @@ void Sprite::setAnimationSpeed(int animId, int keyframesPerSec)
 
 void Sprite::addKeyframe(int animId, const glm::vec2 &displacement)
 {
+    glm::vec2 displ = displacement * sizeInsideSpritesheet;
 	if(animId < int(animations.size()))
-		animations[animId].keyframeDispl.push_back(displacement);
+		animations[animId].keyframeDispl.push_back(displ);
 }
 
 void Sprite::changeAnimation(int animId)

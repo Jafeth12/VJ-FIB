@@ -48,6 +48,7 @@ private:
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
 
+    glm::vec2 sizeInsideSpritesheet;
 };
 
 
