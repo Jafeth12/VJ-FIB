@@ -2,6 +2,7 @@
 #define _TILE_MAP_INCLUDE
 
 
+#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include "Texture.h"
 #include "ShaderProgram.h"
@@ -37,7 +38,7 @@ public:
     // Used for collisions instead of collisionMoveDown
     bool onGround(const glm::ivec2 &pos, const glm::ivec2 &size);
     bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
-    bool collidesWithMap(const glm::ivec2 &pos0, glm::ivec2 *pos1, const glm::ivec2 &playerSize);
+    glm::bvec2 solveCollisions(const glm::ivec2 &pos0, glm::ivec2 *pos1, const glm::ivec2 &playerSize);
 
 private:
 	bool loadLevel(const string &levelFile);

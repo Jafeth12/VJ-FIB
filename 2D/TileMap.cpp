@@ -1,3 +1,4 @@
+#include <glm/fwd.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -233,40 +234,45 @@ bool TileMap::headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size)
     return false;
 }
 
-/**
+
+enum DirX { NONEX = 0, LEFT = -1, RIGHT = 1 };
+enum DirY { NONEY = 0, UP = -1, DOWN = 1 };
+/**a
  * Check if a displacement collides with the map, and corrects such final position
+ * Returns a vector indicating if there is a collision in each axis
  * De momento solamente se mira el eje Y
  */
-bool TileMap::collidesWithMap(const glm::ivec2 &pos0, glm::ivec2 *pos1, const glm::ivec2 &playerSize) {
-    // dirY =  1 -> DOWN
-    // dirY = -1 -> UP
-    // dirY =  0 -> STATIC en l'eix Y
-    char dirY = ((pos0.y < pos1->y) ? 1 : ((pos0.y > pos1->y) ? -1 : 0));
+glm::bvec2 TileMap::solveCollisions(const glm::ivec2 &pos0, glm::ivec2 *pos1, const glm::ivec2 &playerSize) {
+    glm::bvec2 collisions = glm::bvec2(false, false);
+    DirX dirx = ((pos0.x < pos1->x) ? RIGHT : ((pos0.x > pos1->x) ? LEFT : NONEX));
+    DirY diry = ((pos0.y < pos1->y) ? DOWN : ((pos0.y > pos1->y) ? UP : NONEY));
 
     // We are not moving in the Y axis
-    if (dirY == 0) return false;
+    if (dirx == NONEX && diry == NONEY)
+        return collisions;
 
     // Espacio vertical donde podemos colisionar
     int x0 = pos0.x / tileSize;
     int x1 = (pos0.x + playerSize.x - 1) / tileSize;
 
     int y0, y1;
-    if (dirY == 1) {
+    if (diry == DOWN) {
         y0 = pos0.y / tileSize;
         y1 = (pos1->y + playerSize.y - 1) / tileSize;
-    } else { // (dirY == -1)
+    } else { // UP
         y0 = (pos1->y + playerSize.y - 1) / tileSize;
         y1 = pos0.y / tileSize;
     }
 
-    for (int y = y0; y != y1+dirY; y += dirY)
+    for (int y = y0; y != y1+diry; y += diry)
         for (int x = x0; x<=x1; ++x)
             if (map[y * mapSize.x + x] != 0) {
-                if (dirY == 1) // DOWN: Ens coloquem just sobre la colisió
+                collisions.y = true;
+                if (diry == DOWN) // DOWN: Ens coloquem just sobre la colisió
                     pos1->y = tileSize * (y) - playerSize.y;
                 else // UP: Ens coloquem just sota la colisió
                     pos1->y = tileSize * (y+1);
-                return true;
+                break;
             }
-    return false;
+    return collisions;
 }

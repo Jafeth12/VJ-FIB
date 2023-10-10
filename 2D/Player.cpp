@@ -174,7 +174,7 @@ void Player::updatePosition(float deltaTime)
         int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
         glm::ivec2 nextPos = glm::ivec2(posPlayer.x, yNextPos);
         // Correct the position if we collide
-        if(map->collidesWithMap(posPlayer, &nextPos, PLAYER_SIZE))
+        if(map->solveCollisions(posPlayer, &nextPos, PLAYER_SIZE).y)
             // Make the player come to a stop if there was a collision
             velPlayer.y = 0.0f;
         // Apply the new position
