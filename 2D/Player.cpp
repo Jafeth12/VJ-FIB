@@ -154,32 +154,17 @@ void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
 
 void Player::updatePosition(float deltaTime)
 {
-    // Update X
     // Calculate teoretical next position
-    int xNextPos = posPlayer.x + int(velPlayer.x * deltaTime);
-    glm::ivec2 nextPos = glm::ivec2(xNextPos, posPlayer.y);
-    // Check for collisions
-    bool collisions = false;
-    if (velPlayer.x < 0.f) collisions = map->collisionMoveLeft(nextPos, PLAYER_SIZE);
-    else if (velPlayer.x > 0.f) collisions = map->collisionMoveRight(nextPos, PLAYER_SIZE);
-    // Make the player come to a stop if there was a collision
-    if (collisions) velPlayer.x = 0.0f;
-    // Only apply the new position if there was no collision
-    else posPlayer.x = xNextPos;
-
-    // Update Y
-    // We only check for collisions if we are not on the floor
-    if (yState != FLOOR) {
-        // Calculate theoretical next position
-        int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
-        glm::ivec2 nextPos = glm::ivec2(posPlayer.x, yNextPos);
-        // Correct the position if we collide
-        if(map->solveCollisions(posPlayer, &nextPos, PLAYER_SIZE).y)
-            // Make the player come to a stop if there was a collision
-            velPlayer.y = 0.0f;
-        // Apply the new position
-        posPlayer.y = nextPos.y;
-    }
+    glm::ivec2 next_pos;
+    next_pos.x = posPlayer.x + (int)(velPlayer.x * deltaTime);
+    next_pos.y = posPlayer.y - (int)(velPlayer.y * deltaTime);
+    // Check for collisions and correct the next position accordingly
+    glm::bvec2 collisions = map->solveCollisions(posPlayer, &next_pos, PLAYER_SIZE);
+    // Make the player come to a stop if there was a collision per axis
+    if (collisions.x) velPlayer.x = 0.0f;
+    if (collisions.y) velPlayer.y = 0.0f;
+    // Apply the new position
+    posPlayer = next_pos;
 }
 
 bool Player::updateYState(bool upPressed)

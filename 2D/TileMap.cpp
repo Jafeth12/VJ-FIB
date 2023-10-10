@@ -248,7 +248,7 @@ glm::bvec2 TileMap::solveCollisions(const glm::ivec2 &pos0, glm::ivec2 *pos1, co
     DirY diry = ((pos0.y < pos1->y) ? DOWN : ((pos0.y > pos1->y) ? UP : NONEY));
 
     // We are not moving in the Y axis
-    if (dirx == NONEX && diry == NONEY)
+    if (diry == NONEY)
         return collisions;
 
     // Espacio vertical donde podemos colisionar
@@ -272,7 +272,7 @@ glm::bvec2 TileMap::solveCollisions(const glm::ivec2 &pos0, glm::ivec2 *pos1, co
                     pos1->y = tileSize * (y) - playerSize.y;
                 else // UP: Ens coloquem just sota la colisió
                     pos1->y = tileSize * (y+1);
-                break;
+                return collisions;
             }
     return collisions;
 }
