@@ -183,28 +183,6 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	return false;
 }
 
-bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const
-{
-	int x0, x1, y;
-	
-	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
-	y = (pos.y + size.y - 1) / tileSize;
-	for(int x=x0; x<=x1; x++)
-	{
-		if(map[y*mapSize.x+x] != 0)
-		{
-			if(*posY - tileSize * y + size.y <= 4)
-			{
-				*posY = tileSize * y - size.y;
-				return true;
-			}
-		}
-	}
-	
-	return false;
-}
-
 bool TileMap::onGround(const glm::ivec2 &pos, const glm::ivec2 &size)
 {
     // pSpace
@@ -231,32 +209,64 @@ bool TileMap::onGround(const glm::ivec2 &pos, const glm::ivec2 &size)
     return false;
 }
 
-bool TileMap::inTile(const glm::ivec2 &pos, const glm::ivec2 &size)
+bool TileMap::headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size)
 {
-    int x0 = pos.x / tileSize;
-    int x1 = (pos.x + size.x - 1) / tileSize;
-    int yHead = pos.y / tileSize;
-    int yFeet = (pos.y + size.y - 1) / tileSize;
+    // pSpace
+    int psPlayerHeadY = pos.y;
+    int psPixelOverPlayer = psPlayerHeadY - 1;
 
-    for (int x = x0; x<=x1; ++x)
-        for (int y = yHead; y <= yFeet; ++y)
-            if (map[y * mapSize.x + x] != 0)
-                return true;
-    return false;
-}
+    // tileSpace
+    int tsPixelOverPlayer = psPixelOverPlayer / tileSize;
 
-void TileMap::correctPosition(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY)
-{
-    int x0 = pos.x / tileSize;
-    int x1 = (pos.x + size.x - 1) / tileSize;
-    int yFeet = (pos.y + size.y - 1) / tileSize;
+	int x0, x1, yFeet;
+	
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
 
     for (int x = x0; x<=x1; ++x)
     {
-        if (map[yFeet * mapSize.x + x] != 0)
-        {
-            *posY = tileSize * yFeet - size.y;
-            return;
+		if(map[tsPixelOverPlayer*mapSize.x+x] != 0)
+		{
+            return true;
         }
     }
+    return false;
+}
+
+/**
+ * Check if a displacement collides with the map, and corrects such final position
+ * De momento solamente se mira el eje Y
+ */
+bool TileMap::collidesWithMap(const glm::ivec2 &pos0, glm::ivec2 *pos1, const glm::ivec2 &playerSize) {
+    // dirY =  1 -> DOWN
+    // dirY = -1 -> UP
+    // dirY =  0 -> STATIC en l'eix Y
+    char dirY = ((pos0.y < pos1->y) ? 1 : ((pos0.y > pos1->y) ? -1 : 0));
+
+    // We are not moving in the Y axis
+    if (dirY == 0) return false;
+
+    // Espacio vertical donde podemos colisionar
+    int x0 = pos0.x / tileSize;
+    int x1 = (pos0.x + playerSize.x - 1) / tileSize;
+
+    int y0, y1;
+    if (dirY == 1) {
+        y0 = pos0.y / tileSize;
+        y1 = (pos1->y + playerSize.y - 1) / tileSize;
+    } else { // (dirY == -1)
+        y0 = (pos1->y + playerSize.y - 1) / tileSize;
+        y1 = pos0.y / tileSize;
+    }
+
+    for (int y = y0; y != y1+dirY; y += dirY)
+        for (int x = x0; x<=x1; ++x)
+            if (map[y * mapSize.x + x] != 0) {
+                if (dirY == 1) // DOWN: Ens coloquem just sobre la colisió
+                    pos1->y = tileSize * (y) - playerSize.y;
+                else // UP: Ens coloquem just sota la colisió
+                    pos1->y = tileSize * (y+1);
+                return true;
+            }
+    return false;
 }

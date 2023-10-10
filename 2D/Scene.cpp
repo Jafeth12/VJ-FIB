@@ -42,7 +42,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFil
 	currentTime = 0.0f;
 }
 
-void Scene::update(int deltaTime, Player *player)
+void Scene::update(float deltaTime, Player *player)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);

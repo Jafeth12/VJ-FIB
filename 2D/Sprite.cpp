@@ -35,11 +35,11 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	position = glm::vec2(0.f);
 }
 
-void Sprite::update(int deltaTime)
+void Sprite::update(float deltaTime)
 {
 	if(currentAnimation >= 0)
 	{
-		timeAnimation += deltaTime;
+		timeAnimation += deltaTime*1000.f;
 		while(timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
 		{
 			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
