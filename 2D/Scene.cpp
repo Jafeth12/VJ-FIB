@@ -4,13 +4,6 @@
 #include "Scene.h"
 
 
-#define SCREEN_X 32
-#define SCREEN_Y 16
-
-#define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 25
-
-
 Scene::Scene()
 {
 	map = NULL;
@@ -23,22 +16,29 @@ Scene::~Scene()
 }
 
 
-void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFilename)
+void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords)
 {
     texProgram = &shaderProgram;
-	// initShaders();
-	map = TileMap::createTileMap(levelFilename, glm::vec2(SCREEN_X, SCREEN_Y), *texProgram);
+
+    this->initPlayerTiles = initPlayerTiles;
+    this->minCoords = minCoords;
+
+	map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
+
+    // TODO quitar esto hardcodeado porque cambia por escena (ponerlo en la creadora?)
+    background = TileMap::createTileMap("levels/background01.txt", glm::vec2(minCoords.x, minCoords.y), *texProgram);
     camera = &cam;
 
     timeLeft = 400;
 
+    // TODO esto too no debe ser hardcodeado porque puede cambiar (scene deberia tener score, coins, etc)
     texts["mario"] = Text::createText("Mario", &shaderProgram, glm::vec2(3, 1));
     texts["score"] = Text::createText("000000", &shaderProgram, glm::vec2(3, 2));
-    texts["coins"] = Text::createText("0x00", &shaderProgram, glm::vec2(13, 2));
-    texts["worldText"] = Text::createText("World", &shaderProgram, glm::vec2(24, 1));
-    texts["worldNumber"] = Text::createText("1-1", &shaderProgram, glm::vec2(25, 2));
-    texts["timeText"] = Text::createText("Time", &shaderProgram, glm::vec2(31, 1));
-    texts["timeNumber"] = Text::createText(std::to_string(timeLeft), &shaderProgram, glm::vec2(32, 2));
+    texts["coins"] = Text::createText("0x00", &shaderProgram, glm::vec2(12, 2));
+    texts["worldText"] = Text::createText("World", &shaderProgram, glm::vec2(19, 1));
+    texts["worldNumber"] = Text::createText("1-1", &shaderProgram, glm::vec2(20, 2));
+    texts["timeText"] = Text::createText("Time", &shaderProgram, glm::vec2(25, 1));
+    texts["timeNumber"] = Text::createText(std::to_string(timeLeft), &shaderProgram, glm::vec2(26, 2));
 	currentTime = 0.0f;
 }
 
@@ -51,19 +51,17 @@ void Scene::update(float deltaTime, Player *player)
 
     --timeLeft;
 
-    if (timeLeft == 0) {
-        timeLeft = 400;
-    }
+    if (timeLeft == 0) timeLeft = 400;
 
-    if (timeLeft <= 100)
-        texts["timeNumber"]->updateText("0" + std::to_string(timeLeft));
-    else if (timeLeft <= 10)
+    if (timeLeft < 10)
         texts["timeNumber"]->updateText("00" + std::to_string(timeLeft));
+    else if (timeLeft < 100)
+        texts["timeNumber"]->updateText("0" + std::to_string(timeLeft));
     else
         texts["timeNumber"]->updateText(std::to_string(timeLeft));
 
     glm::vec2 playerPos = player->getPosition();
-    camera->setXPosition(playerPos.x - INIT_PLAYER_X_TILES * map->getTileSize());
+    camera->setXPosition(playerPos.x - initPlayerTiles.x * map->getTileSize());
 }
 
 void Scene::render() {
@@ -78,6 +76,7 @@ void Scene::render() {
 	texProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	texProgram->setUniform2f("texCoordDispl", 0.f, 0.f);
 
+    background->render();
 	map->render();
 
     render_texts();

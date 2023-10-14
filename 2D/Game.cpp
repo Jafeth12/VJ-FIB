@@ -2,11 +2,11 @@
 #include <GL/glut.h>
 #include "Game.h"
 
-#define SCREEN_X 32
+#define SCREEN_X 0
 #define SCREEN_Y 16
 
 #define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 25
+#define INIT_PLAYER_Y_TILES 12
 
 
 void Game::init()
@@ -16,14 +16,17 @@ void Game::init()
     wireframe = true;
 	glClearColor(0.45, 0.45f, 1.0f, 1.0f);
     camera = Camera(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+    // camera = Camera(0.f, 512, 512, 0.f);
     initShaders();
     Text::init();
 
     // create scenes
     scenes.push_back(new Scene());
     scenes.push_back(new Scene());
-	scenes[currentSceneIndex]->init(shaderProgram, camera, "levels/level01.txt");
-	scenes[currentSceneIndex+1]->init(shaderProgram, camera, "levels/level02.txt");
+	scenes[currentSceneIndex]->init(shaderProgram, camera, "levels/level01.txt", glm::ivec2(INIT_PLAYER_X_TILES, INIT_PLAYER_Y_TILES), glm::ivec2(SCREEN_X, SCREEN_Y));
+
+    // TODO cambiar el init_player_tiles para 1-2 porque es distinto ---> no hacerlo un define, porque cambia por nivel. SCREEN_X/Y si que pueden ser defines
+	scenes[currentSceneIndex+1]->init(shaderProgram, camera, "levels/level02.txt", glm::ivec2(INIT_PLAYER_X_TILES, INIT_PLAYER_Y_TILES), glm::ivec2(SCREEN_X, SCREEN_Y));
 
     TileMap *map = scenes[currentSceneIndex]->getMap();
 
