@@ -6,27 +6,45 @@
 #include "Player.h"
 #include "Game.h"
 
-
 #define SPEED 16 //FIXME SPEED -> ANIM_SPEED
 #define PLAYER_SIZE glm::ivec2(32, 32)
 #define PLAYER_SIZE_IN_SPRITESHEET 16.f
 #define JUMP_HEIGHT 115.f
 #define JUMP_TIME .5f
 #define N_FALL_GRAVITY 3.f
+#define FALLING_TERMINAL_VEL 500.f
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
 #define JUMP_VEL sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT)
-#define STEP 2*2
 
-enum PlayerAnims
+#define X_TOP_SPEED 500.f
+#define X_ACC  500.f
+#define X_DRAG 500.f
+
+// Components of the animation
+enum VerticalAnims
 {
-	STAND_LEFT,
-    STAND_RIGHT,
-    MOVE_LEFT,
-    MOVE_RIGHT,
-    JUMP_LEFT,
-    JUMP_RIGHT
+    STAND=0,
+    MOVE,
+    JUMP,
+    _LAST, // Not an animation. Used to get the number of vertical animations
+};
+enum LateralAnims
+{
+    LEFT=0,
+    RIGHT,
 };
 
+// Combination of all of those animations components
+// The order is important (un poco bit-hacky, pero funciona)
+enum PlayerAnims
+{
+	STAND_LEFT=0,
+    MOVE_LEFT,
+    JUMP_LEFT,
+    STAND_RIGHT=3,
+    MOVE_RIGHT,
+    JUMP_RIGHT
+};
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
@@ -77,89 +95,27 @@ void Player::update(float deltaTime)
     // Animations and stuff
 	sprite->update(deltaTime);
 
-    // Update the X position of the player
-	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
-	{
-		if(sprite->animation() != MOVE_LEFT)
-			sprite->changeAnimation(MOVE_LEFT);
-		posPlayer.x -= STEP;
-		if(map->collisionMoveLeft(posPlayer, PLAYER_SIZE))
-		{
-			posPlayer.x += STEP;
-			sprite->changeAnimation(STAND_LEFT);
-		}
-	}
-	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
-	{
-		if(sprite->animation() != MOVE_RIGHT)
-			sprite->changeAnimation(MOVE_RIGHT);
-		posPlayer.x += STEP;
-		if(map->collisionMoveRight(posPlayer, PLAYER_SIZE))
-		{
-			posPlayer.x -= STEP;
-			sprite->changeAnimation(STAND_RIGHT);
-		}
-	}
-	else
-	{
-		if(sprite->animation() == MOVE_LEFT)
-			sprite->changeAnimation(STAND_LEFT);
-		else if(sprite->animation() == MOVE_RIGHT)
-			sprite->changeAnimation(STAND_RIGHT);
-	}
-	
-    // Update Y position of the player
+    // Record state of keys
+    bool leftPressed = Game::instance().getSpecialKey(GLUT_KEY_LEFT);
+    bool rightPressed = Game::instance().getSpecialKey(GLUT_KEY_RIGHT);
     bool upPressed = Game::instance().getSpecialKey(GLUT_KEY_UP);
-    bool onGround = map->onGround(posPlayer, PLAYER_SIZE);
-    bool headUnderTile = map->headUnderTile(posPlayer, PLAYER_SIZE);
-    float g = 0.f;
 
-    // Change the current state, based on a couple variables
-    updateYState(upPressed, onGround, headUnderTile);
+    // Change the current vertical state, based on a couple variables
+    // Get wether we should jump or not
+    bool shouldJump = updateYState(upPressed);
 
-    // Change vars based on the state
-    switch (yState) {
-        case FLOOR:
-            g = 0.f;
-            velPlayer.y = 0.f;
-            if (!upPressed) {
-                bJumping = false;
-            }
-            break;
+    // Calculate the acceleration
+    glm::vec2 acc = getAcceleration(leftPressed, rightPressed);
 
-        case UPWARDS:
-            g = GRAVITY_ACC;
-            if (upPressed && onGround && !bJumping) {
-                velPlayer.y = JUMP_VEL;
-                bJumping = true;
-            }
-            break;
-
-        case DOWNWARDS:
-            g = N_FALL_GRAVITY * GRAVITY_ACC;
-            break;
-
-        default:
-            break;
-    }
-
-    if (yState == UPWARDS || yState == DOWNWARDS) {
-        if (sprite->animation() == STAND_LEFT) sprite->changeAnimation(JUMP_LEFT);
-        else if (sprite->animation() == STAND_RIGHT) sprite->changeAnimation(JUMP_RIGHT);
-        else if (sprite->animation() == MOVE_LEFT) sprite->changeAnimation(JUMP_LEFT);
-        else if (sprite->animation() == MOVE_RIGHT) sprite->changeAnimation(JUMP_RIGHT);
-    }
-    else {
-        if (sprite->animation() == JUMP_LEFT) sprite->changeAnimation(STAND_LEFT);
-        else if (sprite->animation() == JUMP_RIGHT) sprite->changeAnimation(STAND_RIGHT);
-    }
-    
     // Act uppon state and the vars
-    updateVelocity(glm::vec2(0.f, g), deltaTime);
+    updateVelocity(acc, shouldJump, deltaTime);
     updatePosition(deltaTime);
 
+    // Update the Animations
+    updateAnimation(leftPressed, rightPressed);
+
 	// Set the new position of the player
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+    setPosition(posPlayer);
 
 }
 
@@ -183,42 +139,143 @@ glm::vec2 Player::getPosition() {
     return posPlayer;
 }
 
-void Player::updateVelocity(glm::vec2 acc, float deltaTime)
+void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
 {
-    velPlayer += acc.y * deltaTime;
+    // Update and limit X
+    velPlayer.x += acc.x * deltaTime;
+    if (velPlayer.x < -X_TOP_SPEED) velPlayer.x = -X_TOP_SPEED;
+    if (velPlayer.x > X_TOP_SPEED) velPlayer.x = X_TOP_SPEED;
+
+    // Update and limit Y
+    if (shouldJump) {
+        velPlayer.y = JUMP_VEL;
+        bJumping = true;
+    }
+    velPlayer.y += acc.y * deltaTime;
+    if (velPlayer.y < -FALLING_TERMINAL_VEL) velPlayer.y = -FALLING_TERMINAL_VEL;
 }
 
 void Player::updatePosition(float deltaTime)
 {
-    if (yState == DOWNWARDS || yState == UPWARDS) {
-        int yNextPos = posPlayer.y - int(velPlayer.y * deltaTime);
-        glm::ivec2 nextPos = glm::ivec2(posPlayer.x, yNextPos);
-        if(map->collidesWithMap(posPlayer, &nextPos, PLAYER_SIZE))
-            velPlayer.y = 0.0f;
-
-        posPlayer.y = nextPos.y;
-    }
+    // Calculate teoretical next position
+    glm::ivec2 next_pos;
+    next_pos.x = posPlayer.x + (int)(velPlayer.x * deltaTime);
+    next_pos.y = posPlayer.y - (int)(velPlayer.y * deltaTime);
+    // Check for collisions and correct the next position accordingly
+    bool collisionsx = map->solveCollisionsX(posPlayer, next_pos, PLAYER_SIZE);
+    bool collisionsy = map->solveCollisionsY(posPlayer, next_pos, PLAYER_SIZE);
+    // Make the player come to a stop if there was a collision per axis
+    if (collisionsx) velPlayer.x = 0.0f;
+    if (collisionsy) velPlayer.y = 0.0f;
+    // Apply the new position
+    posPlayer = next_pos;
 }
 
-void Player::updateYState(bool upPressed, bool onGround, bool headUnderTile)
+bool Player::updateYState(bool upPressed)
 {
+    // Get the state of the player
+    bool onGround = map->onGround(posPlayer, PLAYER_SIZE);
+    bool headUnderTile = map->headUnderTile(posPlayer, PLAYER_SIZE);
+    // Declare the return variable
+    bool shouldJump = false;
+    // Update the state
     switch (yState)
     {
         case FLOOR:
-            if (onGround && upPressed && !bJumping)
+            // Transition to UPWARDS. Player should jump now
+            if (onGround && upPressed && !bJumping) {
                 yState = UPWARDS;
+                shouldJump = true;
+                bJumping = true;
+            }
+            // Transition to DOWNWARDS. Player is falling
             if (!onGround)
                 yState = DOWNWARDS;
+            // Player is on the floor and not pressing up. Allow jumping again
+            if (!upPressed)
+                bJumping = false;
             break;
 
         case UPWARDS:
+            // Transition to DOWNWARDS. We reached the apex of the jump OR we hit a tile OR we stopped pressing up
             if (!upPressed || velPlayer.y <= 0.f || headUnderTile)
                 yState = DOWNWARDS;
             break;
 
         case DOWNWARDS:
+            // Transition to FLOOR
             if (onGround)
                 yState = FLOOR;
             break;
     }
+    return shouldJump;
+}
+
+void Player::updateAnimation(bool leftPressed, bool rightPressed)
+{
+    const int n_vertical_anims = (int)VerticalAnims::_LAST;
+    // Figure out components of the current animation
+    PlayerAnims currentAnim = (PlayerAnims)sprite->animation();
+    VerticalAnims verticalAnim = (VerticalAnims)(currentAnim % n_vertical_anims);
+    LateralAnims lateralAnim = (LateralAnims)(currentAnim / n_vertical_anims);
+    // Setup components for the next animation
+    VerticalAnims nextVerticalAnim = verticalAnim;
+    LateralAnims nextLateralAnim = lateralAnim;
+    // Figure out next vertical animation
+    switch (yState) {
+        case FLOOR:
+            // Both keys pressed or none pressed. Stand still
+            if ((!leftPressed && !rightPressed) || (leftPressed && rightPressed))
+                nextVerticalAnim = STAND;
+            // Only one key pressed. Move
+            else
+                nextVerticalAnim = MOVE;
+            break;
+        case UPWARDS:
+        case DOWNWARDS:
+            nextVerticalAnim = JUMP;
+            break;
+        default:
+            break;
+    }
+    // Firgure out animation direction
+    if (leftPressed && !rightPressed)
+        nextLateralAnim = LEFT;
+    else if (rightPressed && !leftPressed)
+        nextLateralAnim = RIGHT;
+    // Update the animation only if it changed
+    PlayerAnims nextAnimation = (PlayerAnims)(nextVerticalAnim + n_vertical_anims * nextLateralAnim);
+    if (nextAnimation != currentAnim)
+        sprite->changeAnimation(nextAnimation);
+}
+
+glm::vec2 Player::getAcceleration(bool leftPressed, bool rightPressed)
+{
+    glm::vec2 acc = glm::vec2(0.f);
+
+    // Figure out X acceleration
+	if (leftPressed && !rightPressed) acc.x = -X_ACC;
+	else if (rightPressed && !leftPressed) acc.x = X_ACC;
+    // No lateral key pressed or both pressed at the same time. Apply drag only if on the floor
+	else if (yState == FLOOR) {
+        if (velPlayer.x > 0.f) acc.x = -X_DRAG;
+        else if (velPlayer.x < 0.f) acc.x = X_DRAG;
+	}
+
+    // Figure out Y getAcceleration
+    switch (yState) {
+        case FLOOR:
+            acc.y = 0.f;
+            break;
+        case UPWARDS:
+            acc.y = GRAVITY_ACC;
+            break;
+        case DOWNWARDS:
+            acc.y = N_FALL_GRAVITY * GRAVITY_ACC;
+            break;
+        default:
+            break;
+    }
+
+    return acc;
 }

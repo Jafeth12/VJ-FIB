@@ -1,3 +1,4 @@
+#include <glm/fwd.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -147,42 +148,6 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
 }
 
-// Collision tests for axis aligned bounding boxes.
-// Method collisionMoveDown also corrects Y coordinate if the box is
-// already intersecting a tile below.
-
-bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const
-{
-	int x, y0, y1;
-	
-	x = pos.x / tileSize;
-	y0 = pos.y / tileSize;
-	y1 = (pos.y + size.y - 1) / tileSize;
-	for(int y=y0; y<=y1; y++)
-	{
-		if(map[y*mapSize.x+x] != 0)
-			return true;
-	}
-	
-	return false;
-}
-
-bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const
-{
-	int x, y0, y1;
-	
-	x = (pos.x + size.x - 1) / tileSize;
-	y0 = pos.y / tileSize;
-	y1 = (pos.y + size.y - 1) / tileSize;
-	for(int y=y0; y<=y1; y++)
-	{
-		if(map[y*mapSize.x+x] != 0)
-			return true;
-	}
-	
-	return false;
-}
-
 bool TileMap::onGround(const glm::ivec2 &pos, const glm::ivec2 &size)
 {
     // pSpace
@@ -233,40 +198,68 @@ bool TileMap::headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size)
     return false;
 }
 
-/**
- * Check if a displacement collides with the map, and corrects such final position
- * De momento solamente se mira el eje Y
- */
-bool TileMap::collidesWithMap(const glm::ivec2 &pos0, glm::ivec2 *pos1, const glm::ivec2 &playerSize) {
-    // dirY =  1 -> DOWN
-    // dirY = -1 -> UP
-    // dirY =  0 -> STATIC en l'eix Y
-    char dirY = ((pos0.y < pos1->y) ? 1 : ((pos0.y > pos1->y) ? -1 : 0));
 
-    // We are not moving in the Y axis
-    if (dirY == 0) return false;
+enum DirX { NONEX = 0, LEFT = -1, RIGHT = 1 };
+enum DirY { NONEY = 0, UP = -1, DOWN = 1 };
 
-    // Espacio vertical donde podemos colisionar
-    int x0 = pos0.x / tileSize;
-    int x1 = (pos0.x + playerSize.x - 1) / tileSize;
+#define TOP(pos) (pos.y)
+#define BOTTOM(pos, size) (pos.y + size.y - 1)
+#define LEFT(pos) (pos.x)
+#define RIGHT(pos, size) (pos.x + size.x - 1)
 
-    int y0, y1;
-    if (dirY == 1) {
-        y0 = pos0.y / tileSize;
-        y1 = (pos1->y + playerSize.y - 1) / tileSize;
-    } else { // (dirY == -1)
-        y0 = (pos1->y + playerSize.y - 1) / tileSize;
-        y1 = pos0.y / tileSize;
-    }
+bool TileMap::solveCollisionsX(const glm::ivec2 &pos0, glm::ivec2 &pos1, const glm::ivec2 &playerSize) {
+    DirX dirx = ((pos0.x < pos1.x) ? RIGHT : ((pos0.x > pos1.x) ? LEFT : NONEX));
 
-    for (int y = y0; y != y1+dirY; y += dirY)
-        for (int x = x0; x<=x1; ++x)
+    int x0, x1;
+    if (dirx == RIGHT) {
+        x0 = LEFT(pos0) / tileSize;
+        x1 = RIGHT(pos1, playerSize) / tileSize;
+    } else if (dirx == LEFT) {
+        x0 = RIGHT(pos0, playerSize) / tileSize;
+        x1 = LEFT(pos1) / tileSize;
+    } else return false;
+
+    int y0 = TOP(pos0) / tileSize,
+        y1 = BOTTOM(pos0, playerSize) / tileSize;
+
+    for (int x = x0; x != x1 + dirx; x += dirx)
+        for (int y = y0; y <= y1; ++y)
             if (map[y * mapSize.x + x] != 0) {
-                if (dirY == 1) // DOWN: Ens coloquem just sobre la colisió
-                    pos1->y = tileSize * (y) - playerSize.y;
-                else // UP: Ens coloquem just sota la colisió
-                    pos1->y = tileSize * (y+1);
+                if (dirx == RIGHT) { // RIGHT: Ens coloquem just a la esquerra de la colisió
+                    pos1.x = tileSize * x - playerSize.x;
+                } else if (dirx == LEFT) { // LEFT: Ens coloquem just a la dreta de la colisió
+                    pos1.x = tileSize * (x+1);
+                }
                 return true;
             }
+
+    return false;
+}
+
+bool TileMap::solveCollisionsY(const glm::ivec2 &pos0, glm::ivec2 &pos1, const glm::ivec2 &playerSize) {
+    DirY diry = ((pos0.y < pos1.y) ? DOWN : ((pos0.y > pos1.y) ? UP : NONEY));
+
+    int y0, y1;
+    if (diry == DOWN) {
+        y0 = TOP(pos0) / tileSize;
+        y1 = BOTTOM(pos1, playerSize) / tileSize;
+    } else if (diry == UP) {
+        y0 = BOTTOM(pos0, playerSize) / tileSize;
+        y1 = TOP(pos1) / tileSize;
+    } else return false;
+
+    int x0 = LEFT(pos0) / tileSize,
+        x1 = RIGHT(pos0, playerSize) / tileSize;
+
+    for (int y = y0; y != y1 + diry; y += diry)
+        for (int x = x0; x <= x1; ++x)
+            if (map[y * mapSize.x + x] != 0) {
+                if (diry == DOWN) // DOWN: Ens coloquem just sobre la colisió
+                    pos1.y = tileSize * (y) - playerSize.y;
+                else if (diry == UP) // UP: Ens coloquem just sota la colisió
+                    pos1.y = tileSize * (y+1);
+                return true;
+            }
+
     return false;
 }
