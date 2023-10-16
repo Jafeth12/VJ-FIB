@@ -159,10 +159,11 @@ void Player::updatePosition(float deltaTime)
     next_pos.x = posPlayer.x + (int)(velPlayer.x * deltaTime);
     next_pos.y = posPlayer.y - (int)(velPlayer.y * deltaTime);
     // Check for collisions and correct the next position accordingly
-    glm::bvec2 collisions = map->solveCollisions(posPlayer, next_pos, PLAYER_SIZE);
+    bool collisionsx = map->solveCollisionsX(posPlayer, next_pos, PLAYER_SIZE);
+    bool collisionsy = map->solveCollisionsY(posPlayer, next_pos, PLAYER_SIZE);
     // Make the player come to a stop if there was a collision per axis
-    if (collisions.x) velPlayer.x = 0.0f;
-    if (collisions.y) velPlayer.y = 0.0f;
+    if (collisionsx) velPlayer.x = 0.0f;
+    if (collisionsy) velPlayer.y = 0.0f;
     // Apply the new position
     posPlayer = next_pos;
 }

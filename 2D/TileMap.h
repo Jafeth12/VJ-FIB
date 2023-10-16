@@ -32,13 +32,11 @@ public:
 	int getTileSize() const { return tileSize; }
     glm::ivec2 getMapSize() const { return mapSize; }
 
-	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-
-    // Used for collisions instead of collisionMoveDown
+    // Methods for collision detection avoiding tunneling ()
+    bool solveCollisionsX(const glm::ivec2 &pos0, glm::ivec2 &pos1, const glm::ivec2 &playerSize);
+    bool solveCollisionsY(const glm::ivec2 &pos0, glm::ivec2 &pos1, const glm::ivec2 &playerSize);
     bool onGround(const glm::ivec2 &pos, const glm::ivec2 &size);
     bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
-    glm::bvec2 solveCollisions(const glm::ivec2 &pos0, glm::ivec2 &pos1, const glm::ivec2 &playerSize);
 
 private:
 	bool loadLevel(const string &levelFile);
