@@ -8,14 +8,14 @@
 
 
 #define SPEED 16 //FIXME SPEED -> ANIM_SPEED
-#define PLAYER_SIZE glm::ivec2(16, 16)
+#define PLAYER_SIZE glm::ivec2(32, 32)
 #define PLAYER_SIZE_IN_SPRITESHEET 16.f
-
 #define JUMP_HEIGHT 115.f
 #define JUMP_TIME .5f
 #define N_FALL_GRAVITY 3.f
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
 #define JUMP_VEL sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT)
+#define STEP 2*2
 
 enum PlayerAnims
 {
@@ -82,10 +82,10 @@ void Player::update(float deltaTime)
 	{
 		if(sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
-		posPlayer.x -= 2;
+		posPlayer.x -= STEP;
 		if(map->collisionMoveLeft(posPlayer, PLAYER_SIZE))
 		{
-			posPlayer.x += 2;
+			posPlayer.x += STEP;
 			sprite->changeAnimation(STAND_LEFT);
 		}
 	}
@@ -93,10 +93,10 @@ void Player::update(float deltaTime)
 	{
 		if(sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
-		posPlayer.x += 2;
+		posPlayer.x += STEP;
 		if(map->collisionMoveRight(posPlayer, PLAYER_SIZE))
 		{
-			posPlayer.x -= 2;
+			posPlayer.x -= STEP;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
 	}

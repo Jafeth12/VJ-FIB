@@ -1,20 +1,8 @@
 TILEMAP
-72 28 							-- Size of tile map in tiles
-16 16 							-- Tile size & block size
-images/tiles-6.png 	-- Tilesheet
-21 28 								-- Number of tiles in tilesheet
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
+72 16 							-- Size of tile map in tiles
+32 32 							-- Tile size & block size
+images/tiles.png 	-- Tilesheet
+20 8 								-- Number of tiles in tilesheet
 00                                                                    00
 00                                                                    00
 00                                                                    00
@@ -22,10 +10,10 @@ images/tiles-6.png 	-- Tilesheet
 00                                                                    00
 00                                                                    00
 00                                                            :       00
-00                  2                                                 00
+00                    2                                               00
 00                                                                    00
 00                                                                    00
-00            :   2:2:2                                     44444     00
+00              =   2=2=2                                     44444   00
 00                                    @A                              00
 00                                    UV                              00
 00                                    UV             334433           00
