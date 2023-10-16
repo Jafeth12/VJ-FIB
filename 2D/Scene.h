@@ -22,15 +22,19 @@ public:
 	Scene();
 	~Scene();
 
-	void init(ShaderProgram &shaderProgram, Camera &camera, std::string levelFilename);
+	void init(ShaderProgram &shaderProgram, Camera &camera, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
 	void update(float deltaTime, Player *player);
 	void render();
     TileMap* getMap();
 
 private:
 	TileMap *map;
+    TileMap *background;
 	ShaderProgram *texProgram;
 	float currentTime;
+
+    glm::ivec2 initPlayerTiles;
+    glm::ivec2 minCoords;
 
     std::map<std::string, Text*> texts;
 
