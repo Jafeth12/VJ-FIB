@@ -219,8 +219,8 @@ bool TileMap::solveCollisionsX(const glm::ivec2 &pos0, glm::ivec2 &pos1, const g
         x1 = LEFT(pos1) / tileSize;
     } else return false;
 
-    int y0 = TOP(pos0),
-        y1 = BOTTOM(pos0, playerSize);
+    int y0 = TOP(pos0) / tileSize,
+        y1 = BOTTOM(pos0, playerSize) / tileSize;
 
     for (int x = x0; x != x1 + dirx; x += dirx)
         for (int y = y0; y <= y1; ++y)
