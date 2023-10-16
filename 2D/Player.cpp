@@ -99,6 +99,7 @@ void Player::update(float deltaTime)
     bool leftPressed = Game::instance().getSpecialKey(GLUT_KEY_LEFT);
     bool rightPressed = Game::instance().getSpecialKey(GLUT_KEY_RIGHT);
     bool upPressed = Game::instance().getKey(' ');
+    bool runPressed = Game::instance().getKey('z');
 
     // Change the current vertical state, based on a couple variables
     // Get wether we should jump or not
