@@ -16,7 +16,8 @@
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
 #define JUMP_VEL sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT)
 
-#define X_WALKING_SPEED 225.f
+#define X_WALK_SPEED 225.f
+#define X_RUN_SPEED 300.f
 #define X_ACC  550.f
 #define X_DRAG 700.f
 
@@ -144,8 +145,8 @@ void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
 {
     // Update and limit X
     velPlayer.x += acc.x * deltaTime;
-    if (velPlayer.x < -X_WALKING_SPEED) velPlayer.x = -X_WALKING_SPEED;
-    if (velPlayer.x > X_WALKING_SPEED) velPlayer.x = X_WALKING_SPEED;
+    if (velPlayer.x < -X_WALK_SPEED) velPlayer.x = -X_WALK_SPEED;
+    if (velPlayer.x > X_WALK_SPEED) velPlayer.x = X_WALK_SPEED;
 
     // Update and limit Y
     if (shouldJump) {
