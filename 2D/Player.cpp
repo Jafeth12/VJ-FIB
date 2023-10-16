@@ -255,8 +255,8 @@ glm::vec2 Player::getAcceleration(bool leftPressed, bool rightPressed)
     // Figure out X acceleration
 	if (leftPressed && !rightPressed) acc.x = -X_ACC;
 	else if (rightPressed && !leftPressed) acc.x = X_ACC;
-    // No lateral key pressed or both pressed at the same time. Apply drag
-	else {
+    // No lateral key pressed or both pressed at the same time. Apply drag only if on the floor
+	else if (yState == FLOOR) {
         if (velPlayer.x > 0.f) acc.x = -X_DRAG;
         else if (velPlayer.x < 0.f) acc.x = X_DRAG;
 	}
