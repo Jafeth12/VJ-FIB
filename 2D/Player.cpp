@@ -25,6 +25,7 @@ enum VerticalAnims
     STAND=0,
     MOVE,
     JUMP,
+    _LAST, // Not an animation. Used to get the number of vertical animations
 };
 enum LateralAnims
 {
@@ -210,10 +211,11 @@ bool Player::updateYState(bool upPressed)
 
 void Player::updateAnimation(bool leftPressed, bool rightPressed)
 {
+    const int n_vertical_anims = (int)VerticalAnims::_LAST;
     // Figure out components of the current animation
     PlayerAnims currentAnim = (PlayerAnims)sprite->animation();
-    VerticalAnims verticalAnim = (VerticalAnims)(currentAnim % 3);
-    LateralAnims lateralAnim = (LateralAnims)(currentAnim / 3);
+    VerticalAnims verticalAnim = (VerticalAnims)(currentAnim % n_vertical_anims);
+    LateralAnims lateralAnim = (LateralAnims)(currentAnim / n_vertical_anims);
     // Setup components for the next animation
     VerticalAnims nextVerticalAnim = verticalAnim;
     LateralAnims nextLateralAnim = lateralAnim;
@@ -240,7 +242,7 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed)
     else if (rightPressed && !leftPressed)
         nextLateralAnim = RIGHT;
     // Update the animation only if it changed
-    PlayerAnims nextAnimation = (PlayerAnims)(nextVerticalAnim + 3 * nextLateralAnim);
+    PlayerAnims nextAnimation = (PlayerAnims)(nextVerticalAnim + n_vertical_anims * nextLateralAnim);
     if (nextAnimation != currentAnim)
         sprite->changeAnimation(nextAnimation);
 }
