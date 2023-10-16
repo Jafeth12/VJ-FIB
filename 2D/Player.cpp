@@ -6,12 +6,12 @@
 #include "Player.h"
 #include "Game.h"
 
-
 #define SPEED 16 //FIXME SPEED -> ANIM_SPEED
 #define PLAYER_SIZE glm::ivec2(16, 16)
 #define JUMP_HEIGHT 115.f
 #define JUMP_TIME .5f
 #define N_FALL_GRAVITY 3.f
+#define FALLING_TERMINAL_VEL 500.f
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
 #define JUMP_VEL sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT)
 
@@ -151,6 +151,7 @@ void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
         bJumping = true;
     }
     velPlayer.y += acc.y * deltaTime;
+    if (velPlayer.y < -FALLING_TERMINAL_VEL) velPlayer.y = -FALLING_TERMINAL_VEL;
 }
 
 void Player::updatePosition(float deltaTime)
