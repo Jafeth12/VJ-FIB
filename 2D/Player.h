@@ -32,7 +32,7 @@ private:
     void updatePosition(float deltaTime);
     bool updateYState(bool upPressed);
     void updateAnimation(bool leftPressed, bool rightPressed);
-    glm::vec2 getAcceleration(bool leftPressed, bool rightPressed);
+    glm::vec2 getAcceleration(bool leftPressed, bool rightPressed, bool runPressed);
 
 	bool bJumping;
 	glm::ivec2 tileMapDispl, posPlayer;

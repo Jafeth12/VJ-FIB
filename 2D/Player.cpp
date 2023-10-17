@@ -17,7 +17,7 @@
 #define JUMP_VEL sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT)
 
 #define X_WALK_SPEED 225.f
-#define X_RUN_SPEED 300.f
+#define X_RUN_SPEED 2.f * X_WALK_SPEED
 #define X_ACC  550.f
 #define X_DRAG 700.f
 
@@ -107,7 +107,7 @@ void Player::update(float deltaTime)
     bool shouldJump = updateYState(upPressed);
 
     // Calculate the acceleration
-    glm::vec2 acc = getAcceleration(leftPressed, rightPressed);
+    glm::vec2 acc = getAcceleration(leftPressed, rightPressed, runPressed);
 
     // Act uppon state and the vars
     updateVelocity(acc, shouldJump, deltaTime);
@@ -145,8 +145,8 @@ void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
 {
     // Update and limit X
     velPlayer.x += acc.x * deltaTime;
-    if (velPlayer.x < -X_WALK_SPEED) velPlayer.x = -X_WALK_SPEED;
-    if (velPlayer.x > X_WALK_SPEED) velPlayer.x = X_WALK_SPEED;
+    if (velPlayer.x < -X_RUN_SPEED) velPlayer.x = -X_RUN_SPEED;
+    if (velPlayer.x > X_RUN_SPEED) velPlayer.x = X_RUN_SPEED;
 
     // Update and limit Y
     if (shouldJump) {
@@ -251,13 +251,27 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed)
         sprite->changeAnimation(nextAnimation);
 }
 
-glm::vec2 Player::getAcceleration(bool leftPressed, bool rightPressed)
+glm::vec2 Player::getAcceleration(bool leftPressed, bool rightPressed, bool runPressed)
 {
     glm::vec2 acc = glm::vec2(0.f);
 
     // Figure out X acceleration
-	if (leftPressed && !rightPressed) acc.x = -X_ACC;
-	else if (rightPressed && !leftPressed) acc.x = X_ACC;
+	if (leftPressed && !rightPressed) {
+        if (runPressed && velPlayer.x > -X_RUN_SPEED)
+            acc.x = -X_ACC;
+        else if (!runPressed && velPlayer.x > -X_WALK_SPEED)
+            acc.x = -X_ACC;
+        else if (yState == FLOOR)
+            acc.x = X_DRAG;
+    }
+	else if (rightPressed && !leftPressed) {
+        if (runPressed && velPlayer.x < X_RUN_SPEED)
+            acc.x = X_ACC;
+        else if (!runPressed && velPlayer.x < X_WALK_SPEED)
+            acc.x = X_ACC;
+        else if (yState == FLOOR)
+            acc.x = -X_DRAG;
+    }
     // No lateral key pressed or both pressed at the same time. Apply drag only if on the floor
 	else if (yState == FLOOR) {
         if (velPlayer.x > 0.f) acc.x = -X_DRAG;
