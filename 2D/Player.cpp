@@ -21,31 +21,7 @@
 #define X_ACC  550.f
 #define X_DRAG 700.f
 
-// Components of the animation
-enum VerticalAnims
-{
-    STAND=0,
-    MOVE,
-    JUMP,
-    _LAST, // Not an animation. Used to get the number of vertical animations
-};
-enum LateralAnims
-{
-    LEFT=0,
-    RIGHT,
-};
 
-// Combination of all of those animations components
-// The order is important (un poco bit-hacky, pero funciona)
-enum PlayerAnims
-{
-	STAND_LEFT=0,
-    MOVE_LEFT,
-    JUMP_LEFT,
-    STAND_RIGHT=3,
-    MOVE_RIGHT,
-    JUMP_RIGHT
-};
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {

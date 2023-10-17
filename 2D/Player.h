@@ -7,8 +7,6 @@
 #include "TileMap.h"
 #include <glm/fwd.hpp>
 
-enum PlayerYState { FLOOR, UPWARDS, DOWNWARDS };
-enum PlayerXState { RUN_LEFT, WALK_LEFT, NONE, WALK_RIGHT, RUN_RIGHT };
 
 // Player is basically a Sprite that represents the player. As such it has
 // all properties it needs to track its movement, jumping, and collisions.
@@ -28,6 +26,21 @@ public:
     glm::vec2 getPosition();
 
 private:
+    // Animations
+    enum VerticalAnims { STAND=0, MOVE, JUMP, _LAST };
+    enum LateralAnims { LEFT=0, RIGHT };
+    enum PlayerAnims {
+        STAND_LEFT=0,
+        MOVE_LEFT,
+        JUMP_LEFT,
+        STAND_RIGHT=3,
+        MOVE_RIGHT,
+        JUMP_RIGHT
+    };
+
+    // Physics
+    enum PlayerYState { FLOOR, UPWARDS, DOWNWARDS };
+    enum PlayerXState { RUN_LEFT, WALK_LEFT, NONE, WALK_RIGHT, RUN_RIGHT };
 
     void updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime);
     void updatePosition(float deltaTime);
