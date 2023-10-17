@@ -144,10 +144,8 @@ glm::vec2 Player::getPosition() {
 
 void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
 {
-    // Update and limit X
+    // Update X
     velPlayer.x += acc.x * deltaTime;
-    if (velPlayer.x < -X_RUN_SPEED) velPlayer.x = -X_RUN_SPEED;
-    if (velPlayer.x > X_RUN_SPEED) velPlayer.x = X_RUN_SPEED;
 
     // Update and limit Y
     if (shouldJump) {
