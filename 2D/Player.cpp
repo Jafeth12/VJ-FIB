@@ -16,7 +16,8 @@
 #define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
 #define JUMP_VEL sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT)
 
-#define X_TOP_SPEED 225.f
+#define X_WALK_SPEED 225.f
+#define X_RUN_SPEED 2.f * X_WALK_SPEED
 #define X_ACC  550.f
 #define X_DRAG 700.f
 
@@ -61,6 +62,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->setNumberAnimations(6);
     velPlayer = glm::vec2(0.0f);
     yState = FLOOR;
+    xState = NONE;
 	
 		sprite->setAnimationSpeed(STAND_LEFT, SPEED);
 		sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.f));
@@ -98,14 +100,15 @@ void Player::update(float deltaTime)
     // Record state of keys
     bool leftPressed = Game::instance().getSpecialKey(GLUT_KEY_LEFT);
     bool rightPressed = Game::instance().getSpecialKey(GLUT_KEY_RIGHT);
-    bool upPressed = Game::instance().getSpecialKey(GLUT_KEY_UP);
+    bool upPressed = Game::instance().getKey(' ');
+    bool runPressed = Game::instance().getKey('z');
 
-    // Change the current vertical state, based on a couple variables
-    // Get wether we should jump or not
+    // Change the movement state of the player, based on inputs
     bool shouldJump = updateYState(upPressed);
+    updateXState(leftPressed, rightPressed, runPressed);
 
     // Calculate the acceleration
-    glm::vec2 acc = getAcceleration(leftPressed, rightPressed);
+    glm::vec2 acc = getAcceleration();
 
     // Act uppon state and the vars
     updateVelocity(acc, shouldJump, deltaTime);
@@ -141,18 +144,15 @@ glm::vec2 Player::getPosition() {
 
 void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
 {
-    // Update and limit X
-    velPlayer.x += acc.x * deltaTime;
-    if (velPlayer.x < -X_TOP_SPEED) velPlayer.x = -X_TOP_SPEED;
-    if (velPlayer.x > X_TOP_SPEED) velPlayer.x = X_TOP_SPEED;
-
-    // Update and limit Y
+    // Update
+    velPlayer += acc * deltaTime;
+    // Limit
+    if (velPlayer.y < -FALLING_TERMINAL_VEL) velPlayer.y = -FALLING_TERMINAL_VEL;
+    // Special cases (jump)
     if (shouldJump) {
         velPlayer.y = JUMP_VEL;
         bJumping = true;
     }
-    velPlayer.y += acc.y * deltaTime;
-    if (velPlayer.y < -FALLING_TERMINAL_VEL) velPlayer.y = -FALLING_TERMINAL_VEL;
 }
 
 void Player::updatePosition(float deltaTime)
@@ -211,6 +211,48 @@ bool Player::updateYState(bool upPressed)
     return shouldJump;
 }
 
+void Player::updateXState(bool leftPressed, bool rightPressed, bool runPressed) {
+    const bool _none = !(leftPressed ^ rightPressed); // Or both.
+    const bool onlyR = !leftPressed && rightPressed;
+    const bool onlyL = leftPressed && !rightPressed;
+    const bool onAir = yState != FLOOR;
+
+    if (!onAir) { // Estamos en el suelo. Podemos cambiar velocidad y dirección.
+        if (runPressed) {
+            if (onlyL) xState = RUN_LEFT;
+            else if (onlyR) xState = RUN_RIGHT;
+            else xState = NONE;
+        } else {
+            if (onlyL) xState = WALK_LEFT;
+            else if (onlyR) xState = WALK_RIGHT;
+            else xState = NONE;
+        }
+    } else { // Estamos en el aire, podemos cambiar la dirección, pero no la velocidad
+        switch(xState) {
+            case RUN_LEFT:
+                if (onlyR) xState = RUN_RIGHT;
+                break;
+            case RUN_RIGHT:
+                if (onlyL) xState = RUN_LEFT;
+                break;
+
+            case WALK_LEFT:
+                if (onlyR) xState = WALK_RIGHT;
+                break;
+            case WALK_RIGHT:
+                if (onlyL) xState = WALK_LEFT;
+                break;
+
+            case NONE:
+            {
+                if (onlyL) xState = WALK_LEFT;
+                else if (onlyR) xState = WALK_RIGHT;
+                break;
+            }
+        }
+    }
+}
+
 void Player::updateAnimation(bool leftPressed, bool rightPressed)
 {
     const int n_vertical_anims = (int)VerticalAnims::_LAST;
@@ -249,20 +291,37 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed)
         sprite->changeAnimation(nextAnimation);
 }
 
-glm::vec2 Player::getAcceleration(bool leftPressed, bool rightPressed)
+glm::vec2 Player::getAcceleration()
 {
     glm::vec2 acc = glm::vec2(0.f);
 
-    // Figure out X acceleration
-	if (leftPressed && !rightPressed) acc.x = -X_ACC;
-	else if (rightPressed && !leftPressed) acc.x = X_ACC;
-    // No lateral key pressed or both pressed at the same time. Apply drag only if on the floor
-	else if (yState == FLOOR) {
-        if (velPlayer.x > 0.f) acc.x = -X_DRAG;
-        else if (velPlayer.x < 0.f) acc.x = X_DRAG;
-	}
+    // Figure out Y acceleration
+    switch (xState) {
+        case RUN_LEFT:
+            if (velPlayer.x > -X_RUN_SPEED) acc.x = -X_ACC;
+            else if (velPlayer.x < -X_RUN_SPEED) acc.x = X_DRAG;
+            break;
+        case WALK_LEFT:
+            if (velPlayer.x > -X_WALK_SPEED) acc.x = -X_ACC;
+            else if (velPlayer.x < -X_WALK_SPEED) acc.x = X_DRAG;
+            break;
 
-    // Figure out Y getAcceleration
+        case NONE:
+            if (velPlayer.x < 0.f) acc.x = X_DRAG;
+            else if (velPlayer.x > 0.f) acc.x = -X_DRAG;
+            break;
+
+        case WALK_RIGHT:
+            if (velPlayer.x < X_WALK_SPEED) acc.x = X_ACC;
+            else if (velPlayer.x > -X_WALK_SPEED) acc.x = -X_DRAG;
+            break;
+        case RUN_RIGHT:
+            if (velPlayer.x < X_RUN_SPEED) acc.x = X_ACC;
+            else if (velPlayer.x > -X_RUN_SPEED) acc.x = -X_DRAG;
+            break;
+    }
+
+    // Figure out Y acceleration
     switch (yState) {
         case FLOOR:
             acc.y = 0.f;
