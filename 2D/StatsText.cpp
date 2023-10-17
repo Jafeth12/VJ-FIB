@@ -9,13 +9,13 @@ void StatsText::init(ShaderProgram &shaderProgram) {
     worldNumber = 1;
     renderTimeLeft = false;
 
-    texts["mario"] = Text::createText("Mario", &shaderProgram, glm::vec2(3, 1));
-    texts["score"] = Text::createText(zeroFill(score, 6), &shaderProgram, glm::vec2(3, 2));
-    texts["coins"] = Text::createText("0x" + zeroFill(coins, 2), &shaderProgram, glm::vec2(12, 2));
-    texts["worldText"] = Text::createText("World", &shaderProgram, glm::vec2(19, 1));
-    texts["worldNumber"] = Text::createText("1-" + std::to_string(worldNumber), &shaderProgram, glm::vec2(20, 2));
-    texts["timeText"] = Text::createText("Time", &shaderProgram, glm::vec2(25, 1));
-    texts["timeNumber"] = Text::createText(zeroFill(timeLeft, 3), &shaderProgram, glm::vec2(26, 2));
+    texts["mario"] = Text::createText("Mario", &shaderProgram, glm::vec2(3, 2));
+    texts["score"] = Text::createText(zeroFill(score, 6), &shaderProgram, glm::vec2(3, 3));
+    texts["coins"] = Text::createText("0x" + zeroFill(coins, 2), &shaderProgram, glm::vec2(12, 3));
+    texts["worldText"] = Text::createText("World", &shaderProgram, glm::vec2(18, 2));
+    texts["worldNumber"] = Text::createText("1-" + std::to_string(worldNumber), &shaderProgram, glm::vec2(19, 3));
+    texts["timeText"] = Text::createText("Time", &shaderProgram, glm::vec2(25, 2));
+    texts["timeNumber"] = Text::createText(zeroFill(timeLeft, 3), &shaderProgram, glm::vec2(26, 3));
 }
 
 void StatsText::setCoins(int coins) {

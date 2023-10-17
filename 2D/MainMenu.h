@@ -20,46 +20,35 @@ enum MenuOption {
     MENU_OPTION_PLAY = 0,
     MENU_OPTION_TUTORIAL,
     MENU_OPTION_CREDITS,
-    MENU_OPTION_EXIT,
+    _LAST,
 };
 
-class MainMenu {
+class MainMenu : public Scene {
 
 public:
-    MainMenu(ShaderProgram& program);
-    ~MainMenu();
+    // MainMenu();
+    // ~MainMenu();
+
+	virtual void init(ShaderProgram &shaderProgram, Camera &camera, StatsText &statsText, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
+    void update(float deltaTime);
+    virtual void render();
 
     void setMenuState(MenuState newState);
-    void setScore(int score);
-    void setCoins(int coins);
-    void setTopScore(int topScore);
 
     void changeOptionUp();
     void changeOptionDown();
 
-    void render();
-
 private:
-    ShaderProgram* shaderProgram;
-
-    TileMap* tileMap;
-    TileMap* background;
-    TileMap* foreground;
-
     Sprite* logo;
     Texture logoTexture;
 
     Sprite* mushroom;
     Texture mushroomTexture;
 
-    int score;
-    int coins;
     int topScore;
 
-    std::map<std::string, Text*> texts;
-
     MenuState currentState;
-    MenuOption currentOptionSelected;
+    char currentOptionSelected;
 };
 
 #endif

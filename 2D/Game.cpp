@@ -6,11 +6,12 @@
 #define SCREEN_Y 16
 
 #define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 10
+#define INIT_PLAYER_Y_TILES 13
 
 
 void Game::init()
 {
+    currentState = GAME_MENU;
     currentSceneIndex = 0;
 	bPlay = true;
     wireframe = true;
@@ -21,6 +22,9 @@ void Game::init()
     Text::init();
 
     statsText.init(shaderProgram);
+
+	menu.init(shaderProgram, camera, statsText, "levels/level01.txt", glm::ivec2(INIT_PLAYER_X_TILES, INIT_PLAYER_Y_TILES), glm::ivec2(SCREEN_X, SCREEN_Y));
+    menu.setBackground("levels/background01.txt");
 
     // create scenes
     scenes.push_back(new Scene());
@@ -42,7 +46,8 @@ void Game::init()
 
 bool Game::update(float deltaTime)
 {
-    scenes[currentSceneIndex]->update(deltaTime, player);
+    if (currentState == GAME_PLAY) scenes[currentSceneIndex]->update(deltaTime, player);
+    // else menu.update(deltaTime, player);
 	
 	return bPlay;
 }
@@ -51,7 +56,11 @@ void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	scenes[currentSceneIndex]->render();
+    if (currentState == GAME_MENU)
+        menu.render();
+    else
+        scenes[currentSceneIndex]->render();
+
     player->render();
 }
 
@@ -66,9 +75,18 @@ void Game::keyPressed(int key)
 
         wireframe = !wireframe;
     } else if (key == '1') {
+        if (currentState == GAME_MENU) currentState = GAME_PLAY;
         changeScene(0);
     } else if (key == '2') {
+        if (currentState == GAME_MENU) currentState = GAME_PLAY;
         changeScene(1);
+    } else if (key == 'm') {
+        currentState = GAME_MENU;
+        TileMap *newTileMap = menu.getMap();
+        player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * newTileMap->getTileSize(), INIT_PLAYER_Y_TILES * newTileMap->getTileSize()));
+        player->setTileMap(newTileMap);
+        player->render();
+        camera.setPosition(glm::vec2(0, 0));
     }
 	keys[key] = true;
 }
@@ -78,6 +96,7 @@ void Game::changeScene(int sceneIndex) {
 
     // Change the map on the player
     TileMap *newTileMap = scenes[currentSceneIndex]->getMap();
+    player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * newTileMap->getTileSize(), INIT_PLAYER_Y_TILES * newTileMap->getTileSize()));
     player->setTileMap(newTileMap);
 }
 

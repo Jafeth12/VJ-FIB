@@ -11,7 +11,7 @@
 #include "TileMap.h"
 #include "Text.h"
 #include "StatsText.h"
-
+#include "MainMenu.h"
 
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 512
@@ -19,6 +19,10 @@
 
 // Game is a singleton (a class with a single instance) that represents our whole application
 
+enum GameState {
+    GAME_MENU = 0,
+    GAME_PLAY,
+};
 
 class Game
 {
@@ -62,9 +66,11 @@ private:
 	                                  // we can have access at any time
     Camera camera;
     StatsText statsText;
+    MainMenu menu;
     ShaderProgram shaderProgram;
     std::vector<Scene*> scenes;
     int currentSceneIndex;
+    GameState currentState;
     Player *player;
 };
 

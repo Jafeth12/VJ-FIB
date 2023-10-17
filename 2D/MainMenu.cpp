@@ -1,34 +1,66 @@
 #include "MainMenu.h"
+#include "Game.h"
+#include <GL/freeglut_std.h>
 
-MainMenu::MainMenu(ShaderProgram& program) {
+std::string zeroFill(int value, size_t digits) {
+    std::string result = std::to_string(value);
+
+    while (result.length() < digits) {
+        result = "0" + result;
+    }
+
+    return result;
+}
+
+void MainMenu::init(ShaderProgram &shaderProgram, Camera &camera, StatsText &statsText, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords) {
+    Scene::init(shaderProgram, camera, statsText, levelFilename, initPlayerTiles, minCoords);
+
     currentState = MENU_TITLE;
     currentOptionSelected = MENU_OPTION_PLAY;
 
-    shaderProgram = &program;
+    texProgram = &shaderProgram;
 
-    logoTexture.loadFromFile("images/logo.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    mushroomTexture.loadFromFile("images/mushroom.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    logoTexture.loadFromFile("images/title.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    logoTexture.setMinFilter(GL_NEAREST);
+    logoTexture.setMagFilter(GL_NEAREST);
+    // mushroomTexture.loadFromFile("images/mushroom.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
     // checkar las dimensiones, las ha generado copilot y pueden estar mal
-    logo = Sprite::createSprite(glm::ivec2(256, 64), glm::vec2(1.f, 1.f), &logoTexture, &program);
-    mushroom = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.f, 1.f), &mushroomTexture, &program);
+    // logo = Sprite::createSprite(glm::ivec2(256, 128), glm::vec2(1.f, 1.f), &logoTexture, &shaderProgram);
+    // mushroom = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.f, 1.f), &mushroomTexture, &shaderProgram);
 
-    score = 0;
-    coins = 0;
-    topScore = 0;
-
-    // hay que poner los trailing zeros para que se vea bien
-
-    texts["mario"] = Text::createText("Mario", &program, glm::vec2(3, 1));
-    texts["score"] = Text::createText("000000", &program, glm::vec2(3, 2));
-    texts["coins"] = Text::createText("0x00", &program, glm::vec2(12, 2));
-    texts["worldText"] = Text::createText("World", &program, glm::vec2(19, 1));
-    texts["worldNumber"] = Text::createText("1-1", &program, glm::vec2(20, 2));
-    texts["timeText"] = Text::createText("Time", &program, glm::vec2(25, 1));
-
-    texts["topScore"] = Text::createText("TOP- " + std::to_string(topScore), &program, glm::vec2(3, 4));
-    texts["optionPlay"] = Text::createText("1 PLAYER GAME", &program, glm::vec2(3, 6));
-    texts["optionTutorial"] = Text::createText("HOW TO PLAY", &program, glm::vec2(3, 7));
-    texts["optionCredits"] = Text::createText("CREDITS", &program, glm::vec2(3, 8));
-    texts["optionExit"] = Text::createText("EXIT", &program, glm::vec2(3, 9));
+    texts["optionPlay"] = Text::createText("1 PLAYER GAME", &shaderProgram, glm::vec2(11, 20));
+    texts["optionTutorial"] = Text::createText("HOW TO PLAY", &shaderProgram, glm::vec2(12, 22));
+    texts["optionCredits"] = Text::createText("CREDITS", &shaderProgram, glm::vec2(14, 24));
+    texts["topScore"] = Text::createText("TOP- " + zeroFill(topScore, 6), &shaderProgram, glm::vec2(12, 26));
 }
+
+
+void MainMenu::update(float deltaTime) {
+
+	if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+        changeOptionUp();
+    } else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+        changeOptionDown();
+    }
+}
+
+void MainMenu::render() {
+    Scene::render();
+
+    for (auto it = texts.begin(); it != texts.end(); ++it) {
+        it->second->render();
+    }
+
+}
+
+void MainMenu::changeOptionUp() {
+    if (currentOptionSelected == 0) return;
+    --currentOptionSelected;
+}
+
+void MainMenu::changeOptionDown() {
+    ++currentOptionSelected;
+    if (currentOptionSelected == _LAST) currentOptionSelected = _LAST-1;
+}
+

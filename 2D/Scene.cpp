@@ -76,7 +76,6 @@ void Scene::render() {
 	map->render();
     if (foreground != NULL) foreground->render();
 
-    statsText->showTimeLeft();
     statsText->render();
 
 	texProgram->setUniformMatrix4f("view", view);   // esto está aquí porque el render de player necesita la view matrix de la cámara
