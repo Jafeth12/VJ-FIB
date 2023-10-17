@@ -229,13 +229,12 @@ void Player::updateXState(bool leftPressed, bool rightPressed, bool runPressed) 
     }
 }
 
-void Player::updateAnimation(bool leftPressed, bool rightPressed)
+void Player::updateAnimation(bool leftPressed, bool rightPressed) const
 {
-    const int n_vertical_anims = (int)VerticalAnims::_LAST;
     // Figure out components of the current animation
     PlayerAnims currentAnim = (PlayerAnims)sprite->animation();
-    VerticalAnims verticalAnim = (VerticalAnims)(currentAnim % n_vertical_anims);
-    LateralAnims lateralAnim = (LateralAnims)(currentAnim / n_vertical_anims);
+    VerticalAnims verticalAnim = getVerticalAnim(currentAnim);
+    LateralAnims lateralAnim = getLateralAnim(currentAnim);
     // Setup components for the next animation
     VerticalAnims nextVerticalAnim = verticalAnim;
     LateralAnims nextLateralAnim = lateralAnim;
@@ -244,25 +243,25 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed)
         case FLOOR:
             // Both keys pressed or none pressed. Stand still
             if ((!leftPressed && !rightPressed) || (leftPressed && rightPressed))
-                nextVerticalAnim = STAND;
+                nextVerticalAnim = VerticalAnims::STAND;
             // Only one key pressed. Move
             else
-                nextVerticalAnim = MOVE;
+                nextVerticalAnim = VerticalAnims::MOVE;
             break;
         case UPWARDS:
         case DOWNWARDS:
-            nextVerticalAnim = JUMP;
+            nextVerticalAnim = VerticalAnims::JUMP;
             break;
         default:
             break;
     }
     // Firgure out animation direction
     if (leftPressed && !rightPressed)
-        nextLateralAnim = LEFT;
+        nextLateralAnim = LateralAnims::LEFT;
     else if (rightPressed && !leftPressed)
-        nextLateralAnim = RIGHT;
+        nextLateralAnim = LateralAnims::RIGHT;
     // Update the animation only if it changed
-    PlayerAnims nextAnimation = (PlayerAnims)(nextVerticalAnim + n_vertical_anims * nextLateralAnim);
+    PlayerAnims nextAnimation = buildAnim(nextVerticalAnim, nextLateralAnim);
     if (nextAnimation != currentAnim)
         sprite->changeAnimation(nextAnimation);
 }

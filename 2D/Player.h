@@ -38,6 +38,11 @@ private:
         JUMP_RIGHT
     };
 
+    PlayerAnims buildAnim(VerticalAnims v, LateralAnims l) const { return (PlayerAnims)(l * VerticalAnims::_LAST + v); }
+    VerticalAnims getVerticalAnim(PlayerAnims a) const { return (VerticalAnims)(a % VerticalAnims::_LAST); };
+    LateralAnims getLateralAnim(PlayerAnims a) const { return (LateralAnims)(a / VerticalAnims::_LAST); };
+    void updateAnimation(bool leftPressed, bool rightPressed) const;
+
     // Physics
     enum PlayerYState { FLOOR, UPWARDS, DOWNWARDS };
     enum PlayerXState { RUN_LEFT, WALK_LEFT, NONE, WALK_RIGHT, RUN_RIGHT };
@@ -46,7 +51,6 @@ private:
     void updatePosition(float deltaTime);
     bool updateYState(bool upPressed);
     void updateXState(bool leftPressed, bool rightPressed, bool runPressed);
-    void updateAnimation(bool leftPressed, bool rightPressed);
     glm::vec2 getAcceleration();
 
 	bool bJumping;
