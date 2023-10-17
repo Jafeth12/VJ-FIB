@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "Text.h"
+#include "StatsText.h"
 
 
 #define SCREEN_WIDTH 512
@@ -60,6 +61,7 @@ private:
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
     Camera camera;
+    StatsText statsText;
     ShaderProgram shaderProgram;
     std::vector<Scene*> scenes;
     int currentSceneIndex;
