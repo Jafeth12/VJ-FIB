@@ -25,7 +25,10 @@
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
-	bJumping = false;
+    bJumping = false;
+    velPlayer = glm::vec2(0.0f);
+    yState = FLOOR;
+    xState = NONE;
     spritesheet.loadFromFile("images/small_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
     spritesheet.setMinFilter(GL_NEAREST);
     spritesheet.setMagFilter(GL_NEAREST);
@@ -34,38 +37,41 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     // cada sprite es de 16x16, así que el size es 16/128 = 0.125
 
     float size = PLAYER_SIZE_IN_SPRITESHEET / spritesheet.width();
-	sprite = Sprite::createSprite(PLAYER_SIZE, glm::vec2(size, size), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(6);
-    velPlayer = glm::vec2(0.0f);
-    yState = FLOOR;
-    xState = NONE;
-	
-		sprite->setAnimationSpeed(STAND_LEFT, SPEED);
-		sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.f));
-		
-		sprite->setAnimationSpeed(STAND_RIGHT, SPEED);
-		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 1.f));
-		
-		sprite->setAnimationSpeed(MOVE_LEFT, SPEED);
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(3.f, 1.f));
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(2.f, 1.f));
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(1.f, 1.f));
-		
-		sprite->setAnimationSpeed(MOVE_RIGHT, SPEED);
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(3.f, 0.f));
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(2.f, 0.f));
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1.f, 0.f));
+    sprite = Sprite::createSprite(PLAYER_SIZE, glm::vec2(size, size), &spritesheet, &shaderProgram);
+    sprite->setNumberAnimations(6);
 
-        sprite->setAnimationSpeed(JUMP_LEFT, SPEED);
-        sprite->addKeyframe(JUMP_LEFT, glm::vec2(5.f, 1.f));
+    // STAND_LEFT
+    sprite->setAnimationSpeed(STAND_LEFT, SPEED);
+    sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.f));
 
-        sprite->setAnimationSpeed(JUMP_RIGHT, SPEED);
-        sprite->addKeyframe(JUMP_RIGHT, glm::vec2(5.f, 0.f));
-		
-	sprite->changeAnimation(STAND_RIGHT);
-	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	
+    // STAND_RIGHT
+    sprite->setAnimationSpeed(STAND_RIGHT, SPEED);
+    sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 1.f));
+
+    // MOVE_LEFT
+    sprite->setAnimationSpeed(MOVE_LEFT, SPEED);
+    sprite->addKeyframe(MOVE_LEFT, glm::vec2(3.f, 1.f));
+    sprite->addKeyframe(MOVE_LEFT, glm::vec2(2.f, 1.f));
+    sprite->addKeyframe(MOVE_LEFT, glm::vec2(1.f, 1.f));
+
+    // MOVE_RIGHT
+    sprite->setAnimationSpeed(MOVE_RIGHT, SPEED);
+    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(3.f, 0.f));
+    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(2.f, 0.f));
+    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1.f, 0.f));
+
+    // JUMP_LEFT
+    sprite->setAnimationSpeed(JUMP_LEFT, SPEED);
+    sprite->addKeyframe(JUMP_LEFT, glm::vec2(5.f, 1.f));
+
+    // JUMP_RIGHT
+    sprite->setAnimationSpeed(JUMP_RIGHT, SPEED);
+    sprite->addKeyframe(JUMP_RIGHT, glm::vec2(5.f, 0.f));
+
+    sprite->changeAnimation(STAND_RIGHT);
+    tileMapDispl = tileMapPos;
+    sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
 }
 
 void Player::update(float deltaTime)

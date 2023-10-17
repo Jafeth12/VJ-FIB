@@ -54,7 +54,7 @@ private:
     glm::vec2 getAcceleration();
 
 	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer;
+	glm::ivec2 tileMapDispl;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
@@ -62,6 +62,7 @@ private:
     PlayerYState yState;
     PlayerXState xState;
 
+    glm::ivec2 posPlayer;
     glm::vec2 velPlayer;
 };
 
