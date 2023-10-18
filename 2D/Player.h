@@ -27,20 +27,12 @@ public:
 
 private:
     // Animations
-    enum VerticalAnims { STAND=0, MOVE, JUMP, _LAST };
-    enum LateralAnims { LEFT=0, RIGHT };
-    enum PlayerAnims {
-        STAND_LEFT=0,
-        MOVE_LEFT,
-        JUMP_LEFT,
-        STAND_RIGHT=3,
-        MOVE_RIGHT,
-        JUMP_RIGHT
-    };
+    enum VerticalAnims { MOVE, STAND, JUMP, _LAST };
+    enum LateralAnims { LEFT, RIGHT };
 
-    PlayerAnims buildAnim(VerticalAnims v, LateralAnims l) const { return (PlayerAnims)(l * VerticalAnims::_LAST + v); }
-    VerticalAnims getVerticalAnim(PlayerAnims a) const { return (VerticalAnims)(a % VerticalAnims::_LAST); };
-    LateralAnims getLateralAnim(PlayerAnims a) const { return (LateralAnims)(a / VerticalAnims::_LAST); };
+    int buildAnim(VerticalAnims v, LateralAnims l) const { return (int)(l * VerticalAnims::_LAST + v); }
+    VerticalAnims getVerticalAnim(int a) const { return (VerticalAnims)(a % VerticalAnims::_LAST); };
+    LateralAnims getLateralAnim(int a) const { return (LateralAnims)(a / VerticalAnims::_LAST); };
     void updateAnimation(bool leftPressed, bool rightPressed) const;
 
     // Physics

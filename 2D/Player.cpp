@@ -41,34 +41,34 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     sprite->setNumberAnimations(6);
 
     // STAND_LEFT
-    sprite->setAnimationSpeed(STAND_LEFT, SPEED);
-    sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.f));
+    sprite->setAnimationSpeed(buildAnim(STAND, LEFT), SPEED);
+    sprite->addKeyframe(buildAnim(STAND, LEFT), glm::vec2(0.f, 0.f));
 
     // STAND_RIGHT
-    sprite->setAnimationSpeed(STAND_RIGHT, SPEED);
-    sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 1.f));
+    sprite->setAnimationSpeed(buildAnim(STAND, RIGHT), SPEED);
+    sprite->addKeyframe(buildAnim(STAND, RIGHT), glm::vec2(0.f, 1.f));
 
     // MOVE_LEFT
-    sprite->setAnimationSpeed(MOVE_LEFT, SPEED);
-    sprite->addKeyframe(MOVE_LEFT, glm::vec2(3.f, 1.f));
-    sprite->addKeyframe(MOVE_LEFT, glm::vec2(2.f, 1.f));
-    sprite->addKeyframe(MOVE_LEFT, glm::vec2(1.f, 1.f));
+    sprite->setAnimationSpeed(buildAnim(MOVE, LEFT), SPEED);
+    sprite->addKeyframe(buildAnim(MOVE, LEFT), glm::vec2(3.f, 1.f));
+    sprite->addKeyframe(buildAnim(MOVE, LEFT), glm::vec2(2.f, 1.f));
+    sprite->addKeyframe(buildAnim(MOVE, LEFT), glm::vec2(1.f, 1.f));
 
     // MOVE_RIGHT
-    sprite->setAnimationSpeed(MOVE_RIGHT, SPEED);
-    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(3.f, 0.f));
-    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(2.f, 0.f));
-    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1.f, 0.f));
+    sprite->setAnimationSpeed(buildAnim(MOVE, RIGHT), SPEED);
+    sprite->addKeyframe(buildAnim(MOVE, RIGHT), glm::vec2(3.f, 0.f));
+    sprite->addKeyframe(buildAnim(MOVE, RIGHT), glm::vec2(2.f, 0.f));
+    sprite->addKeyframe(buildAnim(MOVE, RIGHT), glm::vec2(1.f, 0.f));
 
     // JUMP_LEFT
-    sprite->setAnimationSpeed(JUMP_LEFT, SPEED);
-    sprite->addKeyframe(JUMP_LEFT, glm::vec2(5.f, 1.f));
+    sprite->setAnimationSpeed(buildAnim(JUMP, LEFT), SPEED);
+    sprite->addKeyframe(buildAnim(JUMP, LEFT), glm::vec2(5.f, 1.f));
 
     // JUMP_RIGHT
-    sprite->setAnimationSpeed(JUMP_RIGHT, SPEED);
-    sprite->addKeyframe(JUMP_RIGHT, glm::vec2(5.f, 0.f));
+    sprite->setAnimationSpeed(buildAnim(JUMP, RIGHT), SPEED);
+    sprite->addKeyframe(buildAnim(JUMP, RIGHT), glm::vec2(5.f, 0.f));
 
-    sprite->changeAnimation(STAND_RIGHT);
+    sprite->changeAnimation(buildAnim(STAND, RIGHT));
     tileMapDispl = tileMapPos;
     sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
@@ -238,9 +238,9 @@ void Player::updateXState(bool leftPressed, bool rightPressed, bool runPressed) 
 void Player::updateAnimation(bool leftPressed, bool rightPressed) const
 {
     // Figure out components of the current animation
-    PlayerAnims currentAnim = (PlayerAnims)sprite->animation();
-    VerticalAnims verticalAnim = getVerticalAnim(currentAnim);
-    LateralAnims lateralAnim = getLateralAnim(currentAnim);
+    int currentAnimId = sprite->animation();
+    VerticalAnims verticalAnim = getVerticalAnim(currentAnimId);
+    LateralAnims lateralAnim = getLateralAnim(currentAnimId);
     // Setup components for the next animation
     VerticalAnims nextVerticalAnim = verticalAnim;
     LateralAnims nextLateralAnim = lateralAnim;
@@ -267,9 +267,9 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
     else if (rightPressed && !leftPressed)
         nextLateralAnim = LateralAnims::RIGHT;
     // Update the animation only if it changed
-    PlayerAnims nextAnimation = buildAnim(nextVerticalAnim, nextLateralAnim);
-    if (nextAnimation != currentAnim)
-        sprite->changeAnimation(nextAnimation);
+    int nextAnimId = buildAnim(nextVerticalAnim, nextLateralAnim);
+    if (nextAnimId != currentAnimId)
+        sprite->changeAnimation(nextAnimId);
 }
 
 glm::vec2 Player::getAcceleration()
