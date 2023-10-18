@@ -273,6 +273,8 @@ void Player::updateXState(bool leftPressed, bool rightPressed, bool runPressed) 
 
 void Player::updateAnimation(bool leftPressed, bool rightPressed) const
 {
+    const bool onlyR = !leftPressed && rightPressed;
+    const bool onlyL = leftPressed && !rightPressed;
     // Figure out components of the current animation
     int currentAnimId = sprite->animation();
     VerticalAnim verticalAnim = getVerticalAnim(currentAnimId);
@@ -295,6 +297,9 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
                     nextVerticalAnim = VerticalAnim::RUN;
                 else
                     nextVerticalAnim = VerticalAnim::WALK;
+
+            if ((velPlayer.x < 0 && onlyR) || (velPlayer.x > 0 && onlyL))
+                nextVerticalAnim = VerticalAnim::BRAKE;
             break;
         case UPWARDS:
         case DOWNWARDS:
@@ -305,9 +310,9 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
     }
     // Firgure out animation direction
     if (yState == FLOOR) {
-        if (leftPressed && !rightPressed)
+        if (onlyL)
             nextLateralAnim = LateralAnim::LEFT;
-        else if (rightPressed && !leftPressed)
+        else if (onlyR)
             nextLateralAnim = LateralAnim::RIGHT;
     }
     // Update the animation only if it changed
