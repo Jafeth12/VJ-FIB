@@ -48,17 +48,41 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     sprite->setAnimationSpeed(getAnimId(STAND, RIGHT), SPEED);
     sprite->addKeyframe(getAnimId(STAND, RIGHT), glm::vec2(0.f, 1.f));
 
-    // MOVE_LEFT
-    sprite->setAnimationSpeed(getAnimId(MOVE, LEFT), SPEED);
-    sprite->addKeyframe(getAnimId(MOVE, LEFT), glm::vec2(3.f, 1.f));
-    sprite->addKeyframe(getAnimId(MOVE, LEFT), glm::vec2(2.f, 1.f));
-    sprite->addKeyframe(getAnimId(MOVE, LEFT), glm::vec2(1.f, 1.f));
+    // WALK_LEFT
+    sprite->setAnimationSpeed(getAnimId(WALK, LEFT), SPEED);
+    sprite->addKeyframe(getAnimId(WALK, LEFT), glm::vec2(3.f, 1.f));
+    sprite->addKeyframe(getAnimId(WALK, LEFT), glm::vec2(2.f, 1.f));
+    sprite->addKeyframe(getAnimId(WALK, LEFT), glm::vec2(1.f, 1.f));
 
-    // MOVE_RIGHT
-    sprite->setAnimationSpeed(getAnimId(MOVE, RIGHT), SPEED);
-    sprite->addKeyframe(getAnimId(MOVE, RIGHT), glm::vec2(3.f, 0.f));
-    sprite->addKeyframe(getAnimId(MOVE, RIGHT), glm::vec2(2.f, 0.f));
-    sprite->addKeyframe(getAnimId(MOVE, RIGHT), glm::vec2(1.f, 0.f));
+    // WALK_RIGHT
+    sprite->setAnimationSpeed(getAnimId(WALK, RIGHT), SPEED);
+    sprite->addKeyframe(getAnimId(WALK, RIGHT), glm::vec2(3.f, 0.f));
+    sprite->addKeyframe(getAnimId(WALK, RIGHT), glm::vec2(2.f, 0.f));
+    sprite->addKeyframe(getAnimId(WALK, RIGHT), glm::vec2(1.f, 0.f));
+
+    // RUN_LEFT
+    sprite->setAnimationSpeed(getAnimId(RUN, LEFT), int(1.5f*float(SPEED)));
+    sprite->addKeyframe(getAnimId(RUN, LEFT), glm::vec2(3.f, 1.f));
+    sprite->addKeyframe(getAnimId(RUN, LEFT), glm::vec2(2.f, 1.f));
+    sprite->addKeyframe(getAnimId(RUN, LEFT), glm::vec2(1.f, 1.f));
+
+    // RUN_RIGHT
+    sprite->setAnimationSpeed(getAnimId(RUN, RIGHT), int(1.5f*float(SPEED)));
+    sprite->addKeyframe(getAnimId(RUN, RIGHT), glm::vec2(3.f, 0.f));
+    sprite->addKeyframe(getAnimId(RUN, RIGHT), glm::vec2(2.f, 0.f));
+    sprite->addKeyframe(getAnimId(RUN, RIGHT), glm::vec2(1.f, 0.f));
+
+    // SPRINT_LEFT
+    sprite->setAnimationSpeed(getAnimId(SPRINT, LEFT), 2*SPEED);
+    sprite->addKeyframe(getAnimId(SPRINT, LEFT), glm::vec2(3.f, 1.f));
+    sprite->addKeyframe(getAnimId(SPRINT, LEFT), glm::vec2(2.f, 1.f));
+    sprite->addKeyframe(getAnimId(SPRINT, LEFT), glm::vec2(1.f, 1.f));
+
+    // SPRINT_RIGHT
+    sprite->setAnimationSpeed(getAnimId(SPRINT, RIGHT), 2*SPEED);
+    sprite->addKeyframe(getAnimId(SPRINT, RIGHT), glm::vec2(3.f, 0.f));
+    sprite->addKeyframe(getAnimId(SPRINT, RIGHT), glm::vec2(2.f, 0.f));
+    sprite->addKeyframe(getAnimId(SPRINT, RIGHT), glm::vec2(1.f, 0.f));
 
     // JUMP_LEFT
     sprite->setAnimationSpeed(getAnimId(JUMP, LEFT), SPEED);
@@ -72,7 +96,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     sprite->setAnimationSpeed(getAnimId(BRAKE, LEFT), SPEED);
     sprite->addKeyframe(getAnimId(BRAKE, LEFT), glm::vec2(4.f, 1.f));
 
-    // DRIFT_RIGHT
+    // BRAKE_RIGHT
     sprite->setAnimationSpeed(getAnimId(BRAKE, RIGHT), SPEED);
     sprite->addKeyframe(getAnimId(BRAKE, RIGHT), glm::vec2(4.f, 0.f));
 
@@ -260,11 +284,17 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
     switch (yState) {
         case FLOOR:
             // Both keys pressed or none pressed. Stand still
-            if ((!leftPressed && !rightPressed) || (leftPressed && rightPressed))
+            // if ((!leftPressed && !rightPressed) || (leftPressed && rightPressed))
+            if (glm::abs(velPlayer.x) < 15)
                 nextVerticalAnim = VerticalAnim::STAND;
             // Only one key pressed. Move
             else
-                nextVerticalAnim = VerticalAnim::MOVE;
+                if (glm::abs(velPlayer.x) > 2.f * (X_RUN_SPEED) / 3.f)
+                    nextVerticalAnim = VerticalAnim::SPRINT;
+                else if (glm::abs(velPlayer.x) > (X_RUN_SPEED) / 3.f)
+                    nextVerticalAnim = VerticalAnim::RUN;
+                else
+                    nextVerticalAnim = VerticalAnim::WALK;
             break;
         case UPWARDS:
         case DOWNWARDS:

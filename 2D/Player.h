@@ -27,7 +27,7 @@ public:
 
 private:
     // Animations
-    enum VerticalAnim { MOVE, STAND, JUMP, BRAKE, V_LAST };
+    enum VerticalAnim { WALK, RUN, SPRINT, STAND, JUMP, BRAKE, V_LAST };
     enum LateralAnim { LEFT, RIGHT, L_LAST };
     enum SpecialAnim { DIE, S_LAST };
 
