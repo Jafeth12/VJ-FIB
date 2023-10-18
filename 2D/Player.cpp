@@ -38,7 +38,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
     float size = PLAYER_SIZE_IN_SPRITESHEET / spritesheet.width();
     sprite = Sprite::createSprite(PLAYER_SIZE, glm::vec2(size, size), &spritesheet, &shaderProgram);
-    sprite->setNumberAnimations(6);
+    sprite->setNumberAnimations(S_LAST);
 
     // STAND_LEFT
     sprite->setAnimationSpeed(buildAnim(STAND, LEFT), SPEED);
@@ -67,6 +67,18 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     // JUMP_RIGHT
     sprite->setAnimationSpeed(buildAnim(JUMP, RIGHT), SPEED);
     sprite->addKeyframe(buildAnim(JUMP, RIGHT), glm::vec2(5.f, 0.f));
+
+    // BRAKE_LEFT
+    sprite->setAnimationSpeed(buildAnim(BRAKE, LEFT), SPEED);
+    sprite->addKeyframe(buildAnim(BRAKE, LEFT), glm::vec2(4.f, 1.f));
+
+    // DRIFT_RIGHT
+    sprite->setAnimationSpeed(buildAnim(BRAKE, RIGHT), SPEED);
+    sprite->addKeyframe(buildAnim(BRAKE, RIGHT), glm::vec2(4.f, 0.f));
+
+    // DIE
+    sprite->setAnimationSpeed(DIE, SPEED);
+    sprite->addKeyframe(DIE, glm::vec2(0.f, 2.f));
 
     sprite->changeAnimation(buildAnim(STAND, RIGHT));
     tileMapDispl = tileMapPos;
@@ -239,24 +251,24 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
 {
     // Figure out components of the current animation
     int currentAnimId = sprite->animation();
-    VerticalAnims verticalAnim = getVerticalAnim(currentAnimId);
-    LateralAnims lateralAnim = getLateralAnim(currentAnimId);
+    VerticalAnim verticalAnim = getVerticalAnim(currentAnimId);
+    LateralAnim lateralAnim = getLateralAnim(currentAnimId);
     // Setup components for the next animation
-    VerticalAnims nextVerticalAnim = verticalAnim;
-    LateralAnims nextLateralAnim = lateralAnim;
+    VerticalAnim nextVerticalAnim = verticalAnim;
+    LateralAnim nextLateralAnim = lateralAnim;
     // Figure out next vertical animation
     switch (yState) {
         case FLOOR:
             // Both keys pressed or none pressed. Stand still
             if ((!leftPressed && !rightPressed) || (leftPressed && rightPressed))
-                nextVerticalAnim = VerticalAnims::STAND;
+                nextVerticalAnim = VerticalAnim::STAND;
             // Only one key pressed. Move
             else
-                nextVerticalAnim = VerticalAnims::MOVE;
+                nextVerticalAnim = VerticalAnim::MOVE;
             break;
         case UPWARDS:
         case DOWNWARDS:
-            nextVerticalAnim = VerticalAnims::JUMP;
+            nextVerticalAnim = VerticalAnim::JUMP;
             break;
         default:
             break;
@@ -264,9 +276,9 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
     // Firgure out animation direction
     if (yState == FLOOR) {
         if (leftPressed && !rightPressed)
-            nextLateralAnim = LateralAnims::LEFT;
+            nextLateralAnim = LateralAnim::LEFT;
         else if (rightPressed && !leftPressed)
-            nextLateralAnim = LateralAnims::RIGHT;
+            nextLateralAnim = LateralAnim::RIGHT;
     }
     // Update the animation only if it changed
     int nextAnimId = buildAnim(nextVerticalAnim, nextLateralAnim);
