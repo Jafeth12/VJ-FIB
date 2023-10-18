@@ -78,6 +78,10 @@ void Scene::render() {
 
     statsText->render();
 
+    for (auto it = texts.begin(); it != texts.end(); ++it) {
+        it->second->render();
+    }
+
 	texProgram->setUniformMatrix4f("view", view);   // esto está aquí porque el render de player necesita la view matrix de la cámara
                                                     // el player se renderiza justo después de esto. habría que mirárselo.
 }

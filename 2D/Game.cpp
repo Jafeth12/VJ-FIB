@@ -5,7 +5,7 @@
 #define SCREEN_X 0
 #define SCREEN_Y 16
 
-#define INIT_PLAYER_X_TILES 4
+#define INIT_PLAYER_X_TILES 3
 #define INIT_PLAYER_Y_TILES 13
 
 
@@ -47,7 +47,7 @@ void Game::init()
 bool Game::update(float deltaTime)
 {
     if (currentState == GAME_PLAY) scenes[currentSceneIndex]->update(deltaTime, player);
-    // else menu.update(deltaTime, player);
+    else menu.update(deltaTime);
 	
 	return bPlay;
 }

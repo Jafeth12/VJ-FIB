@@ -16,23 +16,24 @@ void MainMenu::init(ShaderProgram &shaderProgram, Camera &camera, StatsText &sta
     Scene::init(shaderProgram, camera, statsText, levelFilename, initPlayerTiles, minCoords);
 
     currentState = MENU_TITLE;
-    currentOptionSelected = MENU_OPTION_PLAY;
+    currentOptionSelected = 0;
 
     texProgram = &shaderProgram;
 
-    logoTexture.loadFromFile("images/title.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    logoTexture.loadFromFile("images/logo.png", TEXTURE_PIXEL_FORMAT_RGBA);
     logoTexture.setMinFilter(GL_NEAREST);
     logoTexture.setMagFilter(GL_NEAREST);
     // mushroomTexture.loadFromFile("images/mushroom.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
     // checkar las dimensiones, las ha generado copilot y pueden estar mal
-    // logo = Sprite::createSprite(glm::ivec2(256, 128), glm::vec2(1.f, 1.f), &logoTexture, &shaderProgram);
+    logo = Sprite::createSprite(glm::ivec2(384, 192), glm::vec2(1.f, 1.f), &logoTexture, &shaderProgram);
+    logo->setPosition(glm::vec2(64, 64));
     // mushroom = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.f, 1.f), &mushroomTexture, &shaderProgram);
 
-    texts["optionPlay"] = Text::createText("1 PLAYER GAME", &shaderProgram, glm::vec2(11, 20));
-    texts["optionTutorial"] = Text::createText("HOW TO PLAY", &shaderProgram, glm::vec2(12, 22));
-    texts["optionCredits"] = Text::createText("CREDITS", &shaderProgram, glm::vec2(14, 24));
-    texts["topScore"] = Text::createText("TOP- " + zeroFill(topScore, 6), &shaderProgram, glm::vec2(12, 26));
+    texts["optionPlay"] = Text::createText("1 PLAYER GAME", &shaderProgram, glm::vec2(10, 19));
+    texts["optionTutorial"] = Text::createText("HOW TO PLAY", &shaderProgram, glm::vec2(11, 21));
+    texts["optionCredits"] = Text::createText("CREDITS", &shaderProgram, glm::vec2(13, 23));
+    texts["topScore"] = Text::createText("TOP- " + zeroFill(topScore, 6), &shaderProgram, glm::vec2(11, 26));
 }
 
 
@@ -43,14 +44,13 @@ void MainMenu::update(float deltaTime) {
     } else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
         changeOptionDown();
     }
+
 }
 
 void MainMenu::render() {
     Scene::render();
 
-    for (auto it = texts.begin(); it != texts.end(); ++it) {
-        it->second->render();
-    }
+    logo->render();
 
 }
 
