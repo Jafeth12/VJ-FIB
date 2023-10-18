@@ -262,10 +262,12 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
             break;
     }
     // Firgure out animation direction
-    if (leftPressed && !rightPressed)
-        nextLateralAnim = LateralAnims::LEFT;
-    else if (rightPressed && !leftPressed)
-        nextLateralAnim = LateralAnims::RIGHT;
+    if (yState == FLOOR) {
+        if (leftPressed && !rightPressed)
+            nextLateralAnim = LateralAnims::LEFT;
+        else if (rightPressed && !leftPressed)
+            nextLateralAnim = LateralAnims::RIGHT;
+    }
     // Update the animation only if it changed
     int nextAnimId = buildAnim(nextVerticalAnim, nextLateralAnim);
     if (nextAnimId != currentAnimId)
