@@ -285,17 +285,16 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
     // Figure out next vertical animation
     switch (yState) {
         case FLOOR:
-            // if ((!leftPressed && !rightPressed) || (leftPressed && rightPressed))
-            if (glm::abs(velPlayer.x) < 15)
-                nextVerticalAnim = VerticalAnim::STAND;
-            // Only one key pressed. Move
+            if (glm::abs(velPlayer.x) > (2.f/3.f) * X_RUN_SPEED)
+                nextVerticalAnim = VerticalAnim::SPRINT;
+            else if (glm::abs(velPlayer.x) > (1.f/3.f) * X_RUN_SPEED)
+                nextVerticalAnim = VerticalAnim::RUN;
+            else if (glm::abs(velPlayer.x) > X_WALK_SPEED/4.f) // FIXME: Magic number (1/4 de X_WALK_SPEED).
+                                                               // TODO: Corregir formulas de velocidad para que tengan en cuenta el framerate
+                nextVerticalAnim = VerticalAnim::WALK;
             else
-                if (glm::abs(velPlayer.x) > 2.f * (X_RUN_SPEED) / 3.f)
-                    nextVerticalAnim = VerticalAnim::SPRINT;
-                else if (glm::abs(velPlayer.x) > (X_RUN_SPEED) / 3.f)
-                    nextVerticalAnim = VerticalAnim::RUN;
-                else
-                    nextVerticalAnim = VerticalAnim::WALK;
+                nextVerticalAnim = VerticalAnim::STAND;
+
 
             if ((velPlayer.x < 0 && onlyR) || (velPlayer.x > 0 && onlyL))
                 nextVerticalAnim = VerticalAnim::BRAKE;
