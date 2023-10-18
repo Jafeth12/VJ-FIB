@@ -285,7 +285,6 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
     // Figure out next vertical animation
     switch (yState) {
         case FLOOR:
-            // Both keys pressed or none pressed. Stand still
             // if ((!leftPressed && !rightPressed) || (leftPressed && rightPressed))
             if (glm::abs(velPlayer.x) < 15)
                 nextVerticalAnim = VerticalAnim::STAND;
@@ -302,8 +301,11 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
                 nextVerticalAnim = VerticalAnim::BRAKE;
             break;
         case UPWARDS:
-        case DOWNWARDS:
             nextVerticalAnim = VerticalAnim::JUMP;
+            break;
+        case DOWNWARDS:
+            if (verticalAnim != VerticalAnim::JUMP)
+                nextVerticalAnim = VerticalAnim::STAND;
             break;
         default:
             break;
