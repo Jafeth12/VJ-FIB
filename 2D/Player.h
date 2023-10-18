@@ -29,9 +29,10 @@ private:
     // Animations
     enum VerticalAnim { MOVE, STAND, JUMP, BRAKE, V_LAST };
     enum LateralAnim { LEFT, RIGHT, L_LAST };
-    enum SpecialAnim { DIE = V_LAST*L_LAST, S_LAST};
+    enum SpecialAnim { DIE, S_LAST };
 
-    int buildAnim(VerticalAnim v, LateralAnim l) const { return (int)(l * VerticalAnim::V_LAST + v); }
+    int getAnimId(VerticalAnim v, LateralAnim l) const { return (int)(l * VerticalAnim::V_LAST + v); }
+    int getAnimId(SpecialAnim s) const { return s + V_LAST * L_LAST; }
     VerticalAnim getVerticalAnim(int a) const { return (VerticalAnim)(a % VerticalAnim::V_LAST); };
     LateralAnim getLateralAnim(int a) const { return (LateralAnim)(a / VerticalAnim::V_LAST); };
     void updateAnimation(bool leftPressed, bool rightPressed) const;

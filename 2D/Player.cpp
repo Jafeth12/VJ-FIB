@@ -38,49 +38,49 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
     float size = PLAYER_SIZE_IN_SPRITESHEET / spritesheet.width();
     sprite = Sprite::createSprite(PLAYER_SIZE, glm::vec2(size, size), &spritesheet, &shaderProgram);
-    sprite->setNumberAnimations(S_LAST);
+    sprite->setNumberAnimations(getAnimId(S_LAST));
 
     // STAND_LEFT
-    sprite->setAnimationSpeed(buildAnim(STAND, LEFT), SPEED);
-    sprite->addKeyframe(buildAnim(STAND, LEFT), glm::vec2(0.f, 0.f));
+    sprite->setAnimationSpeed(getAnimId(STAND, LEFT), SPEED);
+    sprite->addKeyframe(getAnimId(STAND, LEFT), glm::vec2(0.f, 0.f));
 
     // STAND_RIGHT
-    sprite->setAnimationSpeed(buildAnim(STAND, RIGHT), SPEED);
-    sprite->addKeyframe(buildAnim(STAND, RIGHT), glm::vec2(0.f, 1.f));
+    sprite->setAnimationSpeed(getAnimId(STAND, RIGHT), SPEED);
+    sprite->addKeyframe(getAnimId(STAND, RIGHT), glm::vec2(0.f, 1.f));
 
     // MOVE_LEFT
-    sprite->setAnimationSpeed(buildAnim(MOVE, LEFT), SPEED);
-    sprite->addKeyframe(buildAnim(MOVE, LEFT), glm::vec2(3.f, 1.f));
-    sprite->addKeyframe(buildAnim(MOVE, LEFT), glm::vec2(2.f, 1.f));
-    sprite->addKeyframe(buildAnim(MOVE, LEFT), glm::vec2(1.f, 1.f));
+    sprite->setAnimationSpeed(getAnimId(MOVE, LEFT), SPEED);
+    sprite->addKeyframe(getAnimId(MOVE, LEFT), glm::vec2(3.f, 1.f));
+    sprite->addKeyframe(getAnimId(MOVE, LEFT), glm::vec2(2.f, 1.f));
+    sprite->addKeyframe(getAnimId(MOVE, LEFT), glm::vec2(1.f, 1.f));
 
     // MOVE_RIGHT
-    sprite->setAnimationSpeed(buildAnim(MOVE, RIGHT), SPEED);
-    sprite->addKeyframe(buildAnim(MOVE, RIGHT), glm::vec2(3.f, 0.f));
-    sprite->addKeyframe(buildAnim(MOVE, RIGHT), glm::vec2(2.f, 0.f));
-    sprite->addKeyframe(buildAnim(MOVE, RIGHT), glm::vec2(1.f, 0.f));
+    sprite->setAnimationSpeed(getAnimId(MOVE, RIGHT), SPEED);
+    sprite->addKeyframe(getAnimId(MOVE, RIGHT), glm::vec2(3.f, 0.f));
+    sprite->addKeyframe(getAnimId(MOVE, RIGHT), glm::vec2(2.f, 0.f));
+    sprite->addKeyframe(getAnimId(MOVE, RIGHT), glm::vec2(1.f, 0.f));
 
     // JUMP_LEFT
-    sprite->setAnimationSpeed(buildAnim(JUMP, LEFT), SPEED);
-    sprite->addKeyframe(buildAnim(JUMP, LEFT), glm::vec2(5.f, 1.f));
+    sprite->setAnimationSpeed(getAnimId(JUMP, LEFT), SPEED);
+    sprite->addKeyframe(getAnimId(JUMP, LEFT), glm::vec2(5.f, 1.f));
 
     // JUMP_RIGHT
-    sprite->setAnimationSpeed(buildAnim(JUMP, RIGHT), SPEED);
-    sprite->addKeyframe(buildAnim(JUMP, RIGHT), glm::vec2(5.f, 0.f));
+    sprite->setAnimationSpeed(getAnimId(JUMP, RIGHT), SPEED);
+    sprite->addKeyframe(getAnimId(JUMP, RIGHT), glm::vec2(5.f, 0.f));
 
     // BRAKE_LEFT
-    sprite->setAnimationSpeed(buildAnim(BRAKE, LEFT), SPEED);
-    sprite->addKeyframe(buildAnim(BRAKE, LEFT), glm::vec2(4.f, 1.f));
+    sprite->setAnimationSpeed(getAnimId(BRAKE, LEFT), SPEED);
+    sprite->addKeyframe(getAnimId(BRAKE, LEFT), glm::vec2(4.f, 1.f));
 
     // DRIFT_RIGHT
-    sprite->setAnimationSpeed(buildAnim(BRAKE, RIGHT), SPEED);
-    sprite->addKeyframe(buildAnim(BRAKE, RIGHT), glm::vec2(4.f, 0.f));
+    sprite->setAnimationSpeed(getAnimId(BRAKE, RIGHT), SPEED);
+    sprite->addKeyframe(getAnimId(BRAKE, RIGHT), glm::vec2(4.f, 0.f));
 
     // DIE
-    sprite->setAnimationSpeed(DIE, SPEED);
-    sprite->addKeyframe(DIE, glm::vec2(0.f, 2.f));
+    sprite->setAnimationSpeed(getAnimId(DIE), SPEED);
+    sprite->addKeyframe(getAnimId(DIE), glm::vec2(0.f, 2.f));
 
-    sprite->changeAnimation(buildAnim(STAND, RIGHT));
+    sprite->changeAnimation(getAnimId(STAND, RIGHT));
     tileMapDispl = tileMapPos;
     sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
@@ -281,7 +281,7 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
             nextLateralAnim = LateralAnim::RIGHT;
     }
     // Update the animation only if it changed
-    int nextAnimId = buildAnim(nextVerticalAnim, nextLateralAnim);
+    int nextAnimId = getAnimId(nextVerticalAnim, nextLateralAnim);
     if (nextAnimId != currentAnimId)
         sprite->changeAnimation(nextAnimId);
 }
