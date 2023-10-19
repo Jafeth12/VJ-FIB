@@ -10,7 +10,7 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "Text.h"
-#include "StatsText.h"
+#include "HUD.h"
 #include "MainMenu.h"
 
 #define SCREEN_WIDTH 512
@@ -65,7 +65,7 @@ private:
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
     Camera camera;
-    StatsText statsText;
+    HUD hud;
     MainMenu menu;
     ShaderProgram shaderProgram;
     std::vector<Scene*> scenes;

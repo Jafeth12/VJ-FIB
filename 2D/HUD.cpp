@@ -1,6 +1,6 @@
-#include "StatsText.h"
+#include "HUD.h"
 
-void StatsText::init(ShaderProgram &shaderProgram) {
+void HUD::init(ShaderProgram &shaderProgram) {
     texProgram = &shaderProgram;
 
     score = 0;
@@ -18,35 +18,35 @@ void StatsText::init(ShaderProgram &shaderProgram) {
     texts["timeNumber"] = Text::createText(zeroFill(timeLeft, 3), &shaderProgram, glm::vec2(26, 3));
 }
 
-void StatsText::setCoins(int coins) {
+void HUD::setCoins(int coins) {
     this->coins = coins;
     texts["coins"]->updateText("0x" + zeroFill(coins, 2));
 }
 
-void StatsText::setScore(int score) {
+void HUD::setScore(int score) {
     this->score = score;
     texts["score"]->updateText(zeroFill(score, 6));
 }
 
-void StatsText::setWorldNumber(int worldNumber) {
+void HUD::setWorldNumber(int worldNumber) {
     this->worldNumber = worldNumber;
     texts["worldNumber"]->updateText("1-" + std::to_string(worldNumber));
 }
 
-void StatsText::incrementWorldNumber() {
+void HUD::incrementWorldNumber() {
     setWorldNumber(worldNumber + 1);
 }
 
-void StatsText::setTimeLeft(int timeLeft) {
+void HUD::setTimeLeft(int timeLeft) {
     this->timeLeft = timeLeft;
     texts["timeNumber"]->updateText(zeroFill(timeLeft, 3));
 }
 
-void StatsText::decrementTimeLeft() {
+void HUD::decrementTimeLeft() {
     setTimeLeft(timeLeft - 1);
 }
 
-void StatsText::render() {
+void HUD::render() {
     for (auto it = texts.begin(); it != texts.end(); ++it) {
         if (!renderTimeLeft && it->first == "timeNumber") continue;
 
@@ -55,7 +55,7 @@ void StatsText::render() {
 }
 
 // private
-std::string StatsText::zeroFill(int value, size_t digits) {
+std::string HUD::zeroFill(int value, size_t digits) {
     std::string result = std::to_string(value);
 
     while (result.length() < digits) {

@@ -29,7 +29,7 @@ public:
     // MainMenu();
     // ~MainMenu();
 
-	virtual void init(ShaderProgram &shaderProgram, Camera &camera, StatsText &statsText, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
+	virtual void init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
     void update(float deltaTime);
     virtual void render();
 

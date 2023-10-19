@@ -1,19 +1,19 @@
-#ifndef STATS_H
-#define STATS_H
+#ifndef HUD_H
+#define HUD_H
 
 #include <glm/glm.hpp>
 #include <map>
 
 #include "Text.h"
 
-class StatsText {
+class HUD {
 
 public:
-    // static StatsText &instance()
+    // static HUD &instance()
     // {
-    //     static StatsText STATS;
+    //     static HUD hud;
     //
-    //     return STATS;
+    //     return hud;
     // }
 
     void init(ShaderProgram &shaderProgram);

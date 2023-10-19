@@ -12,8 +12,8 @@ std::string zeroFill(int value, size_t digits) {
     return result;
 }
 
-void MainMenu::init(ShaderProgram &shaderProgram, Camera &camera, StatsText &statsText, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords) {
-    Scene::init(shaderProgram, camera, statsText, levelFilename, initPlayerTiles, minCoords);
+void MainMenu::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords) {
+    Scene::init(shaderProgram, camera, hud, levelFilename, initPlayerTiles, minCoords);
 
     currentState = MENU_TITLE;
     currentOptionSelected = 0;

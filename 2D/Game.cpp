@@ -21,19 +21,19 @@ void Game::init()
     initShaders();
     Text::init();
 
-    statsText.init(shaderProgram);
+    hud.init(shaderProgram);
 
-	menu.init(shaderProgram, camera, statsText, "levels/level01.txt", glm::ivec2(INIT_PLAYER_X_TILES, INIT_PLAYER_Y_TILES), glm::ivec2(SCREEN_X, SCREEN_Y));
+	menu.init(shaderProgram, camera, hud, "levels/level01.txt", glm::ivec2(INIT_PLAYER_X_TILES, INIT_PLAYER_Y_TILES), glm::ivec2(SCREEN_X, SCREEN_Y));
     menu.setBackground("levels/background01.txt");
 
     // create scenes
     scenes.push_back(new Scene());
     scenes.push_back(new Scene());
-	scenes[currentSceneIndex]->init(shaderProgram, camera, statsText, "levels/level01.txt", glm::ivec2(INIT_PLAYER_X_TILES, INIT_PLAYER_Y_TILES), glm::ivec2(SCREEN_X, SCREEN_Y));
+	scenes[currentSceneIndex]->init(shaderProgram, camera, hud, "levels/level01.txt", glm::ivec2(INIT_PLAYER_X_TILES, INIT_PLAYER_Y_TILES), glm::ivec2(SCREEN_X, SCREEN_Y));
     scenes[currentSceneIndex]->setBackground("levels/background01.txt");
 
     // TODO cambiar el init_player_tiles para 1-2 porque es distinto ---> no hacerlo un define, porque cambia por nivel. SCREEN_X/Y si que pueden ser defines
-	scenes[currentSceneIndex+1]->init(shaderProgram, camera, statsText, "levels/level02.txt", glm::ivec2(INIT_PLAYER_X_TILES, INIT_PLAYER_Y_TILES), glm::ivec2(SCREEN_X, SCREEN_Y));
+	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", glm::ivec2(INIT_PLAYER_X_TILES, INIT_PLAYER_Y_TILES), glm::ivec2(SCREEN_X, SCREEN_Y));
 
     TileMap *map = scenes[currentSceneIndex]->getMap();
 
@@ -76,12 +76,15 @@ void Game::keyPressed(int key)
         wireframe = !wireframe;
     } else if (key == '1') {
         if (currentState == GAME_MENU) currentState = GAME_PLAY;
+        hud.showTimeLeft();
         changeScene(0);
     } else if (key == '2') {
         if (currentState == GAME_MENU) currentState = GAME_PLAY;
+        hud.showTimeLeft();
         changeScene(1);
     } else if (key == 'm') {
         currentState = GAME_MENU;
+        hud.hideTimeLeft();
         TileMap *newTileMap = menu.getMap();
         player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * newTileMap->getTileSize(), INIT_PLAYER_Y_TILES * newTileMap->getTileSize()));
         player->setTileMap(newTileMap);

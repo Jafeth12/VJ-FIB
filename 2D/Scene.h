@@ -9,7 +9,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Text.h"
-#include "StatsText.h"
+#include "HUD.h"
 
 
 // Scene contains all the entities of our game.
@@ -23,7 +23,7 @@ public:
 	Scene();
 	~Scene();
 
-	virtual void init(ShaderProgram &shaderProgram, Camera &camera, StatsText &statsText, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
+	virtual void init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
 	virtual void update(float deltaTime, Player *player);
 	virtual void render();
     TileMap* getMap();
@@ -39,7 +39,7 @@ protected:
     TileMap *background;
     TileMap *foreground;
 
-    StatsText *statsText;
+    HUD *hud;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;

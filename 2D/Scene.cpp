@@ -21,13 +21,13 @@ Scene::~Scene()
         delete foreground;
 }
 
-void Scene::init(ShaderProgram &shaderProgram, Camera &camera, StatsText &statsText, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords)
+void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords)
 {
     texProgram = &shaderProgram;
 
     this->initPlayerTiles = initPlayerTiles;
     this->minCoords = minCoords;
-    this->statsText = &statsText;
+    this->hud = &hud;
     this->camera = &camera;
 
 	map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
@@ -40,10 +40,10 @@ void Scene::update(float deltaTime, Player *player)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 
-    statsText->decrementTimeLeft();
+    hud->decrementTimeLeft();
 
-    if (statsText->isTimeLeftZero()) {
-        statsText->setTimeLeft(400);
+    if (hud->isTimeLeftZero()) {
+        hud->setTimeLeft(400);
     }
 
     glm::vec2 playerPos = player->getPosition();
@@ -76,7 +76,7 @@ void Scene::render() {
 	map->render();
     if (foreground != NULL) foreground->render();
 
-    statsText->render();
+    hud->render();
 
     for (auto it = texts.begin(); it != texts.end(); ++it) {
         it->second->render();
