@@ -27,14 +27,16 @@ public:
 
 private:
     // Animations
-    enum VerticalAnim { WALK, RUN, SPRINT, STAND, JUMP, BRAKE, V_LAST };
-    enum LateralAnim { LEFT, RIGHT, L_LAST };
-    enum SpecialAnim { DIE, S_LAST };
+    typedef short enum_t;
+    enum class VerticalAnim : enum_t { WALK, RUN, SPRINT, STAND, JUMP, BRAKE, LAST };
+    enum class LateralAnim  : enum_t { LEFT, RIGHT, LAST };
+    enum class SpecialAnim  : enum_t { DIE, LAST };
 
-    int getAnimId(VerticalAnim v, LateralAnim l) const { return (int)(l * VerticalAnim::V_LAST + v); }
-    int getAnimId(SpecialAnim s) const { return s + V_LAST * L_LAST; }
-    VerticalAnim getVerticalAnim(int a) const { return (VerticalAnim)(a % VerticalAnim::V_LAST); };
-    LateralAnim getLateralAnim(int a) const { return (LateralAnim)(a / VerticalAnim::V_LAST); };
+    const int numAnims = (int)getAnimId(SpecialAnim::LAST);
+    int getAnimId(VerticalAnim v, LateralAnim l) const { return (enum_t)l * (enum_t)VerticalAnim::LAST + (enum_t)v; }
+    int getAnimId(SpecialAnim s) const { return (enum_t)s + (enum_t)VerticalAnim::LAST * (enum_t)LateralAnim::LAST; }
+    VerticalAnim getVerticalAnim(int a) const { return (VerticalAnim)((enum_t)a % (enum_t)VerticalAnim::LAST); };
+    LateralAnim getLateralAnim(int a) const { return (LateralAnim)((enum_t)a / (enum_t)VerticalAnim::LAST); };
     void updateAnimation(bool leftPressed, bool rightPressed) const;
 
     // Physics

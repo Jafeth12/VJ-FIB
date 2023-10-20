@@ -38,73 +38,73 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
     float size = PLAYER_SIZE_IN_SPRITESHEET / spritesheet.width();
     sprite = Sprite::createSprite(PLAYER_SIZE, glm::vec2(size, size), &spritesheet, &shaderProgram);
-    sprite->setNumberAnimations(getAnimId(S_LAST));
+    sprite->setNumberAnimations(numAnims);
 
     // STAND_LEFT
-    sprite->setAnimationSpeed(getAnimId(STAND, LEFT), SPEED);
-    sprite->addKeyframe(getAnimId(STAND, LEFT), glm::vec2(0.f, 0.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::STAND, LateralAnim::LEFT), SPEED);
+    sprite->addKeyframe(getAnimId(VerticalAnim::STAND, LateralAnim::LEFT), glm::vec2(0.f, 0.f));
 
     // STAND_RIGHT
-    sprite->setAnimationSpeed(getAnimId(STAND, RIGHT), SPEED);
-    sprite->addKeyframe(getAnimId(STAND, RIGHT), glm::vec2(0.f, 1.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT), SPEED);
+    sprite->addKeyframe(getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT), glm::vec2(0.f, 1.f));
 
     // WALK_LEFT
-    sprite->setAnimationSpeed(getAnimId(WALK, LEFT), SPEED);
-    sprite->addKeyframe(getAnimId(WALK, LEFT), glm::vec2(3.f, 1.f));
-    sprite->addKeyframe(getAnimId(WALK, LEFT), glm::vec2(2.f, 1.f));
-    sprite->addKeyframe(getAnimId(WALK, LEFT), glm::vec2(1.f, 1.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::WALK, LateralAnim::LEFT), SPEED);
+    sprite->addKeyframe(getAnimId(VerticalAnim::WALK, LateralAnim::LEFT), glm::vec2(3.f, 1.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::WALK, LateralAnim::LEFT), glm::vec2(2.f, 1.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::WALK, LateralAnim::LEFT), glm::vec2(1.f, 1.f));
 
     // WALK_RIGHT
-    sprite->setAnimationSpeed(getAnimId(WALK, RIGHT), SPEED);
-    sprite->addKeyframe(getAnimId(WALK, RIGHT), glm::vec2(3.f, 0.f));
-    sprite->addKeyframe(getAnimId(WALK, RIGHT), glm::vec2(2.f, 0.f));
-    sprite->addKeyframe(getAnimId(WALK, RIGHT), glm::vec2(1.f, 0.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::WALK, LateralAnim::RIGHT), SPEED);
+    sprite->addKeyframe(getAnimId(VerticalAnim::WALK, LateralAnim::RIGHT), glm::vec2(3.f, 0.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::WALK, LateralAnim::RIGHT), glm::vec2(2.f, 0.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::WALK, LateralAnim::RIGHT), glm::vec2(1.f, 0.f));
 
     // RUN_LEFT
-    sprite->setAnimationSpeed(getAnimId(RUN, LEFT), int(1.5f*float(SPEED)));
-    sprite->addKeyframe(getAnimId(RUN, LEFT), glm::vec2(3.f, 1.f));
-    sprite->addKeyframe(getAnimId(RUN, LEFT), glm::vec2(2.f, 1.f));
-    sprite->addKeyframe(getAnimId(RUN, LEFT), glm::vec2(1.f, 1.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::RUN, LateralAnim::LEFT), int(1.5f*float(SPEED)));
+    sprite->addKeyframe(getAnimId(VerticalAnim::RUN, LateralAnim::LEFT), glm::vec2(3.f, 1.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::RUN, LateralAnim::LEFT), glm::vec2(2.f, 1.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::RUN, LateralAnim::LEFT), glm::vec2(1.f, 1.f));
 
     // RUN_RIGHT
-    sprite->setAnimationSpeed(getAnimId(RUN, RIGHT), int(1.5f*float(SPEED)));
-    sprite->addKeyframe(getAnimId(RUN, RIGHT), glm::vec2(3.f, 0.f));
-    sprite->addKeyframe(getAnimId(RUN, RIGHT), glm::vec2(2.f, 0.f));
-    sprite->addKeyframe(getAnimId(RUN, RIGHT), glm::vec2(1.f, 0.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::RUN, LateralAnim::RIGHT), int(1.5f*float(SPEED)));
+    sprite->addKeyframe(getAnimId(VerticalAnim::RUN, LateralAnim::RIGHT), glm::vec2(3.f, 0.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::RUN, LateralAnim::RIGHT), glm::vec2(2.f, 0.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::RUN, LateralAnim::RIGHT), glm::vec2(1.f, 0.f));
 
     // SPRINT_LEFT
-    sprite->setAnimationSpeed(getAnimId(SPRINT, LEFT), 2*SPEED);
-    sprite->addKeyframe(getAnimId(SPRINT, LEFT), glm::vec2(3.f, 1.f));
-    sprite->addKeyframe(getAnimId(SPRINT, LEFT), glm::vec2(2.f, 1.f));
-    sprite->addKeyframe(getAnimId(SPRINT, LEFT), glm::vec2(1.f, 1.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::SPRINT, LateralAnim::LEFT), 2*SPEED);
+    sprite->addKeyframe(getAnimId(VerticalAnim::SPRINT, LateralAnim::LEFT), glm::vec2(3.f, 1.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::SPRINT, LateralAnim::LEFT), glm::vec2(2.f, 1.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::SPRINT, LateralAnim::LEFT), glm::vec2(1.f, 1.f));
 
     // SPRINT_RIGHT
-    sprite->setAnimationSpeed(getAnimId(SPRINT, RIGHT), 2*SPEED);
-    sprite->addKeyframe(getAnimId(SPRINT, RIGHT), glm::vec2(3.f, 0.f));
-    sprite->addKeyframe(getAnimId(SPRINT, RIGHT), glm::vec2(2.f, 0.f));
-    sprite->addKeyframe(getAnimId(SPRINT, RIGHT), glm::vec2(1.f, 0.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::SPRINT, LateralAnim::RIGHT), 2*SPEED);
+    sprite->addKeyframe(getAnimId(VerticalAnim::SPRINT, LateralAnim::RIGHT), glm::vec2(3.f, 0.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::SPRINT, LateralAnim::RIGHT), glm::vec2(2.f, 0.f));
+    sprite->addKeyframe(getAnimId(VerticalAnim::SPRINT, LateralAnim::RIGHT), glm::vec2(1.f, 0.f));
 
     // JUMP_LEFT
-    sprite->setAnimationSpeed(getAnimId(JUMP, LEFT), SPEED);
-    sprite->addKeyframe(getAnimId(JUMP, LEFT), glm::vec2(5.f, 1.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::JUMP, LateralAnim::LEFT), SPEED);
+    sprite->addKeyframe(getAnimId(VerticalAnim::JUMP, LateralAnim::LEFT), glm::vec2(5.f, 1.f));
 
     // JUMP_RIGHT
-    sprite->setAnimationSpeed(getAnimId(JUMP, RIGHT), SPEED);
-    sprite->addKeyframe(getAnimId(JUMP, RIGHT), glm::vec2(5.f, 0.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::JUMP, LateralAnim::RIGHT), SPEED);
+    sprite->addKeyframe(getAnimId(VerticalAnim::JUMP, LateralAnim::RIGHT), glm::vec2(5.f, 0.f));
 
     // BRAKE_LEFT
-    sprite->setAnimationSpeed(getAnimId(BRAKE, LEFT), SPEED);
-    sprite->addKeyframe(getAnimId(BRAKE, LEFT), glm::vec2(4.f, 1.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::BRAKE, LateralAnim::LEFT), SPEED);
+    sprite->addKeyframe(getAnimId(VerticalAnim::BRAKE, LateralAnim::LEFT), glm::vec2(4.f, 1.f));
 
     // BRAKE_RIGHT
-    sprite->setAnimationSpeed(getAnimId(BRAKE, RIGHT), SPEED);
-    sprite->addKeyframe(getAnimId(BRAKE, RIGHT), glm::vec2(4.f, 0.f));
+    sprite->setAnimationSpeed(getAnimId(VerticalAnim::BRAKE, LateralAnim::RIGHT), SPEED);
+    sprite->addKeyframe(getAnimId(VerticalAnim::BRAKE, LateralAnim::RIGHT), glm::vec2(4.f, 0.f));
 
     // DIE
-    sprite->setAnimationSpeed(getAnimId(DIE), SPEED);
-    sprite->addKeyframe(getAnimId(DIE), glm::vec2(0.f, 2.f));
+    sprite->setAnimationSpeed(getAnimId(SpecialAnim::DIE), SPEED);
+    sprite->addKeyframe(getAnimId(SpecialAnim::DIE), glm::vec2(0.f, 2.f));
 
-    sprite->changeAnimation(getAnimId(STAND, RIGHT));
+    sprite->changeAnimation(getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT));
     tileMapDispl = tileMapPos;
     sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
