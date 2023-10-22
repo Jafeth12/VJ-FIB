@@ -161,6 +161,10 @@ void Text::updatePosition(glm::vec2 pos) {
     position = pos;
 }
 
+glm::vec2 Text::getPosition(){
+    return position;
+}
+
 void Text::render() {
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.f));
     glm::mat4 view = glm::mat4(1.0f);

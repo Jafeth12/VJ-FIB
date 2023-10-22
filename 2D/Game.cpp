@@ -46,8 +46,16 @@ void Game::init()
 
 bool Game::update(float deltaTime)
 {
-    if (currentState == GAME_PLAY) scenes[currentSceneIndex]->update(deltaTime, player);
-    else menu.update(deltaTime);
+    if (currentState == GAME_PLAY) {
+        scenes[currentSceneIndex]->update(deltaTime, player);
+    } else if (currentState == GAME_MENU) {
+        menu.update(deltaTime);
+        if (menu.getMenuState() == MENU_PLAY) {
+            currentState = GAME_PLAY;
+            hud.showTimeLeft();
+            changeScene(0);
+        }
+    }
 	
 	return bPlay;
 }
@@ -56,10 +64,10 @@ void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (currentState == GAME_MENU)
-        menu.render();
-    else
+    if (currentState == GAME_PLAY)
         scenes[currentSceneIndex]->render();
+    else
+        menu.render();
 
     player->render();
 }
@@ -84,11 +92,14 @@ void Game::keyPressed(int key)
         changeScene(1);
     } else if (key == 'm') {
         currentState = GAME_MENU;
+        menu.setMenuState(MENU_TITLE);
         hud.hideTimeLeft();
+
         TileMap *newTileMap = menu.getMap();
+
+        // la posicion del player se deberia coger de la escena. cada escena deberia guardar la posicion inicial del jugador
         player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * newTileMap->getTileSize(), INIT_PLAYER_Y_TILES * newTileMap->getTileSize()));
         player->setTileMap(newTileMap);
-        player->render();
         camera.setPosition(glm::vec2(0, 0));
     }
 	keys[key] = true;

@@ -29,6 +29,8 @@ public:
     void updateText(string new_text);
     void render();
 
+    glm::vec2 getPosition();
+
 private:
     static Texture *s_fontTexture;
 

@@ -10,10 +10,17 @@
 #include <vector>
 #include <string>
 
+#define MENU_TEXT_POS_X 10
+#define MENU_TEXT_POS_Y 19
+
+#define MENU_CURSOR_POS_X 8
+#define MENU_CURSOR_POS_Y 18
+
 enum MenuState {
     MENU_TITLE = 0,
     MENU_TUTORIAL,
     MENU_CREDITS,
+    MENU_PLAY,
 };
 
 enum MenuOption {
@@ -33,7 +40,10 @@ public:
     void update(float deltaTime);
     virtual void render();
 
+    void setTopScore(int newTopScore);
     void setMenuState(MenuState newState);
+
+    MenuState getMenuState();
 
     void changeOptionUp();
     void changeOptionDown();
@@ -42,8 +52,8 @@ private:
     Sprite* logo;
     Texture logoTexture;
 
-    Sprite* mushroom;
-    Texture mushroomTexture;
+    Sprite* cursor;
+    Texture cursorTexture;
 
     int topScore;
 
