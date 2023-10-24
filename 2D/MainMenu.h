@@ -45,8 +45,6 @@ public:
     void changeOptionDown();
 
 private:
-    Sprite* logo;
-    Texture logoTexture;
 
     enum class MenuOption {
         MENU_OPTION_PLAY = 0,
@@ -68,7 +66,9 @@ private:
     MenuState currentState;
     char currentOptionSelected;
 
-    float keyPressTime = 0.0f;
+    float keyPressTime = 0.0f; // RIB=Rest in Beans
+
+    glm::vec2 posFromOption(char option);
 };
 
 #endif

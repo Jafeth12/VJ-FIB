@@ -20,36 +20,30 @@ void MainMenu::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std:
 
     texProgram = &shaderProgram;
 
-    logoTexture.loadFromFile("images/logo.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    logoTexture.setMinFilter(GL_NEAREST);
-    logoTexture.setMagFilter(GL_NEAREST);
+    logo.texture.loadFromFile("images/logo.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    logo.texture.setMinFilter(GL_NEAREST);
+    logo.texture.setMagFilter(GL_NEAREST);
 
-    cursorTexture.loadFromFile("images/mushroom.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    cursorTexture.setMinFilter(GL_NEAREST);
-    cursorTexture.setMagFilter(GL_NEAREST);
+    cursor.texture.loadFromFile("images/mushroom.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    cursor.texture.setMinFilter(GL_NEAREST);
+    cursor.texture.setMagFilter(GL_NEAREST);
 
-    // checkar las dimensiones, las ha generado copilot y pueden estar mal
-    logo = Sprite::createSprite(glm::ivec2(384, 192), glm::vec2(1.f, 1.f), &logoTexture, &shaderProgram);
-    logo->setPosition(glm::vec2(64, 64));
+    // TODO intentar quit magic numbers (384, 192), (32, 32), (64, 64)
+    logo.sprite = Sprite::createSprite(glm::ivec2(384, 192), glm::vec2(1.f, 1.f), &logo.texture, &shaderProgram);
+    logo.sprite->setPosition(glm::vec2(64, 64));
 
+    cursor.sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.f, 1.f), &cursor.texture, &shaderProgram);
+    cursor.sprite->setPosition(glm::vec2(MENU_CURSOR_POS_X*FONT_SIZE, MENU_CURSOR_POS_Y*FONT_SIZE));
 
     texts["optionPlay"] = Text::createText("1 PLAYER GAME", &shaderProgram, glm::vec2(MENU_TEXT_POS_X, MENU_TEXT_POS_Y));
     texts["optionTutorial"] = Text::createText("HOW TO PLAY", &shaderProgram, glm::vec2(MENU_TEXT_POS_X+1, MENU_TEXT_POS_Y+2));
     texts["optionCredits"] = Text::createText("CREDITS", &shaderProgram, glm::vec2(MENU_TEXT_POS_X+3, MENU_TEXT_POS_Y+4));
     texts["topScore"] = Text::createText("TOP- " + zeroFill(topScore, 6), &shaderProgram, glm::vec2(MENU_TEXT_POS_X+1, MENU_TEXT_POS_Y+7));
-
-    cursor = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.f, 1.f), &cursorTexture, &shaderProgram);
-    cursor->setPosition(glm::vec2(10*16 - 32, 18*16));
-    cursor->setPosition(glm::vec2(MENU_CURSOR_POS_X*FONT_SIZE, MENU_CURSOR_POS_Y*FONT_SIZE));
 }
 
 void MainMenu::update(float deltaTime) {
 
     // [código escrito por chat jipitty]
-
-    // static float keyPressTime = 0.0f;  // Initialize a timer for key presses.
-    // const float keyPressDelay = 0.1f;  // Set the delay between key presses (adjust as needed).
-
     bool up = Game::instance().getSpecialKey(GLUT_KEY_UP);
     bool down = Game::instance().getSpecialKey(GLUT_KEY_DOWN);
     bool enter = Game::instance().getKey(13);
@@ -98,19 +92,23 @@ MainMenu::MenuState MainMenu::getMenuState() {
 void MainMenu::render() {
     Scene::render();
 
-    logo->render();
-    cursor->render();
+    logo.sprite->render();
+    cursor.sprite->render();
+}
+
+glm::vec2 MainMenu::posFromOption(char option) {
+    return glm::vec2(MENU_CURSOR_POS_X*FONT_SIZE, MENU_CURSOR_POS_Y*FONT_SIZE + option*2*FONT_SIZE);
 }
 
 void MainMenu::changeOptionUp() {
     if (currentOptionSelected == 0) return;
     --currentOptionSelected;
-    cursor->setPosition(glm::vec2(MENU_CURSOR_POS_X*FONT_SIZE, MENU_CURSOR_POS_Y*FONT_SIZE + currentOptionSelected*2*FONT_SIZE));
+    cursor.sprite->setPosition(posFromOption(currentOptionSelected));
 }
 
 void MainMenu::changeOptionDown() {
     ++currentOptionSelected;
     if (currentOptionSelected == (char)MenuOption::LAST) currentOptionSelected = (char)MenuOption::LAST - 1;
-    cursor->setPosition(glm::vec2(MENU_CURSOR_POS_X*FONT_SIZE, MENU_CURSOR_POS_Y*FONT_SIZE + currentOptionSelected*2*FONT_SIZE));
+    cursor.sprite->setPosition(posFromOption(currentOptionSelected));
 }
 
