@@ -24,18 +24,12 @@ class MainMenu : public Scene {
 public:
     // MainMenu();
     // ~MainMenu();
-    enum class MenuState {
-        MENU_TITLE = 0,
-        MENU_TUTORIAL,
-        MENU_CREDITS,
-        MENU_PLAY,
-    };
 
-    enum class MenuOption {
-        MENU_OPTION_PLAY = 0,
-        MENU_OPTION_TUTORIAL,
-        MENU_OPTION_CREDITS,
-        LAST,
+    enum class MenuState {
+        TITLE = 0,
+        TUTORIAL,
+        CREDITS,
+        PLAY,
     };
 
 	virtual void init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
@@ -54,8 +48,20 @@ private:
     Sprite* logo;
     Texture logoTexture;
 
-    Sprite* cursor;
-    Texture cursorTexture;
+    enum class MenuOption {
+        MENU_OPTION_PLAY = 0,
+        MENU_OPTION_TUTORIAL,
+        MENU_OPTION_CREDITS,
+        LAST,
+    };
+
+    struct MenuSprite {
+        Sprite* sprite;
+        Texture texture;
+    };
+
+    MenuSprite logo;
+    MenuSprite cursor;
 
     int topScore;
 

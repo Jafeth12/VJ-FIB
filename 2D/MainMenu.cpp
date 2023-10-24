@@ -15,7 +15,7 @@ std::string zeroFill(int value, size_t digits) {
 void MainMenu::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords) {
     Scene::init(shaderProgram, camera, hud, levelFilename, initPlayerTiles, minCoords);
 
-    currentState = MenuState::MENU_TITLE;
+    currentState = MenuState::TITLE;
     currentOptionSelected = 0;
 
     texProgram = &shaderProgram;
@@ -43,7 +43,6 @@ void MainMenu::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std:
     cursor->setPosition(glm::vec2(MENU_CURSOR_POS_X*FONT_SIZE, MENU_CURSOR_POS_Y*FONT_SIZE));
 }
 
-
 void MainMenu::update(float deltaTime) {
 
     // [código escrito por chat jipitty]
@@ -70,13 +69,13 @@ void MainMenu::update(float deltaTime) {
 
                 switch (currentOptionSelected) {
                     case (char)MenuOption::MENU_OPTION_PLAY:
-                        currentState = MenuState::MENU_PLAY;
+                        currentState = MenuState::PLAY;
                         break;
                     case (char)MenuOption::MENU_OPTION_TUTORIAL:
-                        currentState = MenuState::MENU_TUTORIAL;
+                        currentState = MenuState::TUTORIAL;
                         break;
                     case (char)MenuOption::MENU_OPTION_CREDITS:
-                        currentState = MenuState::MENU_CREDITS;
+                        currentState = MenuState::CREDITS;
                         break;
                 }
             }
