@@ -15,7 +15,7 @@ std::string zeroFill(int value, size_t digits) {
 void MainMenu::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords) {
     Scene::init(shaderProgram, camera, hud, levelFilename, initPlayerTiles, minCoords);
 
-    currentState = MENU_TITLE;
+    currentState = MenuState::MENU_TITLE;
     currentOptionSelected = 0;
 
     texProgram = &shaderProgram;
@@ -48,8 +48,8 @@ void MainMenu::update(float deltaTime) {
 
     // [código escrito por chat jipitty]
 
-    static float keyPressTime = 0.0f;  // Initialize a timer for key presses.
-    const float keyPressDelay = 0.1f;  // Set the delay between key presses (adjust as needed).
+    // static float keyPressTime = 0.0f;  // Initialize a timer for key presses.
+    // const float keyPressDelay = 0.1f;  // Set the delay between key presses (adjust as needed).
 
     bool up = Game::instance().getSpecialKey(GLUT_KEY_UP);
     bool down = Game::instance().getSpecialKey(GLUT_KEY_DOWN);
@@ -60,7 +60,7 @@ void MainMenu::update(float deltaTime) {
         float currentTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
 
         // Check if enough time has passed since the last key press.
-        if (currentTime - keyPressTime >= keyPressDelay) {
+        if (currentTime - keyPressTime >= MENU_KEY_PRESS_DELAY) {
 
             if (up) {
                 changeOptionUp();
@@ -69,14 +69,14 @@ void MainMenu::update(float deltaTime) {
             } else if (enter) {
 
                 switch (currentOptionSelected) {
-                    case MENU_OPTION_PLAY:
-                        currentState = MENU_PLAY;
+                    case (char)MenuOption::MENU_OPTION_PLAY:
+                        currentState = MenuState::MENU_PLAY;
                         break;
-                    case MENU_OPTION_TUTORIAL:
-                        currentState = MENU_TUTORIAL;
+                    case (char)MenuOption::MENU_OPTION_TUTORIAL:
+                        currentState = MenuState::MENU_TUTORIAL;
                         break;
-                    case MENU_OPTION_CREDITS:
-                        currentState = MENU_CREDITS;
+                    case (char)MenuOption::MENU_OPTION_CREDITS:
+                        currentState = MenuState::MENU_CREDITS;
                         break;
                 }
             }
@@ -92,7 +92,7 @@ void MainMenu::setMenuState(MenuState newState) {
     currentState = newState;
 }
 
-MenuState MainMenu::getMenuState() {
+MainMenu::MenuState MainMenu::getMenuState() {
     return currentState;
 }
 
@@ -111,7 +111,7 @@ void MainMenu::changeOptionUp() {
 
 void MainMenu::changeOptionDown() {
     ++currentOptionSelected;
-    if (currentOptionSelected == _LAST) currentOptionSelected = _LAST-1;
+    if (currentOptionSelected == (char)MenuOption::LAST) currentOptionSelected = (char)MenuOption::LAST - 1;
     cursor->setPosition(glm::vec2(MENU_CURSOR_POS_X*FONT_SIZE, MENU_CURSOR_POS_Y*FONT_SIZE + currentOptionSelected*2*FONT_SIZE));
 }
 

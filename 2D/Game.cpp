@@ -50,7 +50,7 @@ bool Game::update(float deltaTime)
         scenes[currentSceneIndex]->update(deltaTime, player);
     } else if (currentState == GAME_MENU) {
         menu.update(deltaTime);
-        if (menu.getMenuState() == MENU_PLAY) {
+        if (menu.getMenuState() == MainMenu::MenuState::MENU_PLAY) {
             currentState = GAME_PLAY;
             hud.showTimeLeft();
             changeScene(0);
@@ -92,7 +92,7 @@ void Game::keyPressed(int key)
         changeScene(1);
     } else if (key == 'm') {
         currentState = GAME_MENU;
-        menu.setMenuState(MENU_TITLE);
+        menu.setMenuState(MainMenu::MenuState::MENU_TITLE);
         hud.hideTimeLeft();
 
         TileMap *newTileMap = menu.getMap();
