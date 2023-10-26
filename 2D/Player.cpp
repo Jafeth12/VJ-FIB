@@ -221,6 +221,7 @@ bool Player::updateYState(bool upPressed)
             break;
 
         case DOWNWARDS:
+            bJumping = true;
             // Transition to FLOOR
             if (onGround)
                 yState = FLOOR;
