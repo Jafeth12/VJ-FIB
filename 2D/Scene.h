@@ -45,6 +45,7 @@ protected:
     glm::ivec2 minCoords;
 
     std::map<std::string, Text*> texts;
+    bool autoRenderAllText;
 
     Camera *camera;
 

@@ -19,6 +19,10 @@ Scene::~Scene()
         delete background;
     if (foreground != NULL) 
         delete foreground;
+
+    for (auto &text : texts) {
+        delete text.second;
+    }
 }
 
 void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords)
@@ -29,6 +33,8 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
     this->minCoords = minCoords;
     this->hud = &hud;
     this->camera = &camera;
+
+    autoRenderAllText = true;
 
 	map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
 
@@ -78,8 +84,10 @@ void Scene::render() {
 
     hud->render();
 
-    for (auto it = texts.begin(); it != texts.end(); ++it) {
-        it->second->render();
+    if (autoRenderAllText) {
+        for (auto it = texts.begin(); it != texts.end(); ++it) {
+            it->second->render();
+        }
     }
 
 	texProgram->setUniformMatrix4f("view", view);   // esto está aquí porque el render de player necesita la view matrix de la cámara

@@ -1,4 +1,4 @@
-OPTS := -O0
+OPTS := -O3
 
 CC = g++
 

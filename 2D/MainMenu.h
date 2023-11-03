@@ -16,14 +16,15 @@
 #define MENU_CURSOR_POS_X 8
 #define MENU_CURSOR_POS_Y 18
 
-#define MENU_KEY_PRESS_DELAY 0.1f
+#define MENU_KEY_PRESS_DELAY 0.15f
 
 
 class MainMenu : public Scene {
 
 public:
-    // MainMenu();
-    // ~MainMenu();
+	MainMenu(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
+    MainMenu();
+    ~MainMenu();
 
     enum class MenuState {
         TITLE = 0,
@@ -69,6 +70,8 @@ private:
     float keyPressTime = 0.0f; // RIB=Rest in Beans
 
     glm::vec2 posFromOption(char option);
+    void renderCredits();
+    void renderHelp();
 };
 
 #endif
