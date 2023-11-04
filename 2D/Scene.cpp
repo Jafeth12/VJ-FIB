@@ -40,12 +40,18 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFil
     texts["timeText"] = Text::createText("Time", &shaderProgram, glm::vec2(25, 1));
     texts["timeNumber"] = Text::createText(std::to_string(timeLeft), &shaderProgram, glm::vec2(26, 2));
 	currentTime = 0.0f;
+
+    // TODO esto tampoco debe estar hardcodeado XD, pero esk los defines estan en Game.cpp
+    goomba.init(glm::ivec2(0, 16), shaderProgram, Enemy::EnemyColor::UNDERWORLD);
+	goomba.setPosition(glm::vec2(4 * map->getTileSize(), 13 * map->getTileSize()));
+	goomba.setTileMap(map);
 }
 
 void Scene::update(float deltaTime, Player *player)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+    goomba.update(deltaTime);
 
     // TODO quitar todo esto, es de prueba
 
@@ -78,6 +84,7 @@ void Scene::render() {
 
     background->render();
 	map->render();
+    goomba.render();
 
     render_texts();
 

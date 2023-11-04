@@ -9,6 +9,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Text.h"
+#include "Goomba.h"
 
 
 // Scene contains all the entities of our game.
@@ -32,6 +33,8 @@ private:
     TileMap *background;
 	ShaderProgram *texProgram;
 	float currentTime;
+
+    Goomba goomba;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;

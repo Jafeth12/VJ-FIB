@@ -9,12 +9,13 @@
 class Enemy {
 
     public:
-        void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+        enum class EnemyColor { OVERWORLD, UNDERWORLD };
+
+        void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, EnemyColor color);
         void update(float deltaTime);
         void render();
         void setTileMap(TileMap *tileMap);
 
-    private:
         Texture spritesheet;
         Sprite *sprite;
         TileMap *map;
