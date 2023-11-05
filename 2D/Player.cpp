@@ -135,7 +135,10 @@ void Player::update(float deltaTime)
     bool leftPressed = Game::instance().getSpecialKey(GLUT_KEY_LEFT);
     bool rightPressed = Game::instance().getSpecialKey(GLUT_KEY_RIGHT);
     bool upPressed = Game::instance().getKey(' ');
-    bool runPressed = Game::instance().getKey('z');
+
+    bool leftShiftPressed = Game::instance().getSpecialKey(112);
+    bool rightShiftPressed = Game::instance().getSpecialKey(113);
+    bool runPressed = leftShiftPressed || rightShiftPressed;
 
     // Change the movement state of the player, based on inputs
     bool shouldJump = updateYState(upPressed);
