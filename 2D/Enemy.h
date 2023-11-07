@@ -15,6 +15,7 @@ class Enemy {
         void update(float deltaTime);
         void render();
         void setTileMap(TileMap *tileMap);
+        void setPosition(const glm::vec2 &pos);
 
         Texture spritesheet;
         Sprite *sprite;

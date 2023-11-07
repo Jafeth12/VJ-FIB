@@ -7,10 +7,6 @@ class Goomba : public Enemy {
     public:
         void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, EnemyColor color);
         void update(float deltaTime);
-        void render();
-
-        void setTileMap(TileMap *tileMap);
-        void setPosition(const glm::vec2 &pos);
 
     private:
         void updatePosition(float deltaTime);
@@ -24,8 +20,8 @@ class Goomba : public Enemy {
         enum_t getAnimId(Anim a) const { return (enum_t)a; };
 
         // Attributes
-        Dir goombaDir;
-        glm::vec2 goombaVel;
+        Dir dir;
+        glm::vec2 vel;
 };
 
 #endif

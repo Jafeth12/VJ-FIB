@@ -1,5 +1,4 @@
 #include "Goomba.h"
-#include "Enemy.h"
 
 #include "Constants.h"
 
@@ -9,7 +8,7 @@
 #define GOOMBA_SPEED 120.f
 
 void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Enemy::EnemyColor color) {
-    goombaDir = Dir::RIGHT;
+    dir = Dir::RIGHT;
     tileMapDispl = tileMapPos;
 
     spritesheet.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -53,42 +52,30 @@ void Goomba::update(float deltaTime) {
     setPosition(pos);
 }
 
-void Goomba::render() {
-    sprite->render();
-}
-
-void Goomba::setTileMap(TileMap *tileMap) {
-    map = tileMap;
-}
-
-void Goomba::setPosition(const glm::vec2 &pos) {
-    this->pos = pos;
-    sprite->setPosition(glm::vec2(float(tileMapDispl.x + pos.x), float(tileMapDispl.y + pos.y)));
-}
 
 void Goomba::updateVelocity(float deltaTime) {
     if (map->onGround(pos, GOOMBA_SIZE))
-        goombaVel.y = 0.f;
+        vel.y = 0.f;
     else {
-        goombaVel.y += GRAVITY_ACC * deltaTime;
-        if (goombaVel.y > FALLING_TERMINAL_VEL)
-            goombaVel.y = FALLING_TERMINAL_VEL;
+        vel.y += GRAVITY_ACC * deltaTime;
+        if (vel.y > FALLING_TERMINAL_VEL)
+            vel.y = FALLING_TERMINAL_VEL;
     }
 
-    goombaVel.x = GOOMBA_SPEED * (int)goombaDir;
+    vel.x = GOOMBA_SPEED * (int)dir;
 }
 
 void Goomba::updatePosition(float deltaTime) {
-    int xNext = pos.x + (int)(goombaVel.x * deltaTime);
-    int yNext = pos.y - (int)(goombaVel.y * deltaTime);
+    int xNext = pos.x + (int)(vel.x * deltaTime);
+    int yNext = pos.y - (int)(vel.y * deltaTime);
 
     glm::ivec2 nextPos = glm::ivec2(xNext, yNext);
 
     if (map->solveCollisionsY(pos, nextPos, GOOMBA_SIZE))
-        goombaVel.y = 0.f;
+        vel.y = 0.f;
 
     if (map->solveCollisionsX(pos, nextPos, GOOMBA_SIZE))
-        goombaDir = (Dir)(-(enum_t)goombaDir);
+        dir = (Dir)(-(enum_t)dir);
 
     this->pos = nextPos;
 }
