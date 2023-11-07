@@ -33,9 +33,9 @@ public:
         PLAY,
     };
 
-	virtual void init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
+	void init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
     void update(float deltaTime);
-    virtual void render();
+    void render();
 
     void setTopScore(int newTopScore);
     void setMenuState(MenuState newState);

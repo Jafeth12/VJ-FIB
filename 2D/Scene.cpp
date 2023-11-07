@@ -36,7 +36,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 
     autoRenderAllText = true;
 
-	map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
+	if (levelFilename != "") map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
 
 	currentTime = 0.0f;
 }
@@ -54,6 +54,10 @@ void Scene::update(float deltaTime, Player *player)
 
     glm::vec2 playerPos = player->getPosition();
     camera->setXPosition(playerPos.x - initPlayerTiles.x * map->getTileSize());
+}
+
+glm::ivec2 Scene::getInitPlayerTiles() {
+    return initPlayerTiles;
 }
 
 void Scene::setBackground(std::string levelFilename) {
@@ -79,7 +83,7 @@ void Scene::render() {
 	texProgram->setUniform2f("texCoordDispl", 0.f, 0.f);
 
     if (background != NULL) background->render();
-	map->render();
+	if (map != NULL) map->render();
     if (foreground != NULL) foreground->render();
 
     hud->render();

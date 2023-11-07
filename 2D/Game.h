@@ -12,6 +12,7 @@
 #include "Text.h"
 #include "HUD.h"
 #include "MainMenu.h"
+#include "LoadingScene.h"
 
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 512
@@ -22,6 +23,7 @@
 enum GameState {
     GAME_MENU = 0,
     GAME_PLAY,
+    GAME_LOADING,
 };
 
 class Game
@@ -69,6 +71,10 @@ private:
     MainMenu menu;
     ShaderProgram shaderProgram;
     std::vector<Scene*> scenes;
+
+    bool showsLoadingScene;
+    LoadingScene *loadingScene;
+
     int currentSceneIndex;
     GameState currentState;
     Player *player;

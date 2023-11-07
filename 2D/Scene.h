@@ -31,6 +31,8 @@ public:
     void setBackground(std::string levelFilename);
     void setForeground(std::string levelFilename);
 
+    glm::ivec2 getInitPlayerTiles();
+
 protected:
 
 	ShaderProgram *texProgram;
@@ -52,7 +54,6 @@ protected:
 	float currentTime;
 
 private:
-
 };
 
 
