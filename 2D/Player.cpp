@@ -6,16 +6,11 @@
 #include "Player.h"
 #include "Game.h"
 
+#include "Constants.h"
+
 #define SPEED 16 //FIXME SPEED -> ANIM_SPEED
 #define PLAYER_SIZE glm::ivec2(32, 32)
 #define PLAYER_SIZE_IN_SPRITESHEET 16.f
-#define JUMP_HEIGHT 175.f
-#define JUMP_TIME .62f
-#define N_FALL_GRAVITY 3.f
-#define FALLING_TERMINAL_VEL 500.f
-#define GRAVITY_ACC ((-2*JUMP_HEIGHT)/(JUMP_TIME*JUMP_TIME))
-#define JUMP_VEL sqrtf(-2.f * GRAVITY_ACC * JUMP_HEIGHT)
-
 #define X_WALK_SPEED 225.f
 #define X_RUN_SPEED 2.f * X_WALK_SPEED
 #define X_ACC  550.f
