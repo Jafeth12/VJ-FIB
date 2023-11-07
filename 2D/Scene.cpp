@@ -42,9 +42,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFil
 	currentTime = 0.0f;
 
     // TODO esto tampoco debe estar hardcodeado XD, pero esk los defines estan en Game.cpp
-    goomba.init(glm::ivec2(0, 16), shaderProgram, Enemy::EnemyColor::UNDERWORLD);
-	goomba.setPosition(glm::vec2(4 * map->getTileSize(), 13 * map->getTileSize()));
-	goomba.setTileMap(map);
+    goomba.init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::OVERWORLD, Enemy::Dir::RIGHT, glm::ivec2(4, 13));
 }
 
 void Scene::update(float deltaTime, Player *player)

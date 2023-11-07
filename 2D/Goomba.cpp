@@ -1,16 +1,18 @@
 #include "Goomba.h"
-
 #include "Constants.h"
+#include "TileMap.h"
 
 #define ANIM_SPEED 8
 #define GOOMBA_SIZE_IN_SPRITESHEET 32.f
 #define GOOMBA_SIZE glm::ivec2(32, 32)
 #define GOOMBA_SPEED 120.f
 
-void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Enemy::EnemyColor color) {
-    dir = Dir::RIGHT;
+void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
+    dir = initialDirection;
     tileMapDispl = tileMapPos;
+    setTileMap(tileMap);
 
+    // TODO: Cargar spritesheet solamente una vez (no se como XD)
     spritesheet.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
     spritesheet.setMinFilter(GL_NEAREST);
     spritesheet.setMagFilter(GL_NEAREST);
@@ -19,7 +21,7 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, En
     sprite = Sprite::createSprite(GOOMBA_SIZE, glm::vec2(size, size), &spritesheet, &shaderProgram);
 
     float row;
-    if (color == EnemyColor::OVERWORLD)
+    if (color == Color::OVERWORLD)
         row = 0.f;
     else // UNDERWORLD
         row = 1.f;
@@ -40,9 +42,10 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, En
     sprite->addKeyframe(deadId, glm::vec2(2.f, row));
 
     // Set default animation
-    sprite->changeAnimation(getAnimId(Anim::WALK));
+    sprite->changeAnimation(walkId);
 
-    sprite->setPosition(glm::vec2(float(tileMapDispl.x + pos.x), float(tileMapDispl.y + pos.y)));
+
+    setPosition(pos * map->getTileSize());
 }
 
 void Goomba::update(float deltaTime) {
