@@ -23,13 +23,15 @@ public:
 	Scene();
 	~Scene();
 
-	virtual void init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
+	virtual void init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords, int worldNumber);
 	virtual void update(float deltaTime, Player *player);
 	virtual void render();
     TileMap* getMap();
 
     void setBackground(std::string levelFilename);
     void setForeground(std::string levelFilename);
+
+    int getWorldNumber();
 
     glm::ivec2 getInitPlayerTiles();
 
@@ -52,6 +54,7 @@ protected:
     Camera *camera;
 
 	float currentTime;
+    int worldNumber;
 
 private:
 };

@@ -11,7 +11,7 @@ void HUD::init(ShaderProgram &shaderProgram) {
 
     texts["mario"] = Text::createText("Mario", &shaderProgram, glm::vec2(3, 2));
     texts["score"] = Text::createText(zeroFill(score, 6), &shaderProgram, glm::vec2(3, 3));
-    texts["coins"] = Text::createText("0x" + zeroFill(coins, 2), &shaderProgram, glm::vec2(12, 3));
+    texts["coins"] = Text::createText("Cx" + zeroFill(coins, 2), &shaderProgram, glm::vec2(12, 3));
     texts["worldText"] = Text::createText("World", &shaderProgram, glm::vec2(18, 2));
     texts["worldNumber"] = Text::createText("1-" + std::to_string(worldNumber), &shaderProgram, glm::vec2(19, 3));
     texts["timeText"] = Text::createText("Time", &shaderProgram, glm::vec2(25, 2));
@@ -31,10 +31,6 @@ void HUD::setScore(int score) {
 void HUD::setWorldNumber(int worldNumber) {
     this->worldNumber = worldNumber;
     texts["worldNumber"]->updateText("1-" + std::to_string(worldNumber));
-}
-
-void HUD::incrementWorldNumber() {
-    setWorldNumber(worldNumber + 1);
 }
 
 void HUD::setTimeLeft(int timeLeft) {

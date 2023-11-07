@@ -24,7 +24,6 @@ public:
     void setCoins(int coins);
 
     void setWorldNumber(int worldNumber);
-    void incrementWorldNumber();
 
     void setTimeLeft(int timeLeft);
     void decrementTimeLeft();

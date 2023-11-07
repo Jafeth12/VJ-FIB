@@ -3,7 +3,7 @@
 
 #include "Scene.h"
 
-#define LOADING_SCREEN_TIME 3.f
+#define LOADING_SCREEN_TIME 1.5f
 
 class LoadingScene : public Scene {
 public:

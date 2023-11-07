@@ -25,7 +25,7 @@ Scene::~Scene()
     }
 }
 
-void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords)
+void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords, int worldNumber)
 {
     texProgram = &shaderProgram;
 
@@ -33,6 +33,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
     this->minCoords = minCoords;
     this->hud = &hud;
     this->camera = &camera;
+    this->worldNumber = worldNumber;
 
     autoRenderAllText = true;
 
@@ -86,6 +87,7 @@ void Scene::render() {
 	if (map != NULL) map->render();
     if (foreground != NULL) foreground->render();
 
+    if (worldNumber > 0) hud->setWorldNumber(worldNumber);
     hud->render();
 
     if (autoRenderAllText) {
@@ -96,6 +98,10 @@ void Scene::render() {
 
 	texProgram->setUniformMatrix4f("view", view);   // esto está aquí porque el render de player necesita la view matrix de la cámara
                                                     // el player se renderiza justo después de esto. habría que mirárselo.
+}
+
+int Scene::getWorldNumber() {
+    return worldNumber;
 }
 
 TileMap* Scene::getMap() {

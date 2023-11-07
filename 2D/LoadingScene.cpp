@@ -11,15 +11,18 @@ LoadingScene::LoadingScene() {
 }
 
 LoadingScene::~LoadingScene() {
-    Scene::~Scene();
+    // Scene::~Scene();
 }
 
 void LoadingScene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, glm::ivec2 minCoords) {
     initPlayerTiles = INIT_PLAYER_TILES;
-    Scene::init(shaderProgram, camera, hud, "", initPlayerTiles, minCoords);
+    Scene::init(shaderProgram, camera, hud, "", initPlayerTiles, minCoords, -2);
 
-    texts["world"] = Text::createText("WORLD 1-1", &shaderProgram, glm::vec2(11, 14));
-    texts["lives"] = Text::createText("x 3", &shaderProgram, glm::vec2(16, 18));
+    worldNumber = -1;
+    lives = -1;
+
+    texts["world"] = Text::createText("WORLD 1-" + std::to_string(worldNumber), &shaderProgram, glm::vec2(11, 14));
+    texts["lives"] = Text::createText("x 3", &shaderProgram, glm::vec2(16, 18)); // TODO poner vidas aca tambien
 }
 
 void LoadingScene::update(float deltaTime, Player *player) {
@@ -52,6 +55,7 @@ bool LoadingScene::isFinished() {
 
 void LoadingScene::setWorldNumber(int worldNumber) {
     this->worldNumber = worldNumber;
+    texts["world"]->updateText("WORLD 1-" + std::to_string(worldNumber));
 }
 
 void LoadingScene::setLives(int lives) {

@@ -41,6 +41,8 @@ public:
 	
 		return G;
 	}
+
+    ~Game();
 	
 	void init();
 	bool update(float deltaTime);

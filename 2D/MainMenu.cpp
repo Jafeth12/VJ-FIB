@@ -23,7 +23,7 @@ MainMenu::MainMenu(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::
 }
 
 void MainMenu::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords) {
-    Scene::init(shaderProgram, camera, hud, levelFilename, initPlayerTiles, minCoords);
+    Scene::init(shaderProgram, camera, hud, levelFilename, initPlayerTiles, minCoords, -1);
     autoRenderAllText = false;
 
     currentState = MenuState::TITLE;

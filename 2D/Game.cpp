@@ -8,6 +8,7 @@
 #define SCENE_0_INIT_PLAYER_TILES glm::ivec2(3, 13)
 #define SCENE_1_INIT_PLAYER_TILES glm::ivec2(3, 13)
 
+Game::~Game() {}
 
 void Game::init()
 {
@@ -31,10 +32,10 @@ void Game::init()
     // create scenes
     scenes.push_back(new Scene());
     scenes.push_back(new Scene());
-	scenes[currentSceneIndex]->init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_0_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y));
+	scenes[currentSceneIndex]->init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_0_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 1);
     scenes[currentSceneIndex]->setBackground("levels/background01.txt");
 
-	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y));
+	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
 
     TileMap *map = scenes[currentSceneIndex]->getMap();
 
@@ -146,13 +147,15 @@ void Game::keyPressed(int key)
 
 void Game::changeScene(int sceneIndex) {
     currentSceneIndex = sceneIndex;
+    Scene *newScene = scenes[currentSceneIndex];
+    hud.setWorldNumber(newScene->getWorldNumber());
 
     if (showsLoadingScene) {
         currentState = GAME_LOADING;
+        loadingScene.setWorldNumber(newScene->getWorldNumber());
         loadingScene.start();
     } else {
         // Change the map on the player
-        Scene *newScene = scenes[currentSceneIndex];
         TileMap *newTileMap = newScene->getMap();
         glm::ivec2 initPlayerTiles = newScene->getInitPlayerTiles();
         player->setPosition(glm::vec2(initPlayerTiles.x * newTileMap->getTileSize(), initPlayerTiles.y * newTileMap->getTileSize()));
