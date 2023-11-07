@@ -4,6 +4,7 @@
 #define ANIM_SPEED 8
 #define GOOMBA_SIZE_IN_SPRITESHEET 32.f
 #define GOOMBA_SIZE glm::ivec2(32, 32)
+#define GOOMBA_SPEED 120.f
 
 void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Enemy::EnemyColor color) {
     goombaDir = Dir::RIGHT;
@@ -45,7 +46,7 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, En
 
 void Goomba::update(float deltaTime) {
     sprite->update(deltaTime);
-    pos.x += (enum_t)goombaDir;
+    updatePosition(deltaTime);
     setPosition(pos);
 }
 
@@ -60,4 +61,14 @@ void Goomba::setTileMap(TileMap *tileMap) {
 void Goomba::setPosition(const glm::vec2 &pos) {
     this->pos = pos;
     sprite->setPosition(glm::vec2(float(tileMapDispl.x + pos.x), float(tileMapDispl.y + pos.y)));
+}
+
+void Goomba::updatePosition(float deltaTime) {
+    int xNext = pos.x + (int)goombaDir * (int)(GOOMBA_SPEED * deltaTime);
+    glm::ivec2 nextPos = glm::ivec2(xNext, pos.y);
+
+    if (map->solveCollisionsX(pos, nextPos, GOOMBA_SIZE))
+        goombaDir = (Dir)(-(enum_t)goombaDir);
+
+    this->pos = nextPos;
 }
