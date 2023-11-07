@@ -14,6 +14,7 @@ class Goomba : public Enemy {
 
     private:
         void updatePosition(float deltaTime);
+        void updateVelocity(float deltaTime);
 
         // Animations
         typedef int enum_t;
@@ -24,6 +25,7 @@ class Goomba : public Enemy {
 
         // Attributes
         Dir goombaDir;
+        glm::vec2 goombaVel;
 };
 
 #endif

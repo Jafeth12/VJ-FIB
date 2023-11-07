@@ -1,6 +1,8 @@
 #include "Goomba.h"
 #include "Enemy.h"
 
+#include "Constants.h"
+
 #define ANIM_SPEED 8
 #define GOOMBA_SIZE_IN_SPRITESHEET 32.f
 #define GOOMBA_SIZE glm::ivec2(32, 32)
@@ -46,6 +48,7 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, En
 
 void Goomba::update(float deltaTime) {
     sprite->update(deltaTime);
+    updateVelocity(deltaTime);
     updatePosition(deltaTime);
     setPosition(pos);
 }
@@ -63,9 +66,26 @@ void Goomba::setPosition(const glm::vec2 &pos) {
     sprite->setPosition(glm::vec2(float(tileMapDispl.x + pos.x), float(tileMapDispl.y + pos.y)));
 }
 
+void Goomba::updateVelocity(float deltaTime) {
+    if (map->onGround(pos, GOOMBA_SIZE))
+        goombaVel.y = 0.f;
+    else {
+        goombaVel.y += GRAVITY_ACC * deltaTime;
+        if (goombaVel.y > FALLING_TERMINAL_VEL)
+            goombaVel.y = FALLING_TERMINAL_VEL;
+    }
+
+    goombaVel.x = GOOMBA_SPEED * (int)goombaDir;
+}
+
 void Goomba::updatePosition(float deltaTime) {
-    int xNext = pos.x + (int)goombaDir * (int)(GOOMBA_SPEED * deltaTime);
-    glm::ivec2 nextPos = glm::ivec2(xNext, pos.y);
+    int xNext = pos.x + (int)(goombaVel.x * deltaTime);
+    int yNext = pos.y - (int)(goombaVel.y * deltaTime);
+
+    glm::ivec2 nextPos = glm::ivec2(xNext, yNext);
+
+    if (map->solveCollisionsY(pos, nextPos, GOOMBA_SIZE))
+        goombaVel.y = 0.f;
 
     if (map->solveCollisionsX(pos, nextPos, GOOMBA_SIZE))
         goombaDir = (Dir)(-(enum_t)goombaDir);
