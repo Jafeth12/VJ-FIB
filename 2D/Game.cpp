@@ -26,7 +26,7 @@ void Game::init()
 	menu.init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_0_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y));
     menu.setBackground("levels/background01.txt");
 
-    loadingScene = new LoadingScene(shaderProgram, camera, hud, glm::ivec2(SCREEN_X, SCREEN_Y));
+    loadingScene.init(shaderProgram, camera, hud, glm::ivec2(SCREEN_X, SCREEN_Y));
 
     // create scenes
     scenes.push_back(new Scene());
@@ -61,17 +61,17 @@ bool Game::update(float deltaTime)
             }
             break;
         case GAME_LOADING:
-            if (loadingScene->isFinished()) {
+            if (loadingScene.isFinished()) {
                 hud.showTimeLeft();
                 glm::ivec2 initPlayerTiles = scenes[currentSceneIndex]->getInitPlayerTiles();
                 player->setPosition(glm::vec2(initPlayerTiles.x * newTileMap->getTileSize(), initPlayerTiles.y * newTileMap->getTileSize()));
                 player->setTileMap(newTileMap);
             } else {
-                player->setPosition(glm::vec2(loadingScene->getInitPlayerTiles().x * newTileMap->getTileSize(), loadingScene->getInitPlayerTiles().y * newTileMap->getTileSize()));
+                player->setPosition(glm::vec2(loadingScene.getInitPlayerTiles().x * newTileMap->getTileSize(), loadingScene.getInitPlayerTiles().y * newTileMap->getTileSize()));
                 camera.setPosition(glm::vec2(0, 0));
             }
 
-            loadingScene->update(deltaTime, player);
+            loadingScene.update(deltaTime, player);
             break;
         case GAME_PLAY:
             scenes[currentSceneIndex]->update(deltaTime, player);
@@ -92,11 +92,11 @@ void Game::render()
             break;
         case GAME_LOADING:
 
-            if (loadingScene->isFinished()) {
+            if (loadingScene.isFinished()) {
                 currentState = GAME_PLAY;
             } else {
                 hud.hideTimeLeft();
-                loadingScene->render();
+                loadingScene.render();
             }
 
             break;
@@ -149,7 +149,7 @@ void Game::changeScene(int sceneIndex) {
 
     if (showsLoadingScene) {
         currentState = GAME_LOADING;
-        loadingScene->start();
+        loadingScene.start();
     } else {
         // Change the map on the player
         Scene *newScene = scenes[currentSceneIndex];

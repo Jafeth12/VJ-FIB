@@ -73,7 +73,7 @@ private:
     std::vector<Scene*> scenes;
 
     bool showsLoadingScene;
-    LoadingScene *loadingScene;
+    LoadingScene loadingScene;
 
     int currentSceneIndex;
     GameState currentState;
