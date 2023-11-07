@@ -25,14 +25,17 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, En
     // Only 2 animations
     sprite->setNumberAnimations(2);
 
+    enum_t walkId = getAnimId(Anim::WALK);
+    enum_t deadId = getAnimId(Anim::DEAD);
+
     // WALK
-    sprite->setAnimationSpeed(getAnimId(Anim::WALK), ANIM_SPEED);
-    sprite->addKeyframe(getAnimId(Anim::WALK), glm::vec2(0.f, row));
-    sprite->addKeyframe(getAnimId(Anim::WALK), glm::vec2(1.f, row));
+    sprite->setAnimationSpeed(walkId, ANIM_SPEED);
+    sprite->addKeyframe(walkId, glm::vec2(0.f, row));
+    sprite->addKeyframe(walkId, glm::vec2(1.f, row));
 
     // DEAD
-    sprite->setAnimationSpeed(getAnimId(Anim::DEAD), ANIM_SPEED);
-    sprite->addKeyframe(getAnimId(Anim::DEAD), glm::vec2(2.f, row));
+    sprite->setAnimationSpeed(deadId, ANIM_SPEED);
+    sprite->addKeyframe(deadId, glm::vec2(2.f, row));
 
     // Set default animation
     sprite->changeAnimation(getAnimId(Anim::WALK));
@@ -40,14 +43,14 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, En
     sprite->setPosition(glm::vec2(float(tileMapDispl.x + pos.x), float(tileMapDispl.y + pos.y)));
 }
 
-void Goomba::render() {
-    sprite->render();
-}
-
 void Goomba::update(float deltaTime) {
     sprite->update(deltaTime);
     pos.x += (enum_t)goombaDir;
     setPosition(pos);
+}
+
+void Goomba::render() {
+    sprite->render();
 }
 
 void Goomba::setTileMap(TileMap *tileMap) {
