@@ -94,6 +94,27 @@ bool TileMap::loadLevel(const string &levelFile)
 		fin.get(tile);
 #endif
 	}
+
+    unsigned nEnemies;
+
+	getline(fin, line);
+	sstream.str(line);
+	sstream >> nEnemies;
+
+    for (unsigned i = 0; i < nEnemies; ++i) {
+        char enemyType;
+        glm::ivec2 enemyPos;
+        char dir, color;
+
+        getline(fin, line);
+        sstream.str(line);
+        sstream >> enemyType >> enemyPos.x >> enemyPos.y >> dir >> color;
+        EnemyPosition e = { enemyPos, dir, color };
+
+        if (enemyType == 'G') goombas.push_back(e);
+        else if (enemyType == 'K') goombas.push_back(e);
+    }
+
 	fin.close();
 	
 	return true;
