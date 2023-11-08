@@ -49,7 +49,7 @@ protected:
     HUD *hud;
 
     std::vector<Goomba> goombas;
-    Koopa koopa;
+    std::vector<Koopa> koopas;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;

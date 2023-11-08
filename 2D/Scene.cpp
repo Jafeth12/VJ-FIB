@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Enemy.h"
 #include <iostream>
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
@@ -42,24 +43,24 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 
 	currentTime = 0.0f;
 
+    Enemy::Color color = Enemy::Color::OVERWORLD;
+
     // TODO esto tampoco debe estar hardcodeado XD, pero esk los defines estan en Game.cpp
     goombas.resize(2);
-    for (unsigned i = 0; i < goombas.size(); ++i) {
-        goombas[i].init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::OVERWORLD, Enemy::Dir::RIGHT, glm::ivec2(3, 13));
-    }
-    // goombas.init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::UNDERWORLD, Enemy::Dir::RIGHT, glm::ivec2(4, 13));
-    koopa.init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::UNDERWORLD, Enemy::Dir::RIGHT, glm::ivec2(2, 12));
+    for (unsigned i = 0; i < goombas.size(); ++i)
+        goombas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, Enemy::Dir::RIGHT, glm::ivec2(3, 13));
+
+    koopas.resize(2);
+    for (unsigned i = 0; i < koopas.size(); ++i)
+        koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, Enemy::Dir::RIGHT, glm::ivec2(5, 12));
 }
 
 void Scene::update(float deltaTime, Player *player)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-    for (unsigned i = 0; i < goombas.size(); ++i) {
-        goombas[i].update(deltaTime);
-    }
-    // goombas.update(deltaTime);
-    koopa.update(deltaTime);
+    for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].update(deltaTime);
+    for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].update(deltaTime);
 
     hud->decrementTimeLeft();
 
@@ -101,11 +102,8 @@ void Scene::render() {
 	if (map != NULL) map->render();
     if (foreground != NULL) foreground->render();
 
-    for (unsigned i = 0; i < goombas.size(); ++i) {
-        goombas[i].render();
-    }
-    // goombas.render();
-    koopa.render();
+    for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].render();
+    for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].render();
 
     if (worldNumber > 0) hud->setWorldNumber(worldNumber);
     hud->render();
