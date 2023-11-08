@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Text.h"
 #include "Goomba.h"
+#include "HUD.h"
 
 
 // Scene contains all the entities of our game.
@@ -24,16 +25,27 @@ public:
 	Scene();
 	~Scene();
 
-	void init(ShaderProgram &shaderProgram, Camera &camera, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords);
-	void update(float deltaTime, Player *player);
-	void render();
+	virtual void init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::string levelFilename, glm::ivec2 initPlayerTiles, glm::ivec2 minCoords, int worldNumber);
+	virtual void update(float deltaTime, Player *player);
+	virtual void render();
     TileMap* getMap();
 
-private:
+    void setBackground(std::string levelFilename);
+    void setForeground(std::string levelFilename);
+
+    int getWorldNumber();
+
+    glm::ivec2 getInitPlayerTiles();
+
+protected:
+
+	ShaderProgram *texProgram;
+
 	TileMap *map;
     TileMap *background;
-	ShaderProgram *texProgram;
-	float currentTime;
+    TileMap *foreground;
+
+    HUD *hud;
 
     Goomba goomba;
     Koopa koopa;
@@ -42,11 +54,14 @@ private:
     glm::ivec2 minCoords;
 
     std::map<std::string, Text*> texts;
+    bool autoRenderAllText;
 
     Camera *camera;
-    int timeLeft;
 
-    void render_texts();
+	float currentTime;
+    int worldNumber;
+
+private:
 };
 
 
