@@ -21,6 +21,7 @@ void Game::init()
     camera = Camera(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
     initShaders();
     Text::init();
+    SoundEngine::instance().init();
 
     hud.init(shaderProgram);
 
@@ -67,7 +68,9 @@ bool Game::update(float deltaTime)
                 glm::ivec2 initPlayerTiles = scenes[currentSceneIndex]->getInitPlayerTiles();
                 player->setPosition(glm::vec2(initPlayerTiles.x * newTileMap->getTileSize(), initPlayerTiles.y * newTileMap->getTileSize()));
                 player->setTileMap(newTileMap);
+                SoundEngine::instance().playMainTheme();
             } else {
+                SoundEngine::instance().stopAllSounds();
                 player->setPosition(glm::vec2(loadingScene.getInitPlayerTiles().x * newTileMap->getTileSize(), loadingScene.getInitPlayerTiles().y * newTileMap->getTileSize()));
                 camera.setPosition(glm::vec2(0, 0));
             }

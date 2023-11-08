@@ -13,6 +13,7 @@
 #include "HUD.h"
 #include "MainMenu.h"
 #include "LoadingScene.h"
+#include "SoundEngine.h"
 
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 512

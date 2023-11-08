@@ -224,6 +224,7 @@ bool Player::updateYState(bool upPressed)
                 yState = UPWARDS;
                 shouldJump = true;
                 bJumping = true;
+                SoundEngine::instance().playJump();
             }
             // Transition to DOWNWARDS. Player is falling
             if (!onGround)

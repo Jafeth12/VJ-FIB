@@ -12,7 +12,7 @@ SRCS := $(wildcard *.$(LANGUAGE))
 OBJS := $(addprefix $(BIN_DIR)/,$(SRCS:.$(LANGUAGE)=.o))
 
 CFLAGS := $(OPTS) -g -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function -Wno-unused-value
-LDLIBS := -lGL -lSOIL -lGLEW -lGLU -lglut -lm -lX11 -lXrandr -lpthread -lfreetype
+LDLIBS := -lGL -lSOIL -lGLEW -lGLU -lglut -lm -lX11 -lXrandr -lpthread -lIrrKlang
 
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
