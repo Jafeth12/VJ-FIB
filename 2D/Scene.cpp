@@ -43,7 +43,11 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 	currentTime = 0.0f;
 
     // TODO esto tampoco debe estar hardcodeado XD, pero esk los defines estan en Game.cpp
-    goomba.init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::UNDERWORLD, Enemy::Dir::RIGHT, glm::ivec2(4, 13));
+    goombas.resize(2);
+    for (unsigned i = 0; i < goombas.size(); ++i) {
+        goombas[i].init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::OVERWORLD, Enemy::Dir::RIGHT, glm::ivec2(3, 13));
+    }
+    // goombas.init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::UNDERWORLD, Enemy::Dir::RIGHT, glm::ivec2(4, 13));
     koopa.init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::UNDERWORLD, Enemy::Dir::RIGHT, glm::ivec2(2, 12));
 }
 
@@ -51,7 +55,10 @@ void Scene::update(float deltaTime, Player *player)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-    goomba.update(deltaTime);
+    for (unsigned i = 0; i < goombas.size(); ++i) {
+        goombas[i].update(deltaTime);
+    }
+    // goombas.update(deltaTime);
     koopa.update(deltaTime);
 
     hud->decrementTimeLeft();
@@ -90,15 +97,14 @@ void Scene::render() {
 	texProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	texProgram->setUniform2f("texCoordDispl", 0.f, 0.f);
 
-// <<<<<<< HEAD
-//     background->render();
-// 	map->render();
-// =======
     if (background != NULL) background->render();
 	if (map != NULL) map->render();
     if (foreground != NULL) foreground->render();
-// >>>>>>> main
-    goomba.render();
+
+    for (unsigned i = 0; i < goombas.size(); ++i) {
+        goombas[i].render();
+    }
+    // goombas.render();
     koopa.render();
 
     if (worldNumber > 0) hud->setWorldNumber(worldNumber);

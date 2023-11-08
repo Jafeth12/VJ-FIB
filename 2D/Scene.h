@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <map>
+#include <vector>
 #include "Camera.h"
 #include "Koopa.h"
 #include "ShaderProgram.h"
@@ -47,7 +48,7 @@ protected:
 
     HUD *hud;
 
-    Goomba goomba;
+    std::vector<Goomba> goombas;
     Koopa koopa;
 
     glm::ivec2 initPlayerTiles;
