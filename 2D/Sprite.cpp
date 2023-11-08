@@ -29,6 +29,7 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(float), vertices, GL_STATIC_DRAW);
 	posLocation = program->bindVertexAttribute("position", 2, 4*sizeof(float), 0);
 	texCoordLocation = program->bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
+    texCoordDispl = glm::vec2(0.f);
 	texture = spritesheet;
 	shaderProgram = program;
 	currentAnimation = -1;

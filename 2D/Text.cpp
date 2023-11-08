@@ -49,6 +49,12 @@ Text::Text(std::string texto, ShaderProgram *program, glm::vec2 pos) {
     mesh(vertices, indices);
 }
 
+Text::~Text() {
+    glDeleteBuffers(1, &vbo);
+    glDeleteBuffers(1, &ibo);
+    glDeleteVertexArrays(1, &vao);
+}
+
 Text* Text::createText(std::string texto, ShaderProgram *program, glm::vec2 pos) {
     Text *t = new Text(texto, program, pos);
 
@@ -159,6 +165,10 @@ void Text::updateText(std::string new_text) {
 
 void Text::updatePosition(glm::vec2 pos) {
     position = pos;
+}
+
+glm::vec2 Text::getPosition(){
+    return position;
 }
 
 void Text::render() {

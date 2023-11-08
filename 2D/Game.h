@@ -10,7 +10,9 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "Text.h"
-
+#include "HUD.h"
+#include "MainMenu.h"
+#include "LoadingScene.h"
 
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 512
@@ -18,6 +20,11 @@
 
 // Game is a singleton (a class with a single instance) that represents our whole application
 
+enum GameState {
+    GAME_MENU = 0,
+    GAME_PLAY,
+    GAME_LOADING,
+};
 
 class Game
 {
@@ -34,6 +41,8 @@ public:
 	
 		return G;
 	}
+
+    ~Game();
 	
 	void init();
 	bool update(float deltaTime);
@@ -60,9 +69,16 @@ private:
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
     Camera camera;
+    HUD hud;
+    MainMenu menu;
     ShaderProgram shaderProgram;
     std::vector<Scene*> scenes;
+
+    bool showsLoadingScene;
+    LoadingScene loadingScene;
+
     int currentSceneIndex;
+    GameState currentState;
     Player *player;
 };
 

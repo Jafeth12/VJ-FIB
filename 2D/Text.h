@@ -11,11 +11,6 @@
 #define FONT_SIZE_IN_TEXTURE 32
 #define FONT_SIZE 16
 
-struct text_vertex {
-    float pos[2];
-    float texCoords[2];
-};
-
 class Text {
 public: 
     Text(std::string texto, ShaderProgram *program, glm::vec2 pos);
@@ -29,8 +24,15 @@ public:
     void updateText(string new_text);
     void render();
 
+    glm::vec2 getPosition();
+
 private:
     static Texture *s_fontTexture;
+
+    struct text_vertex {
+        float pos[2];
+        float texCoords[2];
+    };
 
 	ShaderProgram *shaderProgram;
 	GLuint vao, vbo, ibo;
