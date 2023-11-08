@@ -22,5 +22,5 @@ images/tiles.png 	-- Tilesheet
 4
 G 4 13 L U
 G 5 13 L O
-K 6 13 R U
-K 7 13 R O
+K 6 12 R U
+K 7 12 R O

@@ -38,21 +38,45 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 
     autoRenderAllText = true;
 
-	if (levelFilename[0] != ' ')
-        map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
-
 	currentTime = 0.0f;
 
-    Enemy::Color color = Enemy::Color::OVERWORLD;
+    if (levelFilename[0] != ' ') {
+        // Cargar el mapa de tiles
+        map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
 
-    // TODO esto tampoco debe estar hardcodeado XD, pero esk los defines estan en Game.cpp
-    goombas.resize(2);
-    for (unsigned i = 0; i < goombas.size(); ++i)
-        goombas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, Enemy::Dir::RIGHT, glm::ivec2(3, 13));
+        // Cargar los enemigos del mapa
+        // Not my proudest fap
+        auto goombasPos = map->getGoombas();
+        goombas.resize(goombasPos.size());
+        for (unsigned i = 0; i < goombasPos.size(); ++i) {
+            Enemy::Dir d;
+            if (goombasPos[i].dir == 'R') d = Enemy::Dir::RIGHT;
+            else d = Enemy::Dir::LEFT;
 
-    koopas.resize(2);
-    for (unsigned i = 0; i < koopas.size(); ++i)
-        koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, Enemy::Dir::RIGHT, glm::ivec2(5, 12));
+            Enemy::Color color;
+            if (goombasPos[i].color == 'U') color = Enemy::Color::UNDERWORLD;
+            else color = Enemy::Color::OVERWORLD;
+
+            goombas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, d, goombasPos[i].initPos);
+        }
+
+        auto koopasPos = map->getKoopas();
+        koopas.resize(koopasPos.size());
+        for (unsigned i = 0; i < koopas.size(); ++i) {
+            Enemy::Dir d;
+            if (koopasPos[i].dir == 'R') d = Enemy::Dir::RIGHT;
+            else d = Enemy::Dir::LEFT;
+
+            Enemy::Color color;
+            if (goombasPos[i].color == 'U') color = Enemy::Color::UNDERWORLD;
+            else color = Enemy::Color::OVERWORLD;
+
+            koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, d, koopasPos[i].initPos);
+        }
+    }
+
+
+
 }
 
 void Scene::update(float deltaTime, Player *player)

@@ -112,7 +112,7 @@ bool TileMap::loadLevel(const string &levelFile)
         EnemyPosition e = { enemyPos, dir, color };
 
         if (enemyType == 'G') goombas.push_back(e);
-        else if (enemyType == 'K') goombas.push_back(e);
+        else if (enemyType == 'K') koopas.push_back(e);
     }
 
 	fin.close();
