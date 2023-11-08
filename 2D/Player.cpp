@@ -189,6 +189,7 @@ void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
     if (shouldJump) {
         velPlayer.y = JUMP_VEL;
         bJumping = true;
+        SoundEngine::instance().playJump();
     }
 }
 
@@ -224,7 +225,6 @@ bool Player::updateYState(bool upPressed)
                 yState = UPWARDS;
                 shouldJump = true;
                 bJumping = true;
-                SoundEngine::instance().playJump();
             }
             // Transition to DOWNWARDS. Player is falling
             if (!onGround)

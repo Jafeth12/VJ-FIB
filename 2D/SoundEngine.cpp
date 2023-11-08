@@ -19,26 +19,32 @@ SoundEngine::~SoundEngine() {
 }
 
 void SoundEngine::stopAllSounds() {
-    engine->stopAllSounds();
+    if (isPlayingSound) engine->stopAllSounds();
+    isPlayingSound = false;
 }
 
 void SoundEngine::playMainTheme() {
     engine->play2D(mainTheme, true);
+    isPlayingSound = true;
 }
 
 void SoundEngine::playJump() {
     engine->play2D(jump, false);
+    isPlayingSound = true;
 }
 
 void SoundEngine::playDie() {
     engine->play2D(die, false);
+    isPlayingSound = true;
 }
 
 void SoundEngine::playCoin() {
     engine->play2D(coin, false);
+    isPlayingSound = true;
 }
 
 void SoundEngine::playGameOver() {
     engine->play2D(game_over, false);
+    isPlayingSound = true;
 }
 

@@ -38,6 +38,8 @@ private:
     irrklang::ISoundSource *coin;
     irrklang::ISoundSource *game_over;
 
+    bool isPlayingSound;
+
 };
 
 #endif // !SOUND_H

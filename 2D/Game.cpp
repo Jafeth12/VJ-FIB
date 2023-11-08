@@ -163,6 +163,9 @@ void Game::changeScene(int sceneIndex) {
         glm::ivec2 initPlayerTiles = newScene->getInitPlayerTiles();
         player->setPosition(glm::vec2(initPlayerTiles.x * newTileMap->getTileSize(), initPlayerTiles.y * newTileMap->getTileSize()));
         player->setTileMap(newTileMap);
+
+        SoundEngine::instance().stopAllSounds();
+        SoundEngine::instance().playMainTheme();
     }
 }
 
