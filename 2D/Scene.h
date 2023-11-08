@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <map>
 #include "Camera.h"
+#include "Koopa.h"
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
@@ -35,6 +36,7 @@ private:
 	float currentTime;
 
     Goomba goomba;
+    Koopa koopa;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;

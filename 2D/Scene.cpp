@@ -42,7 +42,8 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &cam, std::string levelFil
 	currentTime = 0.0f;
 
     // TODO esto tampoco debe estar hardcodeado XD, pero esk los defines estan en Game.cpp
-    goomba.init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::OVERWORLD, Enemy::Dir::RIGHT, glm::ivec2(4, 13));
+    goomba.init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::UNDERWORLD, Enemy::Dir::RIGHT, glm::ivec2(4, 13));
+    koopa.init(glm::ivec2(0, 16), shaderProgram, map, Enemy::Color::UNDERWORLD, Enemy::Dir::RIGHT, glm::ivec2(2, 12));
 }
 
 void Scene::update(float deltaTime, Player *player)
@@ -50,6 +51,7 @@ void Scene::update(float deltaTime, Player *player)
 	currentTime += deltaTime;
 	player->update(deltaTime);
     goomba.update(deltaTime);
+    koopa.update(deltaTime);
 
     // TODO quitar todo esto, es de prueba
 
@@ -83,6 +85,7 @@ void Scene::render() {
     background->render();
 	map->render();
     goomba.render();
+    koopa.render();
 
     render_texts();
 
