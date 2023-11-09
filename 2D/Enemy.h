@@ -18,7 +18,6 @@ class Enemy {
         glm::ivec2 getSize() const { return enemySize; };
 
         virtual bool isDead() const { return true; };
-        virtual bool isMoving() const { return true; };
         bool collidesWith(const Enemy &other) const;
 
         void invertDirection() { dir = (Dir)(-(enum_t)dir); };
