@@ -158,8 +158,10 @@ void Scene::update(float deltaTime, Player *player)
     for (unsigned i = 0; i < goombas.size(); ++i)
         if (goombas[i].shouldCollide() && player->collidesWithEnemy(goombas[i])) {
             float alpha = player->collisionAngle(goombas[i]);
-            if (glm::abs(alpha) <= ANGLE_TO_DIE)
+            if (glm::abs(alpha) <= ANGLE_TO_DIE) {
                 goombas[i].dieVertical();
+                player->stepOnEnemy();
+            }
             else {
                 player->takeDamage();
             }
@@ -168,12 +170,21 @@ void Scene::update(float deltaTime, Player *player)
     // Player - koopas
     for (unsigned i = 0; i < koopas.size(); ++i)
         if (koopas[i].shouldCollide() && player->collidesWithEnemy(koopas[i])) {
-            float alpha = player->collisionAngle(koopas[i]);
-            if (glm::abs(alpha) <= ANGLE_TO_DIE) {
-                koopas[i].dieVertical();
+            if (koopas[i].isShell() && !koopas[i].isMovingShell()) {
+                koopas[i].kick(koopas[i].kickDirection(*player));
+            }
+            else if (koopas[i].isMovingShell()) {
+                player->takeDamage();
             }
             else {
-                player->takeDamage();
+                float alpha = player->collisionAngle(koopas[i]);
+                if (glm::abs(alpha) <= ANGLE_TO_DIE) {
+                    koopas[i].dieVertical();
+                    player->stepOnEnemy();
+                }
+                else {
+                    player->takeDamage();
+                }
             }
         }
 

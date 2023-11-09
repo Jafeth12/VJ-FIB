@@ -2,6 +2,7 @@
 #define _KOOPA_INCLUDE
 
 #include "Enemy.h"
+#include "Player.h"
 #include "TileMap.h"
 
 class Koopa : public Enemy {
@@ -19,6 +20,8 @@ class Koopa : public Enemy {
         bool isDying() const override { return currentState == State::INVERTED; };
         bool isShell() const { return currentState == State::SHELL; };
         bool isMovingShell() const { return currentState == State::SHELL && vel.x != 0.f; };
+
+        Dir kickDirection(Player &p) const;
 
     private:
         static Texture *s_koopaTexture;

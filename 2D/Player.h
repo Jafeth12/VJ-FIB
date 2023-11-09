@@ -38,6 +38,7 @@ public:
      */
     float collisionAngle(const Enemy &enemy) const;
 
+    void stepOnEnemy();
     void takeDamage();
     void fallDie();
 

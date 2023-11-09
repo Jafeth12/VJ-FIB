@@ -128,6 +128,12 @@ void Koopa::kick(Dir dir) {
     }
 }
 
+Enemy::Dir Koopa::kickDirection(Player &p) const {
+    float playerCenter = p.getPosition().x + p.getSize().x / 2.f;
+    float koopaCenter = pos.x + enemySize.x / 2.f;
+    return (playerCenter < koopaCenter) ? Dir::RIGHT : Dir::LEFT;
+}
+
 void Koopa::updateAnimation() {
     int animId = sprite->animation();
     int nextAnimId = animId;

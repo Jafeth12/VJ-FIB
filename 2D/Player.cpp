@@ -211,6 +211,10 @@ float Player::collisionAngle(const Enemy &enemy) const {
     return alpha;
 }
 
+void Player::stepOnEnemy() {
+    this->velPlayer.y = STEP_ON_ENEMY_JUMP_VEL;
+}
+
 void Player::takeDamage() {
     // TODO
     std::cout << "Player::takedamage() todo" << std::endl;
