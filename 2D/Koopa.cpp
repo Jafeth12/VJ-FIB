@@ -5,6 +5,7 @@
 #define KOOPA_SIZE glm::ivec2(32, 48)
 #define KOOPA_SPEED 120.f
 #define SHELL_SPEED 240.f
+#define KOOPA_SHELL_TIME 5.f
 
 Texture *Koopa::s_koopaTexture = nullptr;
 
@@ -14,6 +15,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     map = tileMap;
     enemySize = KOOPA_SIZE;
     bActive = false;
+    timeSinceShell = 0.f;
 
     if (s_koopaTexture == nullptr) {
         s_koopaTexture = new Texture();
@@ -87,6 +89,18 @@ void Koopa::update(float deltaTime) {
     updatePosition(deltaTime);
     updateAnimation();
     setPosition(pos);
+
+    if (isShell() && !isMovingShell()) {
+        timeSinceShell += deltaTime;
+        if (timeSinceShell >= KOOPA_SHELL_TIME) {
+            currentState = State::WALK;
+            dir = Dir::LEFT;
+        }
+    }
+    else {
+        timeSinceShell = 0.f;
+    }
+
 }
 
 

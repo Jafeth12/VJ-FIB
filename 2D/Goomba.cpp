@@ -16,6 +16,7 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
     map = tileMap;
     enemySize = GOOMBA_SIZE;
     bActive = false;
+    timeSinceCrushed = 0.f;
 
     if (s_goombaTexture == nullptr) {
         s_goombaTexture = new Texture();

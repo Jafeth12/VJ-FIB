@@ -38,6 +38,7 @@ class Koopa : public Enemy {
 
         // Attributes
         State currentState;
+        float timeSinceShell;
 };
 
 #endif
