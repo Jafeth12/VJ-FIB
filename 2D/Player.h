@@ -29,7 +29,7 @@ public:
 private:
     // Animations
     typedef short enum_t;
-    enum class VerticalAnim : enum_t { WALK, RUN, SPRINT, STAND, JUMP, BRAKE, _LAST };
+    enum class VerticalAnim : enum_t { WALK, RUN, SPRINT, STAND, JUMP, BRAKE, CLIMB1, CLIMB2, _LAST };
     enum class LateralAnim  : enum_t { LEFT, RIGHT, _LAST };
     enum class SpecialAnim  : enum_t { DIE, _LAST };
 
@@ -50,6 +50,10 @@ private:
     void updateXState(bool leftPressed, bool rightPressed, bool runPressed);
     glm::vec2 getAcceleration();
 
+    void updatePoleAnimation(float deltaTime);
+
+    bool isOnPoleAnimation;
+    bool isOnPole;
 	bool bJumping;
 	glm::ivec2 tileMapDispl;
 	Texture spritesheet;

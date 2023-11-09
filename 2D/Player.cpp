@@ -25,7 +25,11 @@
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
+    isOnPoleAnimation = false;
+    isOnPole = false;
     bJumping = false;
+    map = NULL;
+    backgroundMap = NULL;
     velPlayer = glm::vec2(0.0f);
     yState = FLOOR;
     xState = NONE;
@@ -54,6 +58,10 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     int brakeR = getAnimId(VerticalAnim::BRAKE, LateralAnim::RIGHT);
     int brakeL = getAnimId(VerticalAnim::BRAKE, LateralAnim::LEFT);
     int die = getAnimId(SpecialAnim::DIE);
+    int climb1_R = getAnimId(VerticalAnim::CLIMB1, LateralAnim::RIGHT);
+    int climb1_L = getAnimId(VerticalAnim::CLIMB1, LateralAnim::LEFT);
+    int climb2_R = getAnimId(VerticalAnim::CLIMB2, LateralAnim::RIGHT);
+    int climb2_L = getAnimId(VerticalAnim::CLIMB2, LateralAnim::LEFT);
 
     // STAND_LEFT
     sprite->setAnimationSpeed(standL, SPEED);
@@ -115,6 +123,22 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     sprite->setAnimationSpeed(brakeR, SPEED);
     sprite->addKeyframe(brakeR, glm::vec2(4.f, 0.f));
 
+    // CLIMB1_RIGHT
+    sprite->setAnimationSpeed(climb1_R, SPEED);
+    sprite->addKeyframe(climb1_R, glm::vec2(6.f, 0.f));
+
+    // CLIMB1_LEFT
+    sprite->setAnimationSpeed(climb1_L, SPEED);
+    sprite->addKeyframe(climb1_L, glm::vec2(6.f, 1.f));
+
+    // CLIMB2_RIGHT
+    sprite->setAnimationSpeed(climb2_R, SPEED);
+    sprite->addKeyframe(climb2_R, glm::vec2(7.f, 0.f));
+
+    // CLIMB2_LEFT
+    sprite->setAnimationSpeed(climb2_L, SPEED);
+    sprite->addKeyframe(climb2_L, glm::vec2(7.f, 1.f));
+
     // DIE
     sprite->setAnimationSpeed(die, SPEED);
     sprite->addKeyframe(die, glm::vec2(0.f, 2.f));
@@ -130,6 +154,21 @@ void Player::update(float deltaTime)
 {
     // Animations and stuff
 	sprite->update(deltaTime);
+
+    bool headOnFinishingTile = false;
+
+    if (backgroundMap != NULL) headOnFinishingTile = backgroundMap->headOnFinishingTile(posPlayer, PLAYER_SIZE);
+
+    if (!isOnPoleAnimation && headOnFinishingTile) {
+        isOnPoleAnimation = true;
+        bJumping = false;
+        return ;
+    }
+
+    if (isOnPoleAnimation) {
+        updatePoleAnimation(deltaTime);
+        return;
+    }
 
     // Record state of keys
     bool leftPressed = Game::instance().getSpecialKey(GLUT_KEY_LEFT);
@@ -393,4 +432,53 @@ glm::vec2 Player::getAcceleration()
     }
 
     return acc;
+}
+
+void Player::updatePoleAnimation(float deltaTime) {
+    int currentAnimId = sprite->animation(); 
+    int climb1_R = getAnimId(VerticalAnim::CLIMB1, LateralAnim::RIGHT);
+    int climb1_L = getAnimId(VerticalAnim::CLIMB1, LateralAnim::LEFT);
+    int climb2_R = getAnimId(VerticalAnim::CLIMB2, LateralAnim::RIGHT);
+    int climb2_L = getAnimId(VerticalAnim::CLIMB2, LateralAnim::LEFT);
+
+    static float timeInAnimation = 0.f;
+    timeInAnimation += deltaTime;
+
+    if (currentAnimId != climb1_R && currentAnimId != climb1_L && currentAnimId != climb2_R && currentAnimId != climb2_L) {
+        sprite->changeAnimation(climb1_R);
+        setPosition(glm::ivec2(posPlayer.x + 16, posPlayer.y));
+        isOnPole = true;
+        return;
+    }
+
+    if (isOnPole) {
+        glm::ivec2 next_pos = posPlayer;
+        next_pos.y += 2;
+
+        bool collisionsy = map->onGround(next_pos, PLAYER_SIZE);
+        if (collisionsy) {
+            sprite->changeAnimation(climb1_L);
+            next_pos.x += 16;
+
+            setPosition(next_pos);
+            isOnPole = false;
+
+            velPlayer = glm::vec2(0.f);
+            bJumping = false;
+
+            timeInAnimation = 0.f;
+        } else {
+            setPosition(next_pos);
+
+            if (timeInAnimation < 0.05f) return;
+
+            if (currentAnimId == climb1_R) sprite->changeAnimation(climb2_R);
+            else if (currentAnimId == climb2_R) sprite->changeAnimation(climb1_R);
+
+            timeInAnimation = 0.f;
+        }
+    } else {
+
+    }
+
 }
