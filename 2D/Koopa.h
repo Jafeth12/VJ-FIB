@@ -7,7 +7,7 @@
 
 class Koopa : public Enemy {
     public:
-        void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) override;
+        void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, TileMap::MapColor color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) override;
         void update(float deltaTime, const glm::ivec2 &playerPos);
 
         void becomeShell() { currentState = State::SHELL; vel.x = 0.f; dir = Dir::NONE; };

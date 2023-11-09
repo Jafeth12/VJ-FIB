@@ -7,7 +7,7 @@
 
 class Goomba : public Enemy {
     public:
-        void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) override;
+        void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, TileMap::MapColor color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) override;
         void update(float deltaTime) override;
 
         void dieLateral() override { currentState = State::FLIPPED; Enemy::dieLateral(); };

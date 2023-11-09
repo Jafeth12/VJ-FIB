@@ -97,23 +97,45 @@ bool TileMap::loadLevel(const string &levelFile)
 	}
 
     unsigned nEnemies;
-
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> nEnemies;
 
+    // exit early, no hay enemigos
+    if (nEnemies == 0) {
+        fin.close();
+        return true;
+    }
+    char color;
+    sstream >> color;
+    if (color == 'O') enemiesColor = MapColor::OVERWORLD;
+    else if (color == 'U') enemiesColor = MapColor::UNDERWORLD;
+    else {
+        cerr << "Error: unknown enemy color" << endl;
+        fin.close();
+        return false;
+    }
+
     for (unsigned i = 0; i < nEnemies; ++i) {
-        char enemyType;
+        char enemyType, dir;
         glm::ivec2 enemyPos;
-        char dir, color;
 
         getline(fin, line);
         sstream.str(line);
-        sstream >> enemyType >> enemyPos.x >> enemyPos.y >> dir >> color;
-        EnemyPosition e = { enemyPos, dir, color };
+        sstream >> enemyType >> enemyPos.x >> enemyPos.y >> dir;
 
+        if (dir == 'L') dir = -1;
+        else if (dir == 'R') dir = 1;
+        else {
+            cerr << "Error: unknown enemy direction" << endl;
+            fin.close();
+            return false;
+        }
+
+        EnemyPosition e = { enemyPos, dir };
         if (enemyType == 'G') goombas.push_back(e);
         else if (enemyType == 'K') koopas.push_back(e);
+        // else, no ho afegim
     }
 
 	fin.close();

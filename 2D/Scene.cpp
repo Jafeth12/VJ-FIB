@@ -49,33 +49,16 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 
         // Cargar los enemigos del mapa
         // Not my proudest fap
+        TileMap::MapColor color = map->getMapColor();
         auto goombasPos = map->getGoombas();
         goombas.resize(goombasPos.size());
-        for (unsigned i = 0; i < goombasPos.size(); ++i) {
-            Enemy::Dir d;
-            if (goombasPos[i].dir == 'R') d = Enemy::Dir::RIGHT;
-            else d = Enemy::Dir::LEFT;
-
-            Enemy::Color color;
-            if (goombasPos[i].color == 'U') color = Enemy::Color::UNDERWORLD;
-            else color = Enemy::Color::OVERWORLD;
-
-            goombas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, d, goombasPos[i].initPos);
-        }
+        for (unsigned i = 0; i < goombasPos.size(); ++i)
+            goombas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, (Enemy::Dir)goombasPos[i].dir, goombasPos[i].initPos);
 
         auto koopasPos = map->getKoopas();
         koopas.resize(koopasPos.size());
-        for (unsigned i = 0; i < koopas.size(); ++i) {
-            Enemy::Dir d;
-            if (koopasPos[i].dir == 'R') d = Enemy::Dir::RIGHT;
-            else d = Enemy::Dir::LEFT;
-
-            Enemy::Color color;
-            if (goombasPos[i].color == 'U') color = Enemy::Color::UNDERWORLD;
-            else color = Enemy::Color::OVERWORLD;
-
-            koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, d, koopasPos[i].initPos);
-        }
+        for (unsigned i = 0; i < koopas.size(); ++i)
+            koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
     }
 
 }

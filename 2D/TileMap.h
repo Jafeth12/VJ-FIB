@@ -17,7 +17,6 @@
 struct EnemyPosition {
     glm::ivec2 initPos;
     char dir;
-    char color;
 };
 
 class TileMap
@@ -27,6 +26,8 @@ private:
 	TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
 
 public:
+    enum class MapColor { OVERWORLD, UNDERWORLD };
+
 	// Tile maps can only be created inside an OpenGL context
 	static TileMap *createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
 
@@ -44,6 +45,7 @@ public:
     bool onGround(const glm::ivec2 &pos, const glm::ivec2 &size);
     bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
 
+    MapColor getMapColor() const { return enemiesColor; }
     std::vector<EnemyPosition> getGoombas() const { return goombas; }
     std::vector<EnemyPosition> getKoopas() const { return koopas; }
 
@@ -62,6 +64,7 @@ private:
 	glm::vec2 tileTexSize;
 	int *map;
 
+    MapColor enemiesColor;
     std::vector<EnemyPosition> goombas;
     std::vector<EnemyPosition> koopas;
 };

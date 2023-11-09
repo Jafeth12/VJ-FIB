@@ -10,7 +10,6 @@ class Enemy {
 
     public:
         typedef int enum_t;
-        enum class Color : enum_t { OVERWORLD, UNDERWORLD };
         enum class Dir : enum_t { LEFT=-1, RIGHT=1, NONE=0 };
 
         void render();
@@ -32,7 +31,7 @@ class Enemy {
 
 
     protected:
-        virtual void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) {};
+        virtual void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, TileMap::MapColor color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) {};
         virtual void update(float deltaTime) {};
 
         void setPosition(const glm::vec2 &pos);
