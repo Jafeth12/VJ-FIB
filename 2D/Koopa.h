@@ -9,16 +9,20 @@ class Koopa : public Enemy {
         void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) override;
         void update(float deltaTime) override;
 
-        void becomeShell() { currentState = State::SHELL; };
-        void die() { currentState = State::DEAD; };
+        void becomeShell() { currentState = State::SHELL; vel.x = 0.f; dir = Dir::NONE; };
+        void kick(Dir dir);
+        void die() override { currentState = State::DEAD; dir = Dir::NONE;};
+
         bool isDead() const override { return currentState == State::DEAD; };
         bool isShell() const { return currentState == State::SHELL; };
+        bool isMovingShell() const { return currentState == State::SHELL && vel.x != 0.f; };
 
     private:
         static Texture *s_koopaTexture;
 
         void updatePosition(float deltaTime);
         void updateVelocity(float deltaTime);
+        void updateAnimation();
 
         // Animations
         typedef int enum_t;

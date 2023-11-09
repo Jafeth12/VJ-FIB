@@ -4,6 +4,7 @@
 #define ANIM_SPEED 8
 #define KOOPA_SIZE glm::ivec2(32, 48)
 #define KOOPA_SPEED 120.f
+#define SHELL_SPEED 240.f
 
 Texture *Koopa::s_koopaTexture = nullptr;
 
@@ -70,7 +71,10 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
 }
 
 void Koopa::update(float deltaTime) {
-    if (currentState == State::DEAD) return;
+    updateAnimation();
+    if (currentState == State::DEAD) {
+        return;
+    }
     sprite->update(deltaTime);
     updateVelocity(deltaTime);
     updatePosition(deltaTime);
@@ -87,7 +91,12 @@ void Koopa::updateVelocity(float deltaTime) {
             vel.y = FALLING_TERMINAL_VEL;
     }
 
-    vel.x = KOOPA_SPEED * (int)dir;
+    if (currentState == State::SHELL)
+        vel.x = SHELL_SPEED * (int)dir;
+    else if (currentState == State::WALK)
+        vel.x = KOOPA_SPEED * (int)dir;
+    else
+        vel.x = 0.f;
 }
 
 void Koopa::updatePosition(float deltaTime) {
@@ -105,4 +114,29 @@ void Koopa::updatePosition(float deltaTime) {
     }
 
     this->pos = nextPos;
+}
+
+void Koopa::kick(Dir dir) {
+    if (currentState == State::SHELL) {
+        this->dir = dir;
+    }
+}
+
+void Koopa::updateAnimation() {
+    int animId = sprite->animation();
+    int nextAnimId = animId;
+    switch (currentState) {
+        case State::WALK:
+            if (dir == Dir::LEFT)
+                nextAnimId = getAnimId(currentState, Dir::LEFT);
+            else
+                nextAnimId = getAnimId(currentState, Dir::RIGHT);
+            break;
+        case State::SHELL:
+        case State::DEAD:
+            nextAnimId = getAnimId(currentState);
+            break;
+    }
+    if (animId != nextAnimId)
+        sprite->changeAnimation(nextAnimId);
 }

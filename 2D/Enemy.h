@@ -16,10 +16,14 @@ class Enemy {
         void render();
         glm::ivec2 getPosition() const { return pos; };
         glm::ivec2 getSize() const { return enemySize; };
-        virtual bool isDead() const { return true; };
-        void invertDirection() { dir = (dir == Dir::LEFT) ? Dir::RIGHT : Dir::LEFT; };
 
+        virtual bool isDead() const { return true; };
+        virtual bool isMoving() const { return true; };
         bool collidesWith(const Enemy &other) const;
+
+        void invertDirection() { dir = (Dir)(-(enum_t)dir); };
+        virtual void die() {};
+
 
     protected:
         virtual void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) {};

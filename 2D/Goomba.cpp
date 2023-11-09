@@ -55,8 +55,12 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
 }
 
 void Goomba::update(float deltaTime) {
-    if (currentState == State::DEAD) return;
+    if (currentState == State::DEAD) {
+        sprite->changeAnimation(getAnimId(currentState));
+        return;
+    }
     sprite->update(deltaTime);
+    updateAnimation();
     updateVelocity(deltaTime);
     updatePosition(deltaTime);
     setPosition(pos);
@@ -72,7 +76,10 @@ void Goomba::updateVelocity(float deltaTime) {
             vel.y = FALLING_TERMINAL_VEL;
     }
 
-    vel.x = GOOMBA_SPEED * (int)dir;
+    if (currentState == State::WALK)
+        vel.x = GOOMBA_SPEED * (int)dir;
+    else if (currentState == State::DEAD)
+        vel.x = 0.f;
 }
 
 void Goomba::updatePosition(float deltaTime) {
@@ -88,4 +95,14 @@ void Goomba::updatePosition(float deltaTime) {
         dir = (Dir)(-(enum_t)dir);
 
     this->pos = nextPos;
+}
+
+void Goomba::updateAnimation() {
+    State prevState = (State)sprite->animation();
+    if (currentState != prevState) {
+        if (currentState == State::WALK)
+            sprite->changeAnimation(getAnimId(currentState));
+        else if (currentState == State::DEAD)
+            sprite->changeAnimation(getAnimId(currentState));
+    }
 }

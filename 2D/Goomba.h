@@ -10,7 +10,7 @@ class Goomba : public Enemy {
         void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) override;
         void update(float deltaTime) override;
 
-        void die() { currentState = State::DEAD; };
+        void die() override { currentState = State::DEAD; dir = Dir::NONE;};
         bool isDead() const override { return currentState == State::DEAD; };
 
     private:
@@ -18,6 +18,7 @@ class Goomba : public Enemy {
 
         void updatePosition(float deltaTime);
         void updateVelocity(float deltaTime);
+        void updateAnimation();
 
         // Animations
         typedef int enum_t;
