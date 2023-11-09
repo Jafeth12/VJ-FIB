@@ -27,6 +27,7 @@ public:
 	virtual void update(float deltaTime, Player *player);
 	virtual void render();
     TileMap* getMap();
+    TileMap* getBackgroundMap();
 
     void setBackground(std::string levelFilename);
     void setForeground(std::string levelFilename);

@@ -38,6 +38,7 @@ void Game::init()
 	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
 
     TileMap *map = scenes[currentSceneIndex]->getMap();
+    TileMap *backgroundMap = scenes[currentSceneIndex]->getBackgroundMap();
 
     player = new Player();
 
@@ -45,12 +46,14 @@ void Game::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), shaderProgram);
 	player->setPosition(glm::vec2(initPlayerTiles.x * map->getTileSize(), initPlayerTiles.y * map->getTileSize()));
 	player->setTileMap(map);
+    player->setBackgroundMap(backgroundMap);
 }
 
 bool Game::update(float deltaTime)
 {
 
     TileMap *newTileMap = scenes[currentSceneIndex]->getMap();
+    TileMap *newBackgroundMap = scenes[currentSceneIndex]->getBackgroundMap();
 
     switch (currentState) {
         case GAME_MENU:
@@ -67,6 +70,7 @@ bool Game::update(float deltaTime)
                 glm::ivec2 initPlayerTiles = scenes[currentSceneIndex]->getInitPlayerTiles();
                 player->setPosition(glm::vec2(initPlayerTiles.x * newTileMap->getTileSize(), initPlayerTiles.y * newTileMap->getTileSize()));
                 player->setTileMap(newTileMap);
+                player->setBackgroundMap(newBackgroundMap);
             } else {
                 player->setPosition(glm::vec2(loadingScene.getInitPlayerTiles().x * newTileMap->getTileSize(), loadingScene.getInitPlayerTiles().y * newTileMap->getTileSize()));
                 camera.setPosition(glm::vec2(0, 0));
@@ -157,9 +161,11 @@ void Game::changeScene(int sceneIndex) {
     } else {
         // Change the map on the player
         TileMap *newTileMap = newScene->getMap();
+        TileMap *newBackgroundMap = newScene->getBackgroundMap();
         glm::ivec2 initPlayerTiles = newScene->getInitPlayerTiles();
         player->setPosition(glm::vec2(initPlayerTiles.x * newTileMap->getTileSize(), initPlayerTiles.y * newTileMap->getTileSize()));
         player->setTileMap(newTileMap);
+        player->setBackgroundMap(newBackgroundMap);
     }
 }
 

@@ -8,6 +8,8 @@
 
 using namespace std;
 
+#define POLE 'D'-'0'
+#define POLE_HEAD 'X'-'0'
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
@@ -167,6 +169,31 @@ bool TileMap::onGround(const glm::ivec2 &pos, const glm::ivec2 &size)
     for (int x = x0; x<=x1; ++x)
     {
 		if(map[tsPixelUnderPlayer*mapSize.x+x] != 0)
+		{
+            return true;
+        }
+    }
+    return false;
+}
+
+bool TileMap::headOnFinishingTile(const glm::ivec2 &pos, const glm::ivec2 &size)
+{
+    // pSpace
+    int psPlayerHeadY = pos.y;
+    int psPixelOnPlayer = psPlayerHeadY;
+
+    // tileSpace
+    int tsPixelOverPlayer = psPixelOnPlayer / tileSize;
+
+	int x0, x1, yFeet;
+
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+
+    for (int x = x0; x<=x1; ++x)
+    {
+        char tile = map[tsPixelOverPlayer*mapSize.x+x];
+		if(tile == POLE || tile == POLE_HEAD)
 		{
             return true;
         }

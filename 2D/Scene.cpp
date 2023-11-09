@@ -104,6 +104,10 @@ int Scene::getWorldNumber() {
     return worldNumber;
 }
 
+TileMap* Scene::getBackgroundMap() {
+    return background;
+}
+
 TileMap* Scene::getMap() {
     return map;
 }

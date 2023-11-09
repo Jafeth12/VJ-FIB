@@ -169,6 +169,11 @@ void Player::setTileMap(TileMap *tileMap)
 	map = tileMap;
 }
 
+void Player::setBackgroundMap(TileMap *tileMap)
+{
+    backgroundMap = tileMap;
+}
+
 void Player::setPosition(const glm::vec2 &pos)
 {
 	posPlayer = pos;

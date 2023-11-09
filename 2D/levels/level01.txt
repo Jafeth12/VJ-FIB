@@ -6,7 +6,7 @@ images/tiles.png 	-- Tilesheet
 00                                                                                                                                                                                                                  
 00                                                                                                                                                                                                                  
 00                                                                                                                                                                                                                  
-00                                                                                                                                                                                                     D            
+00                                                                                                                                                                                                                  
 00                                                                                                                                                                                                                  
 00                                                                                                                                                                                            E                     
 00                    2                                                          22222222   222=              =            222    2==2                                                       EE                     

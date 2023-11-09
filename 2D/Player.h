@@ -21,6 +21,7 @@ public:
 	void render();
 
 	void setTileMap(TileMap *tileMap);
+    void setBackgroundMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 
     glm::vec2 getPosition();
@@ -54,6 +55,7 @@ private:
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
+    TileMap *backgroundMap;
 
     PlayerYState yState;
     PlayerXState xState;

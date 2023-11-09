@@ -37,6 +37,7 @@ public:
     bool solveCollisionsY(const glm::ivec2 &pos0, glm::ivec2 &pos1, const glm::ivec2 &playerSize);
     bool onGround(const glm::ivec2 &pos, const glm::ivec2 &size);
     bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
+    bool headOnFinishingTile(const glm::ivec2 &pos, const glm::ivec2 &size);
 
 private:
 	bool loadLevel(const string &levelFile);
