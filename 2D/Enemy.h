@@ -18,10 +18,15 @@ class Enemy {
         glm::ivec2 getSize() const { return enemySize; };
 
         virtual bool isDead() const { return true; };
+        virtual bool isDying() const { return false; };
+        virtual bool shouldCollide() const { return !isDying() && !isDead(); };
         bool collidesWith(const Enemy &other) const;
 
         void invertDirection() { dir = (Dir)(-(enum_t)dir); };
-        virtual void die() {};
+
+        virtual void dieLateral() { vel.y = 240.f; };
+        virtual void dieVertical() { vel.y = 0.f; };
+        virtual void dieFall() { vel.y = 0.f; };
 
 
     protected:

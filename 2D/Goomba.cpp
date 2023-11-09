@@ -32,11 +32,11 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
     else // UNDERWORLD
         row = 1.f;
 
-    // Only 2 animations
-    sprite->setNumberAnimations(2);
+    sprite->setNumberAnimations(3);
 
     enum_t walkId = getAnimId(State::WALK);
-    enum_t deadId = getAnimId(State::DEAD);
+    enum_t crushedId = getAnimId(State::CRUSHED);
+    enum_t flippedId = getAnimId(State::FLIPPED);
 
     // WALK
     sprite->setAnimationSpeed(walkId, ANIM_SPEED);
@@ -44,21 +44,20 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
     sprite->addKeyframe(walkId, glm::vec2(1.f, row));
 
     // DEAD
-    sprite->setAnimationSpeed(deadId, ANIM_SPEED);
-    sprite->addKeyframe(deadId, glm::vec2(2.f, row));
+    sprite->setAnimationSpeed(crushedId, ANIM_SPEED);
+    sprite->addKeyframe(crushedId, glm::vec2(2.f, row));
+
+    // FLIPPED
+    sprite->setAnimationSpeed(flippedId, ANIM_SPEED);
+    sprite->addKeyframe(flippedId, glm::vec2(3.f, row));
 
     // Set default animation
     sprite->changeAnimation(walkId);
-
 
     setPosition(pos * map->getTileSize());
 }
 
 void Goomba::update(float deltaTime) {
-    if (currentState == State::DEAD) {
-        sprite->changeAnimation(getAnimId(currentState));
-        return;
-    }
     sprite->update(deltaTime);
     updateAnimation();
     updateVelocity(deltaTime);
@@ -68,17 +67,13 @@ void Goomba::update(float deltaTime) {
 
 
 void Goomba::updateVelocity(float deltaTime) {
-    if (map->onGround(pos, enemySize))
-        vel.y = 0.f;
-    else {
-        vel.y += GRAVITY_ACC * deltaTime;
-        if (vel.y > FALLING_TERMINAL_VEL)
-            vel.y = FALLING_TERMINAL_VEL;
-    }
+    vel.y += GRAVITY_ACC * deltaTime;
+    if (vel.y > FALLING_TERMINAL_VEL)
+        vel.y = FALLING_TERMINAL_VEL;
 
     if (currentState == State::WALK)
         vel.x = GOOMBA_SPEED * (int)dir;
-    else if (currentState == State::DEAD)
+    else if (currentState == State::CRUSHED)
         vel.x = 0.f;
 }
 
@@ -88,21 +83,21 @@ void Goomba::updatePosition(float deltaTime) {
 
     glm::ivec2 nextPos = glm::ivec2(xNext, yNext);
 
-    if (map->solveCollisionsY(pos, nextPos, enemySize))
-        vel.y = 0.f;
+    if (!isDying()) { 
+        if (map->solveCollisionsY(pos, nextPos, enemySize))
+            vel.y = 0.f;
 
-    if (map->solveCollisionsX(pos, nextPos, enemySize))
-        dir = (Dir)(-(enum_t)dir);
-
+        if (map->solveCollisionsX(pos, nextPos, enemySize))
+            dir = (Dir)(-(enum_t)dir);
+    }
     this->pos = nextPos;
+
+
 }
 
 void Goomba::updateAnimation() {
     State prevState = (State)sprite->animation();
     if (currentState != prevState) {
-        if (currentState == State::WALK)
-            sprite->changeAnimation(getAnimId(currentState));
-        else if (currentState == State::DEAD)
-            sprite->changeAnimation(getAnimId(currentState));
+        sprite->changeAnimation(getAnimId(currentState));
     }
 }

@@ -79,16 +79,35 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 
 void Scene::update(float deltaTime, Player *player)
 {
-	currentTime += deltaTime;
-	player->update(deltaTime);
-    for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].update(deltaTime);
-    for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].update(deltaTime);
+    currentTime += deltaTime;
+    player->update(deltaTime);
+    // Call enemies update conditionally
+    for (unsigned i = 0; i < goombas.size(); ++i)
+        if (!goombas[i].isDead())
+            goombas[i].update(deltaTime);
+    for (unsigned i = 0; i < koopas.size(); ++i)
+        if (!koopas[i].isDead())
+            koopas[i].update(deltaTime);
+
+    // Check if Enemies have fallen
+    for (unsigned i = 0; i < goombas.size(); ++i) {
+        if (!goombas[i].isDead())
+            if (goombas[i].getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
+                goombas[i].dieFall();
+            }
+    }
+    for (unsigned i = 0; i < koopas.size(); ++i) {
+        if (!koopas[i].isDead())
+            if (koopas[i].getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
+                koopas[i].dieFall();
+            }
+    }
 
     // Check collisions
     // Goombas - Goombas
     for (unsigned i = 0; i < goombas.size(); ++i)
         for (unsigned j = 0; j < i; ++j)
-            if (!goombas[i].isDead() && !goombas[j].isDead() && goombas[i].collidesWith(goombas[j])) {
+            if (goombas[i].shouldCollide() && goombas[j].shouldCollide() && goombas[i].collidesWith(goombas[j])) {
                 goombas[i].invertDirection();
                 goombas[j].invertDirection();
             }
@@ -96,9 +115,9 @@ void Scene::update(float deltaTime, Player *player)
     // Goombas - Koopas
     for (unsigned i = 0; i < goombas.size(); ++i)
         for (unsigned j = 0; j < koopas.size(); ++j)
-            if (!goombas[i].isDead() && !koopas[j].isDead() && goombas[i].collidesWith(koopas[j])) {
+            if (goombas[i].shouldCollide() && koopas[j].shouldCollide() && goombas[i].collidesWith(koopas[j])) {
                 if (koopas[j].isMovingShell()) {
-                    goombas[i].die();
+                    goombas[i].dieLateral();
                 } else {
                     goombas[i].invertDirection();
                     koopas[j].invertDirection();
@@ -108,12 +127,12 @@ void Scene::update(float deltaTime, Player *player)
     // Koopas Koopas
     for (unsigned i = 0; i < koopas.size(); ++i)
         for (unsigned j = 0; j < i; ++j)
-            if (!koopas[i].isDead() && !koopas[j].isDead() && koopas[i].collidesWith(koopas[j])) {
+            if (koopas[i].shouldCollide() && koopas[j].shouldCollide() && koopas[i].collidesWith(koopas[j])) {
                 if (koopas[i].isMovingShell() ^ koopas[j].isMovingShell()) {
                     if (koopas[i].isMovingShell()) {
-                        koopas[j].die();
+                        koopas[j].dieLateral();
                     } else {
-                        koopas[i].die();
+                        koopas[i].dieLateral();
                     }
                 } else {
                     koopas[i].invertDirection();
@@ -161,8 +180,12 @@ void Scene::render() {
 	if (map != NULL) map->render();
     if (foreground != NULL) foreground->render();
 
-    for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].render();
-    for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].render();
+    for (unsigned i = 0; i < goombas.size(); ++i) 
+        if (!goombas[i].isDead())
+                goombas[i].render();
+    for (unsigned i = 0; i < koopas.size(); ++i)
+        if (!koopas[i].isDead())
+                koopas[i].render();
 
     if (worldNumber > 0) hud->setWorldNumber(worldNumber);
     hud->render();

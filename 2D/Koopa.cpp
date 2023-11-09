@@ -39,7 +39,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     enum_t walkL = getAnimId(State::WALK, Dir::LEFT);
     enum_t walkR = getAnimId(State::WALK, Dir::RIGHT);
     enum_t shellId = getAnimId(State::SHELL);
-    enum_t deadId = getAnimId(State::DEAD);
+    enum_t invertedId = getAnimId(State::INVERTED);
 
     // WALKL
     sprite->setAnimationSpeed(walkL, ANIM_SPEED);
@@ -55,9 +55,9 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     sprite->setAnimationSpeed(shellId, ANIM_SPEED);
     sprite->addKeyframe(shellId, glm::vec2(4.f, row));
 
-    // DEAD
-    sprite->setAnimationSpeed(deadId, ANIM_SPEED);
-    sprite->addKeyframe(deadId, glm::vec2(5.f, row));
+    // INVERTED
+    sprite->setAnimationSpeed(invertedId, ANIM_SPEED);
+    sprite->addKeyframe(invertedId, glm::vec2(5.f, row));
 
     // Set default animation
     currentState = State::WALK;
@@ -66,37 +66,40 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     else
         sprite->changeAnimation(walkR);
 
-
     setPosition(pos * map->getTileSize());
 }
 
+
+void Koopa::dieVertical() {
+    if (isShell())
+        return; // Un koopa o puede morir verticalmente si esta en estado shell
+    else if (currentState == State::WALK)
+        becomeShell();
+
+    Enemy::dieVertical();
+}
+
 void Koopa::update(float deltaTime) {
-    updateAnimation();
-    if (currentState == State::DEAD) {
-        return;
-    }
     sprite->update(deltaTime);
     updateVelocity(deltaTime);
     updatePosition(deltaTime);
+    updateAnimation();
     setPosition(pos);
 }
 
 
 void Koopa::updateVelocity(float deltaTime) {
-    if (map->onGround(pos, enemySize))
-        vel.y = 0.f;
-    else {
-        vel.y += GRAVITY_ACC * deltaTime;
-        if (vel.y > FALLING_TERMINAL_VEL)
-            vel.y = FALLING_TERMINAL_VEL;
-    }
+    vel.y += GRAVITY_ACC * deltaTime;
+    if (vel.y > FALLING_TERMINAL_VEL)
+        vel.y = FALLING_TERMINAL_VEL;
 
     if (currentState == State::SHELL)
         vel.x = SHELL_SPEED * (int)dir;
     else if (currentState == State::WALK)
         vel.x = KOOPA_SPEED * (int)dir;
-    else
+    else if (currentState == State::DEAD)
         vel.x = 0.f;
+    // si inverted, no tocamos vel.x
 }
 
 void Koopa::updatePosition(float deltaTime) {
@@ -105,14 +108,15 @@ void Koopa::updatePosition(float deltaTime) {
 
     glm::ivec2 nextPos = glm::ivec2(xNext, yNext);
 
-    if (map->solveCollisionsY(pos, nextPos, enemySize))
-        vel.y = 0.f;
+    if (!isDying()) {
+        if (map->solveCollisionsY(pos, nextPos, enemySize))
+            vel.y = 0.f;
 
-    if (map->solveCollisionsX(pos, nextPos, enemySize)) {
-        dir = (Dir)(-(enum_t)dir);
-        sprite->changeAnimation(getAnimId(currentState, dir));
+        if (map->solveCollisionsX(pos, nextPos, enemySize)) {
+            dir = (Dir)(-(enum_t)dir);
+            sprite->changeAnimation(getAnimId(currentState, dir));
+        }
     }
-
     this->pos = nextPos;
 }
 
@@ -133,6 +137,7 @@ void Koopa::updateAnimation() {
                 nextAnimId = getAnimId(currentState, Dir::RIGHT);
             break;
         case State::SHELL:
+        case State::INVERTED:
         case State::DEAD:
             nextAnimId = getAnimId(currentState);
             break;
