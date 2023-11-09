@@ -8,7 +8,7 @@
 void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
     dir = initialDirection;
     tileMapDispl = tileMapPos;
-    setTileMap(tileMap);
+    map = tileMap;
 
     // TODO: Cargar spritesheet solamente una vez (no se como XD)
     spritesheet.loadFromFile("images/koopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -28,10 +28,10 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     // Only 2 animations
     sprite->setNumberAnimations(4);
 
-    enum_t walkL = getAnimId(Anim::WALK, Dir::LEFT);
-    enum_t walkR = getAnimId(Anim::WALK, Dir::RIGHT);
-    enum_t shellId = getAnimId(Anim::SHELL);
-    enum_t deadId = getAnimId(Anim::DEAD);
+    enum_t walkL = getAnimId(State::WALK, Dir::LEFT);
+    enum_t walkR = getAnimId(State::WALK, Dir::RIGHT);
+    enum_t shellId = getAnimId(State::SHELL);
+    enum_t deadId = getAnimId(State::DEAD);
 
     // WALKL
     sprite->setAnimationSpeed(walkL, ANIM_SPEED);
@@ -52,7 +52,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     sprite->addKeyframe(deadId, glm::vec2(5.f, row));
 
     // Set default animation
-    currentAnim = Anim::WALK;
+    currentState = State::WALK;
     if (dir == Dir::LEFT)
         sprite->changeAnimation(walkL);
     else
@@ -93,7 +93,7 @@ void Koopa::updatePosition(float deltaTime) {
 
     if (map->solveCollisionsX(pos, nextPos, KOOPA_SIZE)) {
         dir = (Dir)(-(enum_t)dir);
-        sprite->changeAnimation(getAnimId(currentAnim, dir));
+        sprite->changeAnimation(getAnimId(currentState, dir));
     }
 
     this->pos = nextPos;

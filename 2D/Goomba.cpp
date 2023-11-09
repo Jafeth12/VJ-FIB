@@ -10,7 +10,7 @@
 void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
     dir = initialDirection;
     tileMapDispl = tileMapPos;
-    setTileMap(tileMap);
+    map = tileMap;
 
     // TODO: Cargar spritesheet solamente una vez (no se como XD)
     spritesheet.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -29,8 +29,8 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
     // Only 2 animations
     sprite->setNumberAnimations(2);
 
-    enum_t walkId = getAnimId(Anim::WALK);
-    enum_t deadId = getAnimId(Anim::DEAD);
+    enum_t walkId = getAnimId(State::WALK);
+    enum_t deadId = getAnimId(State::DEAD);
 
     // WALK
     sprite->setAnimationSpeed(walkId, ANIM_SPEED);
