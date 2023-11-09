@@ -22,6 +22,8 @@ public:
     void addToPosition(float x, float y);
     void setVelocity(glm::vec2 vel);
 
+    bool isOnScreen(const glm::vec2 &pos, const glm::vec2 &size);
+
 
 private:
     glm::vec2 position;

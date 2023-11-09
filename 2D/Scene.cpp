@@ -1,10 +1,11 @@
-#include "Scene.h"
-#include "Enemy.h"
 #include <iostream>
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Scene.h"
+#include "Enemy.h"
+#include "Game.h"
 
-#define DISTANCE_TO_ACTIVATE_ENEMY 500
+#define DISTANCE_TO_ACTIVATE_ENEMY 500.f
 #define ANGLE_TO_DIE (M_PI/2.f)
 
 Scene::Scene()
@@ -112,8 +113,12 @@ void Scene::update(float deltaTime, Player *player)
             // Update conditionally (if not dead)
             koopas[i].update(deltaTime, player->getPosition());
             // Check if under the map. Die if so
+            // TODO: quitar cuando uno se pueda caer del mapa por los agujeros 
             if (koopas[i].getPosition().y > (map->getMapSize().y - 2) * map->getTileSize())
                 koopas[i].dieFall();
+            if (koopas[i].isShell() && !camera->isOnScreen(koopas[i].getPosition(), koopas[i].getSize())) {
+                koopas[i].dieFall();
+            }
         }
     }
 
@@ -168,7 +173,7 @@ void Scene::update(float deltaTime, Player *player)
         }
 
     // Player - koopas
-    for (unsigned i = 0; i < koopas.size(); ++i)
+    for (unsigned i = 0; i < koopas.size(); ++i) {
         if (koopas[i].shouldCollide() && player->collidesWithEnemy(koopas[i])) {
             if (koopas[i].isShell() && !koopas[i].isMovingShell()) {
                 koopas[i].kick(koopas[i].kickDirection(*player));
@@ -187,13 +192,18 @@ void Scene::update(float deltaTime, Player *player)
                 }
             }
         }
+    }
 
+
+
+    // HUD
     hud->decrementTimeLeft();
 
     if (hud->isTimeLeftZero()) {
         hud->setTimeLeft(400);
     }
 
+    // Camera
     glm::vec2 playerPos = player->getPosition();
     camera->setXPosition(playerPos.x - initPlayerTiles.x * map->getTileSize());
 }
