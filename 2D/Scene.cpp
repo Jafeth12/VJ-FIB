@@ -74,6 +74,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
             koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, d, koopasPos[i].initPos);
         }
     }
+
 }
 
 void Scene::update(float deltaTime, Player *player)
@@ -96,9 +97,9 @@ void Scene::update(float deltaTime, Player *player)
     for (unsigned i = 0; i < goombas.size(); ++i)
         for (unsigned j = 0; j < koopas.size(); ++j)
             if (!goombas[i].isDead() && !koopas[j].isDead() && goombas[i].collidesWith(koopas[j])) {
-                if (koopas[j].isShell())
+                if (koopas[j].isMovingShell()) {
                     goombas[i].die();
-                else {
+                } else {
                     goombas[i].invertDirection();
                     koopas[j].invertDirection();
                 }
@@ -108,17 +109,13 @@ void Scene::update(float deltaTime, Player *player)
     for (unsigned i = 0; i < koopas.size(); ++i)
         for (unsigned j = 0; j < i; ++j)
             if (!koopas[i].isDead() && !koopas[j].isDead() && koopas[i].collidesWith(koopas[j])) {
-                if (koopas[i].isShell() && koopas[j].isShell()) {
-                    koopas[i].invertDirection();
-                    koopas[j].invertDirection();
-                }
-                else if (koopas[i].isShell()) {
-                    koopas[j].die();
-                }
-                else if (koopas[j].isShell()) {
-                    koopas[i].die();
-                }
-                else {
+                if (koopas[i].isMovingShell() ^ koopas[j].isMovingShell()) {
+                    if (koopas[i].isMovingShell()) {
+                        koopas[j].die();
+                    } else {
+                        koopas[i].die();
+                    }
+                } else {
                     koopas[i].invertDirection();
                     koopas[j].invertDirection();
                 }
