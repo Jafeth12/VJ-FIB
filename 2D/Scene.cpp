@@ -1,8 +1,12 @@
-#include "Scene.h"
 #include <iostream>
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Scene.h"
+#include "Enemy.h"
+#include "Game.h"
 
+#define DISTANCE_TO_ACTIVATE_ENEMY 500.f
+#define ANGLE_TO_DIE (M_PI/2.f)
 
 Scene::Scene()
 {
@@ -37,22 +41,151 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 
     autoRenderAllText = true;
 
-	if (levelFilename != "") map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
-
 	currentTime = 0.0f;
+
+    if (levelFilename[0] != ' ') {
+        // Cargar el mapa de tiles
+        map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
+
+        // Cargar los enemigos del mapa
+        // Not my proudest fap
+        TileMap::MapColor color = map->getMapColor();
+        auto goombasPos = map->getGoombas();
+        goombas.resize(goombasPos.size());
+        for (unsigned i = 0; i < goombasPos.size(); ++i)
+            goombas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, (Enemy::Dir)goombasPos[i].dir, goombasPos[i].initPos);
+
+        auto koopasPos = map->getKoopas();
+        koopas.resize(koopasPos.size());
+        for (unsigned i = 0; i < koopas.size(); ++i)
+            koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
+    }
+
 }
 
 void Scene::update(float deltaTime, Player *player)
 {
-	currentTime += deltaTime;
-	player->update(deltaTime);
+    currentTime += deltaTime;
+    player->update(deltaTime);
+    // Check player under the map
+    if (player->getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
+        player->fallDie();
+    }
 
+    // === Conditionally update enemies ===
+    // Goombas
+    for (unsigned i = 0; i < goombas.size(); ++i) {
+        // Activate when player is near
+        if (!goombas[i].isActive() && abs(goombas[i].getPosition().x - player->getPosition().x) < DISTANCE_TO_ACTIVATE_ENEMY)
+            goombas[i].activate();
+        if (!goombas[i].isDead()) {
+            // Update conditionally (if not dead)
+            goombas[i].update(deltaTime);
+            // Check if under the map. Die if so
+                if (goombas[i].getPosition().y > (map->getMapSize().y - 1) * map->getTileSize()) {
+                goombas[i].dieFall();
+            }
+        }
+    }
+    // Koopas
+    for (unsigned i = 0; i < koopas.size(); ++i) {
+        // Activate when player is near
+        if (!koopas[i].isActive() && abs(koopas[i].getPosition().x - player->getPosition().x) < DISTANCE_TO_ACTIVATE_ENEMY)
+            koopas[i].activate();
+        if (!koopas[i].isDead()) {
+            // Update conditionally (if not dead)
+            koopas[i].update(deltaTime, player->getPosition());
+            // Check if under the map. Die if so
+            if (koopas[i].getPosition().y > (map->getMapSize().y - 1) * map->getTileSize())
+                koopas[i].dieFall();
+            if (koopas[i].isShell() && !camera->isOnScreen(koopas[i].getPosition(), koopas[i].getSize())) {
+                koopas[i].dieFall();
+            }
+        }
+    }
+
+    // === Check collisions ===
+    // Goombas - Goombas
+    for (unsigned i = 0; i < goombas.size(); ++i)
+        for (unsigned j = 0; j < i; ++j)
+            if (goombas[i].shouldCollide() && goombas[j].shouldCollide() && goombas[i].collidesWith(goombas[j])) {
+                goombas[i].invertDirection();
+                goombas[j].invertDirection();
+            }
+
+    // Goombas - Koopas
+    for (unsigned i = 0; i < goombas.size(); ++i)
+        for (unsigned j = 0; j < koopas.size(); ++j)
+            if (goombas[i].shouldCollide() && koopas[j].shouldCollide() && goombas[i].collidesWith(koopas[j])) {
+                if (koopas[j].isMovingShell()) {
+                    goombas[i].dieLateral();
+                } else {
+                    goombas[i].invertDirection();
+                    koopas[j].invertDirection();
+                }
+            }
+
+    // Koopas Koopas
+    for (unsigned i = 0; i < koopas.size(); ++i)
+        for (unsigned j = 0; j < i; ++j)
+            if (koopas[i].shouldCollide() && koopas[j].shouldCollide() && koopas[i].collidesWith(koopas[j])) {
+                if (koopas[i].isMovingShell() ^ koopas[j].isMovingShell()) {
+                    if (koopas[i].isMovingShell()) {
+                        koopas[j].dieLateral();
+                    } else {
+                        koopas[i].dieLateral();
+                    }
+                } else {
+                    koopas[i].invertDirection();
+                    koopas[j].invertDirection();
+                }
+            }
+
+    // Player - goombas
+    for (unsigned i = 0; i < goombas.size(); ++i)
+        if (goombas[i].shouldCollide() && player->collidesWithEnemy(goombas[i])) {
+            float alpha = player->collisionAngle(goombas[i]);
+            if (glm::abs(alpha) <= ANGLE_TO_DIE) {
+                goombas[i].dieVertical();
+                player->stepOnEnemy();
+            }
+            else {
+                player->takeDamage();
+            }
+        }
+
+    // Player - koopas
+    for (unsigned i = 0; i < koopas.size(); ++i) {
+        if (koopas[i].shouldCollide() && player->collidesWithEnemy(koopas[i])) {
+            if (koopas[i].isShell() && !koopas[i].isMovingShell()) {
+                koopas[i].kick(koopas[i].kickDirection(*player));
+            }
+            else if (koopas[i].isMovingShell()) {
+                player->takeDamage();
+            }
+            else {
+                float alpha = player->collisionAngle(koopas[i]);
+                if (glm::abs(alpha) <= ANGLE_TO_DIE) {
+                    koopas[i].dieVertical();
+                    player->stepOnEnemy();
+                }
+                else {
+                    player->takeDamage();
+                }
+            }
+        }
+    }
+
+
+
+    // HUD
     hud->decrementTimeLeft();
 
     if (hud->isTimeLeftZero()) {
         hud->setTimeLeft(400);
     }
 
+    // Camera
     glm::vec2 playerPos = player->getPosition();
     camera->setXPosition(playerPos.x - initPlayerTiles.x * map->getTileSize());
 }
@@ -86,6 +219,13 @@ void Scene::render() {
     if (background != NULL) background->render();
 	if (map != NULL) map->render();
     if (foreground != NULL) foreground->render();
+
+    for (unsigned i = 0; i < goombas.size(); ++i) 
+        if (!goombas[i].isDead())
+                goombas[i].render();
+    for (unsigned i = 0; i < koopas.size(); ++i)
+        if (!koopas[i].isDead())
+                koopas[i].render();
 
     if (worldNumber > 0) hud->setWorldNumber(worldNumber);
     hud->render();

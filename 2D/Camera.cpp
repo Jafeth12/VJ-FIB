@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "Game.h"
 
 Camera::Camera() {
     position = glm::vec2(0.0f);
@@ -44,6 +45,11 @@ void Camera::setYPosition(float y) {
 void Camera::addToPosition(float x, float y) {
     position.x += x;
     position.y += y;
+}
+
+bool Camera::isOnScreen(const glm::vec2 &pos, const glm::vec2 &size) {
+    return (pos.x + size.x >= position.x && pos.x <= position.x + SCREEN_WIDTH) &&
+           (pos.y + size.y >= position.y && pos.y <= position.y + SCREEN_HEIGHT);
 }
 
 Camera::~Camera() {

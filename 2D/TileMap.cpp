@@ -1,3 +1,4 @@
+#include <glm/common.hpp>
 #include <glm/fwd.hpp>
 #include <iostream>
 #include <fstream>
@@ -94,6 +95,49 @@ bool TileMap::loadLevel(const string &levelFile)
 		fin.get(tile);
 #endif
 	}
+
+    unsigned nEnemies;
+	getline(fin, line);
+	sstream.str(line);
+	sstream >> nEnemies;
+
+    // exit early, no hay enemigos
+    if (nEnemies == 0) {
+        fin.close();
+        return true;
+    }
+    char color;
+    sstream >> color;
+    if (color == 'O') enemiesColor = MapColor::OVERWORLD;
+    else if (color == 'U') enemiesColor = MapColor::UNDERWORLD;
+    else {
+        cerr << "Error: unknown enemy color" << endl;
+        fin.close();
+        return false;
+    }
+
+    for (unsigned i = 0; i < nEnemies; ++i) {
+        char enemyType, dir;
+        glm::ivec2 enemyPos;
+
+        getline(fin, line);
+        sstream.str(line);
+        sstream >> enemyType >> enemyPos.x >> enemyPos.y >> dir;
+
+        if (dir == 'L') dir = -1;
+        else if (dir == 'R') dir = 1;
+        else {
+            cerr << "Error: unknown enemy direction" << endl;
+            fin.close();
+            return false;
+        }
+
+        EnemyPosition e = { enemyPos, dir };
+        if (enemyType == 'G') goombas.push_back(e);
+        else if (enemyType == 'K') koopas.push_back(e);
+        // else, no ho afegim
+    }
+
 	fin.close();
 	
 	return true;
@@ -251,7 +295,8 @@ bool TileMap::solveCollisionsY(const glm::ivec2 &pos0, glm::ivec2 &pos1, const g
     int x0 = LEFT(pos0) / tileSize,
         x1 = RIGHT(pos0, playerSize) / tileSize;
 
-    for (int y = y0; y != y1 + diry; y += diry)
+    int a = glm::min(y1 + diry, mapSize.y);
+    for (int y = y0; y != a; y += diry)
         for (int x = x0; x <= x1; ++x)
             if (map[y * mapSize.x + x] != 0) {
                 if (diry == DOWN) // DOWN: Ens coloquem just sobre la colisió

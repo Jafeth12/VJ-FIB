@@ -4,6 +4,7 @@
 
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
+#include <vector>
 #include "Texture.h"
 #include "ShaderProgram.h"
 
@@ -13,6 +14,10 @@
 // it builds a single VBO that contains all tiles. As a result the render
 // method draws the whole map independently of what is visible.
 
+struct EnemyPosition {
+    glm::ivec2 initPos;
+    char dir;
+};
 
 class TileMap
 {
@@ -21,6 +26,8 @@ private:
 	TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
 
 public:
+    enum class MapColor { OVERWORLD, UNDERWORLD };
+
 	// Tile maps can only be created inside an OpenGL context
 	static TileMap *createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
 
@@ -38,6 +45,10 @@ public:
     bool onGround(const glm::ivec2 &pos, const glm::ivec2 &size);
     bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
 
+    MapColor getMapColor() const { return enemiesColor; }
+    std::vector<EnemyPosition> getGoombas() const { return goombas; }
+    std::vector<EnemyPosition> getKoopas() const { return koopas; }
+
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
@@ -53,6 +64,9 @@ private:
 	glm::vec2 tileTexSize;
 	int *map;
 
+    MapColor enemiesColor;
+    std::vector<EnemyPosition> goombas;
+    std::vector<EnemyPosition> koopas;
 };
 
 

@@ -4,11 +4,14 @@
 
 #include <glm/glm.hpp>
 #include <map>
+#include <vector>
 #include "Camera.h"
+#include "Koopa.h"
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
 #include "Text.h"
+#include "Goomba.h"
 #include "HUD.h"
 
 
@@ -44,6 +47,9 @@ protected:
     TileMap *foreground;
 
     HUD *hud;
+
+    std::vector<Goomba> goombas;
+    std::vector<Koopa> koopas;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;
