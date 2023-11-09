@@ -74,9 +74,6 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
             koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, d, koopasPos[i].initPos);
         }
     }
-
-
-
 }
 
 void Scene::update(float deltaTime, Player *player)
@@ -85,6 +82,15 @@ void Scene::update(float deltaTime, Player *player)
 	player->update(deltaTime);
     for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].update(deltaTime);
     for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].update(deltaTime);
+
+    // Check collisions
+    // Goombas - Goombas
+    for (unsigned i = 0; i < goombas.size(); ++i)
+        for (unsigned j = 0; j < i; ++j)
+            if (goombas[i].collidesWith(goombas[j])) {
+                goombas[i].invertDirection();
+                goombas[j].invertDirection();
+            }
 
     hud->decrementTimeLeft();
 

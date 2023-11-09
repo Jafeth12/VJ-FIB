@@ -88,3 +88,17 @@ void Goomba::updatePosition(float deltaTime) {
 
     this->pos = nextPos;
 }
+
+bool Goomba::collidesWith(const Goomba &other) const {
+    glm::ivec2 otherPos = other.getPosition();
+    glm::ivec2 otherSize = other.getSize();
+
+    glm::ivec2 otherMinCoords = otherPos;
+    glm::ivec2 otherMaxCoords = otherPos + otherSize;
+
+    glm::ivec2 thisMinCoords = pos;
+    glm::ivec2 thisMaxCoords = pos + enemySize;
+
+    return (thisMinCoords.x < otherMaxCoords.x && thisMaxCoords.x > otherMinCoords.x &&
+        thisMinCoords.y < otherMaxCoords.y && thisMaxCoords.y > otherMinCoords.y);
+}

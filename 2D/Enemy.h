@@ -15,6 +15,7 @@ class Enemy {
 
         void render();
         glm::ivec2 getPosition() const { return pos; };
+        glm::ivec2 getSize() const { return enemySize; };
         virtual bool isDead() const { return true; };
         void invertDirection() { dir = (dir == Dir::LEFT) ? Dir::RIGHT : Dir::LEFT; };
 
