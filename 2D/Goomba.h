@@ -33,6 +33,7 @@ class Goomba : public Enemy {
 
         // Attributes
         State currentState;
+        float timeSinceCrushed;
 };
 
 #endif

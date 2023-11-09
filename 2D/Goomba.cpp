@@ -6,6 +6,7 @@
 #define GOOMBA_SIZE_IN_SPRITESHEET 32.f
 #define GOOMBA_SIZE glm::ivec2(32, 32)
 #define GOOMBA_SPEED 120.f
+#define GOOMA_CRUSHED_TIME 0.5f
 
 Texture *Goomba::s_goombaTexture = nullptr;
 
@@ -66,18 +67,30 @@ void Goomba::update(float deltaTime) {
     updateVelocity(deltaTime);
     updatePosition(deltaTime);
     setPosition(pos);
+
+    if (currentState == State::CRUSHED) {
+        timeSinceCrushed += deltaTime;
+        if (timeSinceCrushed > GOOMA_CRUSHED_TIME) {
+            currentState = State::DEAD;
+        }
+    }
 }
 
 
 void Goomba::updateVelocity(float deltaTime) {
-    vel.y += GRAVITY_ACC * deltaTime;
-    if (vel.y > FALLING_TERMINAL_VEL)
-        vel.y = FALLING_TERMINAL_VEL;
+    if (currentState == State::CRUSHED)
+        vel.y = 0.f;
+    else { 
+        vel.y += GRAVITY_ACC * deltaTime;
+        if (vel.y > FALLING_TERMINAL_VEL)
+            vel.y = FALLING_TERMINAL_VEL;
+    }
 
     if (currentState == State::WALK)
         vel.x = GOOMBA_SPEED * (int)dir;
     else if (currentState == State::CRUSHED)
         vel.x = 0.f;
+    // if Flipped, carry on with the previous velocity
 }
 
 void Goomba::updatePosition(float deltaTime) {
