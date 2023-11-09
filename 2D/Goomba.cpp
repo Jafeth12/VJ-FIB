@@ -7,19 +7,24 @@
 #define GOOMBA_SIZE glm::ivec2(32, 32)
 #define GOOMBA_SPEED 120.f
 
+Texture *Goomba::s_goombaTexture = nullptr;
+
 void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
     dir = initialDirection;
     tileMapDispl = tileMapPos;
     map = tileMap;
     enemySize = GOOMBA_SIZE;
 
-    // TODO: Cargar spritesheet solamente una vez (no se como XD)
-    spritesheet.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    spritesheet.setMinFilter(GL_NEAREST);
-    spritesheet.setMagFilter(GL_NEAREST);
+    if (s_goombaTexture == nullptr) {
+        s_goombaTexture = new Texture();
+        s_goombaTexture->loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
+        s_goombaTexture->setMinFilter(GL_NEAREST);
+        s_goombaTexture->setMagFilter(GL_NEAREST);
+    }
+    spritesheet = s_goombaTexture;
 
-    float size = GOOMBA_SIZE_IN_SPRITESHEET / spritesheet.width();
-    sprite = Sprite::createSprite(enemySize, glm::vec2(size, size), &spritesheet, &shaderProgram);
+    float size = GOOMBA_SIZE_IN_SPRITESHEET / spritesheet->width();
+    sprite = Sprite::createSprite(enemySize, glm::vec2(size, size), s_goombaTexture, &shaderProgram);
 
     float row;
     if (color == Color::OVERWORLD)

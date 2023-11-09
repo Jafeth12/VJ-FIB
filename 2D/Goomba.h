@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "TileMap.h"
 
+
 class Goomba : public Enemy {
     public:
         void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) override;
@@ -13,6 +14,8 @@ class Goomba : public Enemy {
         bool isDead() const override { return currentState == State::DEAD; };
 
     private:
+        static Texture *s_goombaTexture;
+
         void updatePosition(float deltaTime);
         void updateVelocity(float deltaTime);
 

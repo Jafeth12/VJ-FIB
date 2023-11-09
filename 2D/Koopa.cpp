@@ -5,6 +5,8 @@
 #define KOOPA_SIZE glm::ivec2(32, 48)
 #define KOOPA_SPEED 120.f
 
+Texture *Koopa::s_koopaTexture = nullptr;
+
 void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
     dir = initialDirection;
     tileMapDispl = tileMapPos;
@@ -12,13 +14,17 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     enemySize = KOOPA_SIZE;
 
     // TODO: Cargar spritesheet solamente una vez (no se como XD)
-    spritesheet.loadFromFile("images/koopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    spritesheet.setMinFilter(GL_NEAREST);
-    spritesheet.setMagFilter(GL_NEAREST);
+    if (s_koopaTexture == nullptr) {
+        s_koopaTexture = new Texture();
+        s_koopaTexture->loadFromFile("images/koopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
+        s_koopaTexture->setMinFilter(GL_NEAREST);
+        s_koopaTexture->setMagFilter(GL_NEAREST);
+    }
+    spritesheet = s_koopaTexture;
 
-    float sizeX = 32.f / spritesheet.width();
-    float sizeY = 64.f / spritesheet.height();
-    sprite = Sprite::createSprite(enemySize, glm::vec2(sizeX, sizeY), &spritesheet, &shaderProgram);
+    float sizeX = 32.f / spritesheet->width();
+    float sizeY = 64.f / spritesheet->height();
+    sprite = Sprite::createSprite(enemySize, glm::vec2(sizeX, sizeY), s_koopaTexture, &shaderProgram);
 
     float row;
     if (color == Color::OVERWORLD)

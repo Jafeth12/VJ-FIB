@@ -24,7 +24,7 @@ class Enemy {
 
         void setPosition(const glm::vec2 &pos);
 
-        Texture spritesheet;
+        Texture *spritesheet;
         Sprite *sprite;
         TileMap *map;
 

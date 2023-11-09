@@ -15,6 +15,8 @@ class Koopa : public Enemy {
         bool isShell() const { return currentState == State::SHELL; };
 
     private:
+        static Texture *s_koopaTexture;
+
         void updatePosition(float deltaTime);
         void updateVelocity(float deltaTime);
 
