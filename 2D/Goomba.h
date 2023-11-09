@@ -10,6 +10,7 @@ class Goomba : public Enemy {
         void update(float deltaTime) override;
 
         void die() { currentState = State::DEAD; };
+        bool isDead() const override { return currentState == State::DEAD; };
 
     private:
         void updatePosition(float deltaTime);

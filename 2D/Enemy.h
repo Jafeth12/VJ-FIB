@@ -15,6 +15,7 @@ class Enemy {
 
         void render();
         glm::ivec2 getPosition() const { return pos; };
+        virtual bool isDead() const { return true; };
 
     protected:
         virtual void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) {};

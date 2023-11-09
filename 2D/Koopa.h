@@ -11,6 +11,8 @@ class Koopa : public Enemy {
 
         void becomeShell() { currentState = State::SHELL; };
         void die() { currentState = State::DEAD; };
+        bool isDead() const override { return currentState == State::DEAD; };
+        bool isShell() const { return currentState == State::SHELL; };
 
     private:
         void updatePosition(float deltaTime);
