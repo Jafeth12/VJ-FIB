@@ -81,7 +81,7 @@ void Koopa::dieVertical() {
     Enemy::dieVertical();
 }
 
-void Koopa::update(float deltaTime) {
+void Koopa::update(float deltaTime, const glm::ivec2 &playerPos) {
     if (bActive == false)
         return;
     sprite->update(deltaTime);
@@ -94,7 +94,7 @@ void Koopa::update(float deltaTime) {
         timeSinceShell += deltaTime;
         if (timeSinceShell >= KOOPA_SHELL_TIME) {
             currentState = State::WALK;
-            dir = Dir::LEFT;
+            dir = (pos.x < playerPos.x) ? Dir::RIGHT : Dir::LEFT;
         }
     }
     else {

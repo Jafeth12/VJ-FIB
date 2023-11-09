@@ -110,7 +110,7 @@ void Scene::update(float deltaTime, Player *player)
             koopas[i].activate();
         if (!koopas[i].isDead()) {
             // Update conditionally (if not dead)
-            koopas[i].update(deltaTime);
+            koopas[i].update(deltaTime, player->getPosition());
             // Check if under the map. Die if so
             if (koopas[i].getPosition().y > (map->getMapSize().y - 2) * map->getTileSize())
                 koopas[i].dieFall();
