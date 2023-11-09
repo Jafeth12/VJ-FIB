@@ -99,7 +99,7 @@ void Scene::update(float deltaTime, Player *player)
             // Update conditionally (if not dead)
             goombas[i].update(deltaTime);
             // Check if under the map. Die if so
-            if (goombas[i].getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
+                if (goombas[i].getPosition().y > (map->getMapSize().y - 1) * map->getTileSize()) {
                 goombas[i].dieFall();
             }
         }
@@ -113,8 +113,7 @@ void Scene::update(float deltaTime, Player *player)
             // Update conditionally (if not dead)
             koopas[i].update(deltaTime, player->getPosition());
             // Check if under the map. Die if so
-            // TODO: quitar cuando uno se pueda caer del mapa por los agujeros 
-            if (koopas[i].getPosition().y > (map->getMapSize().y - 2) * map->getTileSize())
+            if (koopas[i].getPosition().y > (map->getMapSize().y - 1) * map->getTileSize())
                 koopas[i].dieFall();
             if (koopas[i].isShell() && !camera->isOnScreen(koopas[i].getPosition(), koopas[i].getSize())) {
                 koopas[i].dieFall();
