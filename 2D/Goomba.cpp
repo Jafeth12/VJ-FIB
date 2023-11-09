@@ -11,6 +11,7 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
     dir = initialDirection;
     tileMapDispl = tileMapPos;
     map = tileMap;
+    enemySize = GOOMBA_SIZE;
 
     // TODO: Cargar spritesheet solamente una vez (no se como XD)
     spritesheet.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -18,7 +19,7 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
     spritesheet.setMagFilter(GL_NEAREST);
 
     float size = GOOMBA_SIZE_IN_SPRITESHEET / spritesheet.width();
-    sprite = Sprite::createSprite(GOOMBA_SIZE, glm::vec2(size, size), &spritesheet, &shaderProgram);
+    sprite = Sprite::createSprite(enemySize, glm::vec2(size, size), &spritesheet, &shaderProgram);
 
     float row;
     if (color == Color::OVERWORLD)
@@ -57,7 +58,7 @@ void Goomba::update(float deltaTime) {
 
 
 void Goomba::updateVelocity(float deltaTime) {
-    if (map->onGround(pos, GOOMBA_SIZE))
+    if (map->onGround(pos, enemySize))
         vel.y = 0.f;
     else {
         vel.y += GRAVITY_ACC * deltaTime;
@@ -74,10 +75,10 @@ void Goomba::updatePosition(float deltaTime) {
 
     glm::ivec2 nextPos = glm::ivec2(xNext, yNext);
 
-    if (map->solveCollisionsY(pos, nextPos, GOOMBA_SIZE))
+    if (map->solveCollisionsY(pos, nextPos, enemySize))
         vel.y = 0.f;
 
-    if (map->solveCollisionsX(pos, nextPos, GOOMBA_SIZE))
+    if (map->solveCollisionsX(pos, nextPos, enemySize))
         dir = (Dir)(-(enum_t)dir);
 
     this->pos = nextPos;

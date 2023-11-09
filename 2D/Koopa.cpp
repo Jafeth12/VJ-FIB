@@ -9,6 +9,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     dir = initialDirection;
     tileMapDispl = tileMapPos;
     map = tileMap;
+    enemySize = KOOPA_SIZE;
 
     // TODO: Cargar spritesheet solamente una vez (no se como XD)
     spritesheet.loadFromFile("images/koopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -17,7 +18,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
 
     float sizeX = 32.f / spritesheet.width();
     float sizeY = 64.f / spritesheet.height();
-    sprite = Sprite::createSprite(KOOPA_SIZE, glm::vec2(sizeX, sizeY), &spritesheet, &shaderProgram);
+    sprite = Sprite::createSprite(enemySize, glm::vec2(sizeX, sizeY), &spritesheet, &shaderProgram);
 
     float row;
     if (color == Color::OVERWORLD)
@@ -71,7 +72,7 @@ void Koopa::update(float deltaTime) {
 
 
 void Koopa::updateVelocity(float deltaTime) {
-    if (map->onGround(pos, KOOPA_SIZE))
+    if (map->onGround(pos, enemySize))
         vel.y = 0.f;
     else {
         vel.y += GRAVITY_ACC * deltaTime;
@@ -88,10 +89,10 @@ void Koopa::updatePosition(float deltaTime) {
 
     glm::ivec2 nextPos = glm::ivec2(xNext, yNext);
 
-    if (map->solveCollisionsY(pos, nextPos, KOOPA_SIZE))
+    if (map->solveCollisionsY(pos, nextPos, enemySize))
         vel.y = 0.f;
 
-    if (map->solveCollisionsX(pos, nextPos, KOOPA_SIZE)) {
+    if (map->solveCollisionsX(pos, nextPos, enemySize)) {
         dir = (Dir)(-(enum_t)dir);
         sprite->changeAnimation(getAnimId(currentState, dir));
     }

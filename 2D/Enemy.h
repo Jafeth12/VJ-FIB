@@ -16,6 +16,7 @@ class Enemy {
         void render();
         glm::ivec2 getPosition() const { return pos; };
         virtual bool isDead() const { return true; };
+        void invertDirection() { dir = (dir == Dir::LEFT) ? Dir::RIGHT : Dir::LEFT; };
 
     protected:
         virtual void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) {};
@@ -28,7 +29,8 @@ class Enemy {
         TileMap *map;
 
         glm::ivec2 tileMapDispl,
-                   pos;
+                   pos,
+                   enemySize;
         Dir dir;
         glm::vec2 vel;
 
