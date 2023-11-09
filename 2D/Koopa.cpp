@@ -1,19 +1,18 @@
 #include "Koopa.h"
 #include "Constants.h"
+#include "TileMap.h"
 
 #define ANIM_SPEED 8
-#define KOOPA_SIZE glm::ivec2(32, 48)
 #define KOOPA_SPEED 120.f
 #define SHELL_SPEED 240.f
 #define KOOPA_SHELL_TIME 5.f
 
 Texture *Koopa::s_koopaTexture = nullptr;
 
-void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
+void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, TileMap::MapColor color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
     dir = initialDirection;
     tileMapDispl = tileMapPos;
     map = tileMap;
-    enemySize = KOOPA_SIZE;
     bActive = false;
     timeSinceShell = 0.f;
 
@@ -27,10 +26,10 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
 
     float sizeX = 32.f / spritesheet->width();
     float sizeY = 64.f / spritesheet->height();
-    sprite = Sprite::createSprite(enemySize, glm::vec2(sizeX, sizeY), s_koopaTexture, &shaderProgram);
+    sprite = Sprite::createSprite(getSize(), glm::vec2(sizeX, sizeY), s_koopaTexture, &shaderProgram);
 
     float row;
-    if (color == Color::OVERWORLD)
+    if (color == TileMap::MapColor::OVERWORLD)
         row = 0.f;
     else // UNDERWORLD
         row = 1.f;
@@ -125,10 +124,10 @@ void Koopa::updatePosition(float deltaTime) {
     glm::ivec2 nextPos = glm::ivec2(xNext, yNext);
 
     if (!isDying()) {
-        if (map->solveCollisionsY(pos, nextPos, enemySize))
+        if (map->solveCollisionsY(pos, nextPos, getSize()))
             vel.y = 0.f;
 
-        if (map->solveCollisionsX(pos, nextPos, enemySize)) {
+        if (map->solveCollisionsX(pos, nextPos, getSize())) {
             dir = (Dir)(-(enum_t)dir);
             sprite->changeAnimation(getAnimId(currentState, dir));
         }
@@ -144,7 +143,7 @@ void Koopa::kick(Dir dir) {
 
 Enemy::Dir Koopa::kickDirection(Player &p) const {
     float playerCenter = p.getPosition().x + p.getSize().x / 2.f;
-    float koopaCenter = pos.x + enemySize.x / 2.f;
+    float koopaCenter = pos.x + getSize().x / 2.f;
     return (playerCenter < koopaCenter) ? Dir::RIGHT : Dir::LEFT;
 }
 

@@ -4,17 +4,15 @@
 
 #define ANIM_SPEED 8
 #define GOOMBA_SIZE_IN_SPRITESHEET 32.f
-#define GOOMBA_SIZE glm::ivec2(32, 32)
 #define GOOMBA_SPEED 120.f
 #define GOOMA_CRUSHED_TIME 0.5f
 
 Texture *Goomba::s_goombaTexture = nullptr;
 
-void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
+void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, TileMap::MapColor color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
     dir = initialDirection;
     tileMapDispl = tileMapPos;
     map = tileMap;
-    enemySize = GOOMBA_SIZE;
     bActive = false;
     timeSinceCrushed = 0.f;
 
@@ -27,10 +25,10 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
     spritesheet = s_goombaTexture;
 
     float size = GOOMBA_SIZE_IN_SPRITESHEET / spritesheet->width();
-    sprite = Sprite::createSprite(enemySize, glm::vec2(size, size), s_goombaTexture, &shaderProgram);
+    sprite = Sprite::createSprite(getSize(), glm::vec2(size, size), s_goombaTexture, &shaderProgram);
 
     float row;
-    if (color == Color::OVERWORLD)
+    if (color == TileMap::MapColor::OVERWORLD)
         row = 0.f;
     else // UNDERWORLD
         row = 1.f;
@@ -101,15 +99,13 @@ void Goomba::updatePosition(float deltaTime) {
     glm::ivec2 nextPos = glm::ivec2(xNext, yNext);
 
     if (!isDying()) { 
-        if (map->solveCollisionsY(pos, nextPos, enemySize))
+        if (map->solveCollisionsY(pos, nextPos, getSize()))
             vel.y = 0.f;
 
-        if (map->solveCollisionsX(pos, nextPos, enemySize))
+        if (map->solveCollisionsX(pos, nextPos, getSize()))
             dir = (Dir)(-(enum_t)dir);
     }
     this->pos = nextPos;
-
-
 }
 
 void Goomba::updateAnimation() {

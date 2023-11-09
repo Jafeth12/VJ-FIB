@@ -17,7 +17,7 @@ bool Enemy::collidesWith(const Enemy &other) const {
     glm::ivec2 otherMaxCoords = otherPos + otherSize;
 
     glm::ivec2 thisMinCoords = pos;
-    glm::ivec2 thisMaxCoords = pos + enemySize;
+    glm::ivec2 thisMaxCoords = pos + getSize();
 
     return (thisMinCoords.x < otherMaxCoords.x && thisMaxCoords.x > otherMinCoords.x &&
         thisMinCoords.y < otherMaxCoords.y && thisMaxCoords.y > otherMinCoords.y);

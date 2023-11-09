@@ -4,11 +4,14 @@
 #include "Enemy.h"
 #include "TileMap.h"
 
+#define GOOMBA_SIZE glm::ivec2(32, 32)
 
 class Goomba : public Enemy {
     public:
         void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, TileMap::MapColor color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) override;
         void update(float deltaTime) override;
+
+        glm::ivec2 getSize() const override { return GOOMBA_SIZE; };
 
         void dieLateral() override { currentState = State::FLIPPED; Enemy::dieLateral(); };
         void dieVertical() override { currentState = State::CRUSHED; dir = Dir::NONE; Enemy::dieVertical(); };

@@ -14,7 +14,7 @@ class Enemy {
 
         void render();
         glm::ivec2 getPosition() const { return pos; };
-        glm::ivec2 getSize() const { return enemySize; };
+        virtual glm::ivec2 getSize() const { return glm::ivec2(0); };
 
         virtual bool isDead() const { return true; };
         virtual bool isDying() const { return false; };
@@ -41,8 +41,7 @@ class Enemy {
         TileMap *map;
 
         glm::ivec2 tileMapDispl,
-                   pos,
-                   enemySize;
+                   pos;
         Dir dir;
         glm::vec2 vel;
 

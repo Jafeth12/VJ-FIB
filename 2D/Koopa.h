@@ -5,10 +5,15 @@
 #include "Player.h"
 #include "TileMap.h"
 
+#define KOOPA_SIZE glm::ivec2(32, 48)
+#define KOOPA_SHELL_SIZE glm::ivec2(32, 32)
+
 class Koopa : public Enemy {
     public:
         void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, TileMap::MapColor color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) override;
         void update(float deltaTime, const glm::ivec2 &playerPos);
+
+        glm::ivec2 getSize() const override { return KOOPA_SIZE; };
 
         void becomeShell() { currentState = State::SHELL; vel.x = 0.f; dir = Dir::NONE; };
         void kick(Dir dir);
