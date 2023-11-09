@@ -87,9 +87,41 @@ void Scene::update(float deltaTime, Player *player)
     // Goombas - Goombas
     for (unsigned i = 0; i < goombas.size(); ++i)
         for (unsigned j = 0; j < i; ++j)
-            if (goombas[i].collidesWith(goombas[j])) {
+            if (!goombas[i].isDead() && !goombas[j].isDead() && goombas[i].collidesWith(goombas[j])) {
                 goombas[i].invertDirection();
                 goombas[j].invertDirection();
+            }
+
+    // Goombas - Koopas
+    for (unsigned i = 0; i < goombas.size(); ++i)
+        for (unsigned j = 0; j < koopas.size(); ++j)
+            if (!goombas[i].isDead() && !koopas[j].isDead() && goombas[i].collidesWith(koopas[j])) {
+                if (koopas[j].isShell())
+                    goombas[i].die();
+                else {
+                    goombas[i].invertDirection();
+                    koopas[j].invertDirection();
+                }
+            }
+
+    // Koopas Koopas
+    for (unsigned i = 0; i < koopas.size(); ++i)
+        for (unsigned j = 0; j < i; ++j)
+            if (!koopas[i].isDead() && !koopas[j].isDead() && koopas[i].collidesWith(koopas[j])) {
+                if (koopas[i].isShell() && koopas[j].isShell()) {
+                    koopas[i].invertDirection();
+                    koopas[j].invertDirection();
+                }
+                else if (koopas[i].isShell()) {
+                    koopas[j].die();
+                }
+                else if (koopas[j].isShell()) {
+                    koopas[i].die();
+                }
+                else {
+                    koopas[i].invertDirection();
+                    koopas[j].invertDirection();
+                }
             }
 
     hud->decrementTimeLeft();

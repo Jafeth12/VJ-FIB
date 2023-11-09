@@ -19,6 +19,8 @@ class Enemy {
         virtual bool isDead() const { return true; };
         void invertDirection() { dir = (dir == Dir::LEFT) ? Dir::RIGHT : Dir::LEFT; };
 
+        bool collidesWith(const Enemy &other) const;
+
     protected:
         virtual void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, Enemy::Color color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) {};
         virtual void update(float deltaTime) {};

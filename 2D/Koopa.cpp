@@ -70,6 +70,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
 }
 
 void Koopa::update(float deltaTime) {
+    if (currentState == State::DEAD) return;
     sprite->update(deltaTime);
     updateVelocity(deltaTime);
     updatePosition(deltaTime);

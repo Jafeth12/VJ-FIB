@@ -13,8 +13,6 @@ class Goomba : public Enemy {
         void die() { currentState = State::DEAD; };
         bool isDead() const override { return currentState == State::DEAD; };
 
-        bool collidesWith(const Goomba &other) const;
-
     private:
         static Texture *s_goombaTexture;
 
