@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Sprite.h"
 #include "TileMap.h"
+#include "Enemy.h"
 #include <glm/fwd.hpp>
 
 
@@ -23,7 +24,22 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 
-    glm::vec2 getPosition();
+    glm::vec2 getPosition() const;
+    glm::vec2 getSize() const;
+
+    bool collidesWithEnemy(const Enemy &enemy) const;
+
+    /**
+     * @brief Retorna el ángulo entre la recta
+     * entre centros del jugador y el enemigo,
+     * y la vertical encima del enemigo.
+     * Cuando el jugador está directamente encima,
+     * el ángulo = 0
+     */
+    float collisionAngle(const Enemy &enemy) const;
+
+    void takeDamage();
+    void fallDie();
 
 private:
     // Animations

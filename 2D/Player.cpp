@@ -1,5 +1,7 @@
 #include <cmath>
+#include <glm/common.hpp>
 #include <glm/fwd.hpp>
+#include <glm/trigonometric.hpp>
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -170,8 +172,53 @@ void Player::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
-glm::vec2 Player::getPosition() {
+glm::vec2 Player::getPosition() const {
     return posPlayer;
+}
+
+glm::vec2 Player::getSize() const {
+    return PLAYER_SIZE;
+}
+
+bool Player::collidesWithEnemy(const Enemy &enemy) const {
+    glm::ivec2 enemySize = enemy.getSize();
+    glm::ivec2 enemyPos = enemy.getPosition();
+    glm::ivec2 enemyCenter = enemyPos + enemySize/2;
+    glm::ivec2 playerCenter = posPlayer + PLAYER_SIZE/2;
+    glm::ivec2 dist = glm::abs(enemyCenter - playerCenter);
+    glm::ivec2 minDist = (PLAYER_SIZE + enemySize)/2;
+    if (dist.x < minDist.x && dist.y < minDist.y)
+        return true;
+    return false;
+}
+
+
+float Player::collisionAngle(const Enemy &enemy) const {
+    // Puntos de interes:
+    //  - p: centro del player
+    //  - e: centro del enemigo
+    //  - k: punto tal que angulo entre pk y ke sea 90ª
+    glm::vec2 p = (glm::vec2)posPlayer + this->getSize()/2.f;
+    glm::vec2 e = (glm::vec2)enemy.getPosition() + ((glm::vec2)enemy.getSize())/2.f;
+    glm::vec2 k = glm::vec2(e.x, p.y);
+
+    float kp = glm::abs(k.x - p.x);
+    float ek = glm::abs(e.y - k.y);
+
+    float alpha =glm::atan(kp/ek);
+    if (p.y > e.y) alpha += M_PI;
+
+    return alpha;
+}
+
+void Player::takeDamage() {
+    // TODO
+    std::cout << "Player::takedamage() todo" << std::endl;
+}
+
+void Player::fallDie() {
+    // TODO
+    std::cout << "Player::fallDie() todo" << std::endl;
 }
 
 void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
