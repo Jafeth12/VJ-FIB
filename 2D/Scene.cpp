@@ -4,6 +4,7 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 
+#define DISTANCE_TO_ACTIVATE_ENEMY 500
 
 Scene::Scene()
 {
@@ -82,10 +83,11 @@ void Scene::update(float deltaTime, Player *player)
     currentTime += deltaTime;
     player->update(deltaTime);
 
+    // === Conditionally update enemies ===
     // Goombas
     for (unsigned i = 0; i < goombas.size(); ++i) {
         // Activate when player is near
-        if (!goombas[i].isActive() && abs(goombas[i].getPosition().x - player->getPosition().x) < 500)
+        if (!goombas[i].isActive() && abs(goombas[i].getPosition().x - player->getPosition().x) < DISTANCE_TO_ACTIVATE_ENEMY)
             goombas[i].activate();
         if (!goombas[i].isDead()) {
             // Update conditionally (if not dead)
@@ -99,7 +101,7 @@ void Scene::update(float deltaTime, Player *player)
     // Koopas
     for (unsigned i = 0; i < koopas.size(); ++i) {
         // Activate when player is near
-        if (!koopas[i].isActive() && abs(koopas[i].getPosition().x - player->getPosition().x) < 500)
+        if (!koopas[i].isActive() && abs(koopas[i].getPosition().x - player->getPosition().x) < DISTANCE_TO_ACTIVATE_ENEMY)
             koopas[i].activate();
         if (!koopas[i].isDead()) {
             // Update conditionally (if not dead)
@@ -110,7 +112,7 @@ void Scene::update(float deltaTime, Player *player)
         }
     }
 
-    // Check collisions
+    // === Check collisions ===
     // Goombas - Goombas
     for (unsigned i = 0; i < goombas.size(); ++i)
         for (unsigned j = 0; j < i; ++j)
