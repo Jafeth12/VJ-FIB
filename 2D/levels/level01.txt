@@ -23,7 +23,7 @@ images/tiles.png 	-- Tilesheet
 G 23 13 L O
 G 41 13 L O
 G 52 13 L O
-G 53 13 L O
+G 54 13 L O
 G 82 21 L O
 G 84 21 L O
 G 99 13 L O
