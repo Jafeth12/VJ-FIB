@@ -55,6 +55,7 @@ bool Game::update(float deltaTime)
 
     switch (currentState) {
         case GAME_MENU:
+            SoundEngine::instance().stopAllSounds();
             menu.update(deltaTime);
             if (menu.getMenuState() == MainMenu::MenuState::PLAY) {
                 currentState = GAME_PLAY;
