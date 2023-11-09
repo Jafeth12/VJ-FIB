@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #define DISTANCE_TO_ACTIVATE_ENEMY 500
+#define ANGLE_TO_DIE (M_PI/2.f)
 
 Scene::Scene()
 {
@@ -82,6 +83,10 @@ void Scene::update(float deltaTime, Player *player)
 {
     currentTime += deltaTime;
     player->update(deltaTime);
+    // Check player under the map
+    if (player->getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
+        player->fallDie();
+    }
 
     // === Conditionally update enemies ===
     // Goombas
@@ -148,6 +153,29 @@ void Scene::update(float deltaTime, Player *player)
                     koopas[j].invertDirection();
                 }
             }
+
+    // Player - goombas
+    for (unsigned i = 0; i < goombas.size(); ++i)
+        if (goombas[i].shouldCollide() && player->collidesWithEnemy(goombas[i])) {
+            float alpha = player->collisionAngle(goombas[i]);
+            if (glm::abs(alpha) <= ANGLE_TO_DIE)
+                goombas[i].dieVertical();
+            else {
+                player->takeDamage();
+            }
+        }
+
+    // Player - koopas
+    for (unsigned i = 0; i < koopas.size(); ++i)
+        if (koopas[i].shouldCollide() && player->collidesWithEnemy(koopas[i])) {
+            float alpha = player->collisionAngle(koopas[i]);
+            if (glm::abs(alpha) <= ANGLE_TO_DIE) {
+                koopas[i].dieVertical();
+            }
+            else {
+                player->takeDamage();
+            }
+        }
 
     hud->decrementTimeLeft();
 
