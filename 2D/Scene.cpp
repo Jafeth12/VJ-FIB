@@ -82,38 +82,32 @@ void Scene::update(float deltaTime, Player *player)
     currentTime += deltaTime;
     player->update(deltaTime);
 
-    // Activate enemies when player is near
+    // Goombas
     for (unsigned i = 0; i < goombas.size(); ++i) {
-        if (!goombas[i].isActive() && abs(goombas[i].getPosition().x - player->getPosition().x) < 500) {
+        // Activate when player is near
+        if (!goombas[i].isActive() && abs(goombas[i].getPosition().x - player->getPosition().x) < 500)
             goombas[i].activate();
-        }
-    }
-    for (unsigned i = 0; i < koopas.size(); ++i) {
-        if (!koopas[i].isActive() && abs(koopas[i].getPosition().x - player->getPosition().x) < 500) {
-            koopas[i].activate();
-        }
-    }
-
-    // Call enemies update conditionally
-    for (unsigned i = 0; i < goombas.size(); ++i)
-        if (!goombas[i].isDead())
+        if (!goombas[i].isDead()) {
+            // Update conditionally (if not dead)
             goombas[i].update(deltaTime);
-    for (unsigned i = 0; i < koopas.size(); ++i)
-        if (!koopas[i].isDead())
-            koopas[i].update(deltaTime);
-
-    // Check if Enemies have fallen
-    for (unsigned i = 0; i < goombas.size(); ++i) {
-        if (!goombas[i].isDead())
+            // Check if under the map. Die if so
             if (goombas[i].getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
                 goombas[i].dieFall();
             }
+        }
     }
+    // Koopas
     for (unsigned i = 0; i < koopas.size(); ++i) {
-        if (!koopas[i].isDead())
-            if (koopas[i].getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
+        // Activate when player is near
+        if (!koopas[i].isActive() && abs(koopas[i].getPosition().x - player->getPosition().x) < 500)
+            koopas[i].activate();
+        if (!koopas[i].isDead()) {
+            // Update conditionally (if not dead)
+            koopas[i].update(deltaTime);
+            // Check if under the map. Die if so
+            if (koopas[i].getPosition().y > (map->getMapSize().y - 2) * map->getTileSize())
                 koopas[i].dieFall();
-            }
+        }
     }
 
     // Check collisions
