@@ -81,6 +81,19 @@ void Scene::update(float deltaTime, Player *player)
 {
     currentTime += deltaTime;
     player->update(deltaTime);
+
+    // Activate enemies when player is near
+    for (unsigned i = 0; i < goombas.size(); ++i) {
+        if (!goombas[i].isActive() && abs(goombas[i].getPosition().x - player->getPosition().x) < 500) {
+            goombas[i].activate();
+        }
+    }
+    for (unsigned i = 0; i < koopas.size(); ++i) {
+        if (!koopas[i].isActive() && abs(koopas[i].getPosition().x - player->getPosition().x) < 500) {
+            koopas[i].activate();
+        }
+    }
+
     // Call enemies update conditionally
     for (unsigned i = 0; i < goombas.size(); ++i)
         if (!goombas[i].isDead())

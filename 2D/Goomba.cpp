@@ -14,6 +14,7 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
     tileMapDispl = tileMapPos;
     map = tileMap;
     enemySize = GOOMBA_SIZE;
+    bActive = false;
 
     if (s_goombaTexture == nullptr) {
         s_goombaTexture = new Texture();
@@ -58,6 +59,8 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
 }
 
 void Goomba::update(float deltaTime) {
+    if (bActive == false)
+        return;
     sprite->update(deltaTime);
     updateAnimation();
     updateVelocity(deltaTime);

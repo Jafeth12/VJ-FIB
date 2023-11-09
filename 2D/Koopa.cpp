@@ -13,8 +13,8 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     tileMapDispl = tileMapPos;
     map = tileMap;
     enemySize = KOOPA_SIZE;
+    bActive = false;
 
-    // TODO: Cargar spritesheet solamente una vez (no se como XD)
     if (s_koopaTexture == nullptr) {
         s_koopaTexture = new Texture();
         s_koopaTexture->loadFromFile("images/koopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -80,6 +80,8 @@ void Koopa::dieVertical() {
 }
 
 void Koopa::update(float deltaTime) {
+    if (bActive == false)
+        return;
     sprite->update(deltaTime);
     updateVelocity(deltaTime);
     updatePosition(deltaTime);

@@ -21,8 +21,10 @@ class Enemy {
         virtual bool isDying() const { return false; };
         virtual bool shouldCollide() const { return !isDying() && !isDead(); };
         bool collidesWith(const Enemy &other) const;
+        bool isActive() const { return bActive; };
 
         void invertDirection() { dir = (Dir)(-(enum_t)dir); };
+        void activate() { bActive = true; };
 
         virtual void dieLateral() { vel.y = 240.f; };
         virtual void dieVertical() { vel.y = 0.f; };
@@ -44,6 +46,8 @@ class Enemy {
                    enemySize;
         Dir dir;
         glm::vec2 vel;
+
+        bool bActive;
 
 };
 
