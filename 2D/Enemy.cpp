@@ -1,7 +1,8 @@
 #include "Enemy.h"
 
 void Enemy::render() {
-    sprite->render();
+    if (!this->isDead())
+        sprite->render();
 }
 
 void Enemy::setPosition(const glm::vec2 &pos) {

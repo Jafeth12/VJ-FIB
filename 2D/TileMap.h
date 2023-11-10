@@ -36,6 +36,8 @@ public:
 	void render() const;
 	void free();
 
+    Texture* getTexture() { return &tilesheet; }
+
 	int getTileSize() const { return tileSize; }
     glm::ivec2 getMapSize() const { return mapSize; }
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Brick.h"
 #include "Scene.h"
 #include "Enemy.h"
 #include "Game.h"
@@ -23,6 +24,8 @@ Scene::~Scene()
         delete background;
     if (foreground != NULL) 
         delete foreground;
+
+    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) delete interactiveBlocks[i];
 
     for (auto &text : texts) {
         delete text.second;
@@ -59,7 +62,12 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
         koopas.resize(koopasPos.size());
         for (unsigned i = 0; i < koopas.size(); ++i)
             koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
+
+        interactiveBlocks.push_back(new Brick(glm::ivec2(0, 16), map, glm::vec2(8, 8), shaderProgram, map->getTexture(), TileMap::MapColor::OVERWORLD));
+        // interactiveBlocks[0].render();
     }
+
+
 
 }
 
@@ -220,12 +228,9 @@ void Scene::render() {
 	if (map != NULL) map->render();
     if (foreground != NULL) foreground->render();
 
-    for (unsigned i = 0; i < goombas.size(); ++i) 
-        if (!goombas[i].isDead())
-                goombas[i].render();
-    for (unsigned i = 0; i < koopas.size(); ++i)
-        if (!koopas[i].isDead())
-                koopas[i].render();
+    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) interactiveBlocks[i]->render();
+    for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].render();
+    for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].render();
 
     if (worldNumber > 0) hud->setWorldNumber(worldNumber);
     hud->render();
