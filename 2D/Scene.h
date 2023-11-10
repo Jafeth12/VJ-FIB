@@ -16,6 +16,8 @@
 #include "HUD.h"
 #include "InteractiveBlock.h"
 
+#include "Coin.h"
+
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -54,6 +56,8 @@ protected:
     std::vector<Koopa> koopas;
 
     std::vector<InteractiveBlock*> interactiveBlocks;
+
+    Coin coin;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;
