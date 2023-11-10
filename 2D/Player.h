@@ -50,13 +50,18 @@ private:
     typedef short enum_t;
     enum class VerticalAnim : enum_t { WALK, RUN, SPRINT, STAND, JUMP, BRAKE, _LAST };
     enum class LateralAnim  : enum_t { LEFT, RIGHT, _LAST };
+    enum class AnimSize     : enum_t { SMALL, BIG, _LAST };
+    enum class AnimType     : enum_t { NORMAL, STAR, _LAST };
     enum class SpecialAnim  : enum_t { DIE, _LAST };
 
     const int numAnims = (int)getAnimId(SpecialAnim::_LAST);
-    int getAnimId(VerticalAnim v, LateralAnim l) const { return (enum_t)l * (enum_t)VerticalAnim::_LAST + (enum_t)v; }
-    int getAnimId(SpecialAnim s) const { return (enum_t)s + (enum_t)VerticalAnim::_LAST * (enum_t)LateralAnim::_LAST; }
-    VerticalAnim getVerticalAnim(int a) const { return (VerticalAnim)((enum_t)a % (enum_t)VerticalAnim::_LAST); };
-    LateralAnim getLateralAnim(int a) const { return (LateralAnim)((enum_t)a / (enum_t)VerticalAnim::_LAST); };
+    int getAnimId(VerticalAnim v, LateralAnim l, AnimSize as, AnimType t) const;
+    int getAnimId(SpecialAnim s) const;
+    VerticalAnim getVerticalAnim(int a) const;
+    LateralAnim getLateralAnim(int a) const;
+    AnimSize getAnimSize(int a) const;
+    AnimType getAnimType(int a) const;
+
     void updateAnimation(bool leftPressed, bool rightPressed) const;
 
     // Physics
@@ -82,6 +87,13 @@ private:
 
     glm::ivec2 posPlayer;
     glm::vec2 velPlayer;
+
+    // Animations
+    VerticalAnim verticalAnim;
+    LateralAnim lateralAnim;
+    AnimSize animSize;
+    int currentAnim;
+
 
     enum class State {
         SMALL,
