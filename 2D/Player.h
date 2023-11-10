@@ -24,8 +24,8 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 
-    glm::vec2 getPosition() const;
-    glm::vec2 getSize() const;
+    glm::ivec2 getPosition() const;
+    glm::ivec2 getSize() const;
 
     bool collidesWithEnemy(const Enemy &enemy) const;
 
@@ -42,19 +42,31 @@ public:
     void takeDamage();
     void fallDie();
 
+    void takeMushroom();
+    void takeStar();
+
+    bool isStar() const;
+    int getCurrentStarFrame();
+
 private:
     // Animations
     typedef short enum_t;
     enum class VerticalAnim : enum_t { WALK, RUN, SPRINT, STAND, JUMP, BRAKE, _LAST };
     enum class LateralAnim  : enum_t { LEFT, RIGHT, _LAST };
+    enum class AnimType     : enum_t { NORMAL, STAR, _LAST };
+    enum class AnimSize     : enum_t { SMALL, BIG, _LAST };
     enum class SpecialAnim  : enum_t { DIE, _LAST };
 
-    const int numAnims = (int)getAnimId(SpecialAnim::_LAST);
-    int getAnimId(VerticalAnim v, LateralAnim l) const { return (enum_t)l * (enum_t)VerticalAnim::_LAST + (enum_t)v; }
-    int getAnimId(SpecialAnim s) const { return (enum_t)s + (enum_t)VerticalAnim::_LAST * (enum_t)LateralAnim::_LAST; }
-    VerticalAnim getVerticalAnim(int a) const { return (VerticalAnim)((enum_t)a % (enum_t)VerticalAnim::_LAST); };
-    LateralAnim getLateralAnim(int a) const { return (LateralAnim)((enum_t)a / (enum_t)VerticalAnim::_LAST); };
-    void updateAnimation(bool leftPressed, bool rightPressed) const;
+    const int NUM_ANIMS = (int)getAnimId(SpecialAnim::_LAST);
+
+    int getAnimId(VerticalAnim v, LateralAnim l, AnimSize as) const;
+    int getAnimId(SpecialAnim s) const;
+
+    VerticalAnim getVerticalAnim(int a) const;
+    LateralAnim getLateralAnim(int a) const;
+    AnimSize getAnimSize(int a) const;
+
+    void updateAnimation(bool leftPressed, bool rightPressed, float deltaTime);
 
     // Physics
     enum PlayerYState { FLOOR, UPWARDS, DOWNWARDS };
@@ -62,13 +74,16 @@ private:
 
     void updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime);
     void updatePosition(float deltaTime);
+
+    void updatePlayerState(float deltaTime);
     bool updateYState(bool upPressed);
     void updateXState(bool leftPressed, bool rightPressed, bool runPressed);
     glm::vec2 getAcceleration();
 
 	bool bJumping;
 	glm::ivec2 tileMapDispl;
-	Texture spritesheet;
+    Texture spritesheet;
+
 	Sprite *sprite;
 	TileMap *map;
 
@@ -77,6 +92,28 @@ private:
 
     glm::ivec2 posPlayer;
     glm::vec2 velPlayer;
+
+    // Animations
+    VerticalAnim verticalAnim;
+    LateralAnim lateralAnim;
+    AnimSize animSize;
+    int currentAnim;
+    int currentStarFrame;
+
+    ShaderProgram *shaderProgram;
+
+    enum class State {
+        SMALL,
+        BIG,
+        SMALL_STAR,
+        BIG_STAR,
+        JUST_TOOK_DAMAGE,
+        DYING,
+        DEAD,
+    };
+    void setState(State newState);
+    State statePlayer;
+    float timeCurrentState;
 };
 
 
