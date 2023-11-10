@@ -5,6 +5,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include "InteractiveBlock.h"
 #include "Player.h"
 #include "Game.h"
 
@@ -293,7 +294,7 @@ glm::ivec2 Player::getSize() const {
     else return PLAYER_SIZE;
 }
 
-bool Player::collidesWithEnemy(const Enemy &enemy) const {
+bool Player::collidesWith(const Enemy &enemy) const {
     glm::ivec2 enemySize = enemy.getSize();
     glm::ivec2 enemyPos = enemy.getPosition();
     glm::ivec2 enemyCenter = enemyPos + enemySize/2;
@@ -302,6 +303,17 @@ bool Player::collidesWithEnemy(const Enemy &enemy) const {
     glm::ivec2 minDist = (getSize() + enemySize)/2;
     if (dist.x < minDist.x && dist.y < minDist.y)
         return true;
+    return false;
+}
+
+bool Player::collidesWith(const InteractiveBlock &block) const {
+    if (map->headUnderTile(posPlayer, getSize())) {
+        std::cout << "Head is under tile" << std::endl;
+        auto collidedTile = map->tileOverHead(posPlayer, getSize());
+        if (collidedTile == block.getTile()) {
+            return true;
+        }
+    }
     return false;
 }
 

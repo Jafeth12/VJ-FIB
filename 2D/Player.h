@@ -3,6 +3,7 @@
 
 
 #include "Camera.h"
+#include "InteractiveBlock.h"
 #include "Sprite.h"
 #include "TileMap.h"
 #include "Enemy.h"
@@ -32,7 +33,8 @@ public:
     bool isBig() const { return statePlayer == State::BIG || statePlayer == State::BIG_STAR; }
     bool isStar() const { return statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR; };
 
-    bool collidesWithEnemy(const Enemy &enemy) const;
+    bool collidesWith(const Enemy &enemy) const;
+    bool collidesWith(const InteractiveBlock &block) const;
 
     /**
      * @brief Retorna el ángulo entre la recta

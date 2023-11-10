@@ -14,6 +14,8 @@ class InteractiveBlock
         virtual void update(float deltaTime);
         void render();
 
+        glm::ivec2 getTile() const { return pos / map->getTileSize(); }
+
         void activate();
         bool canActivate() const;
 

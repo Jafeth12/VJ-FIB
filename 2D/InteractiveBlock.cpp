@@ -37,8 +37,11 @@ void InteractiveBlock::setPosition(glm::vec2 &pos) {
 }
 
 void InteractiveBlock::render() {
-    sprite->render();
+    if (state != BlockState::OFF)
+        sprite->render();
 }
+
+
 
 void InteractiveBlock::activate() {
     state = BlockState::JUMPING;

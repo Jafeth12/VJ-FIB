@@ -64,8 +64,8 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
         for (unsigned i = 0; i < koopas.size(); ++i)
             koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
 
-        interactiveBlocks.push_back(new Brick(glm::ivec2(0, 16), map, glm::vec2(8, 8), shaderProgram, map->getTexture(), TileMap::MapColor::UNDERWORLD));
-        interactiveBlocks.push_back(new Interrogation(glm::ivec2(0, 16), map, glm::vec2(9, 8), shaderProgram, map->getTexture(), TileMap::MapColor::UNDERWORLD));
+        interactiveBlocks.push_back(new Brick(glm::ivec2(0, 16), map, glm::vec2(21, 10), shaderProgram, map->getTexture(), TileMap::MapColor::UNDERWORLD));
+        interactiveBlocks.push_back(new Interrogation(glm::ivec2(0, 16), map, glm::vec2(22, 10), shaderProgram, map->getTexture(), TileMap::MapColor::UNDERWORLD));
         // interactiveBlocks[0].render();
     }
 
@@ -156,7 +156,7 @@ void Scene::update(float deltaTime, Player *player)
 
     // Player - goombas
     for (unsigned i = 0; i < goombas.size(); ++i)
-        if (goombas[i].shouldCollide() && player->collidesWithEnemy(goombas[i])) {
+        if (goombas[i].shouldCollide() && player->collidesWith(goombas[i])) {
             float alpha = player->collisionAngle(goombas[i]);
             if (glm::abs(alpha) <= ANGLE_TO_DIE) {
                 goombas[i].dieVertical();
@@ -169,7 +169,7 @@ void Scene::update(float deltaTime, Player *player)
 
     // Player - koopas
     for (unsigned i = 0; i < koopas.size(); ++i) {
-        if (koopas[i].shouldCollide() && player->collidesWithEnemy(koopas[i])) {
+        if (koopas[i].shouldCollide() && player->collidesWith(koopas[i])) {
             if (koopas[i].isShell() && !koopas[i].isMovingShell()) {
                 koopas[i].kick(koopas[i].kickDirection(*player));
             }
@@ -189,7 +189,15 @@ void Scene::update(float deltaTime, Player *player)
         }
     }
 
-    // Player - interactive blocks
+    // Player - interactiveBlocks
+    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
+        if (player->collidesWith(*interactiveBlocks[i])) {
+            std::cout << "Player collides with block" << std::endl;
+            if (interactiveBlocks[i]->canActivate()) {
+                interactiveBlocks[i]->activate();
+            }
+        }
+    }
 
 
 
