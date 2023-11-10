@@ -38,6 +38,8 @@ public:
     bool hasEnded();
     void setIsOver(bool isOver);
 
+    void reset();
+
     int getWorldNumber();
 
     glm::ivec2 getInitPlayerTiles();

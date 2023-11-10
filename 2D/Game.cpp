@@ -24,12 +24,16 @@ void Game::init()
     Text::init();
     SoundEngine::instance().init();
 
+    totalScore = 0;
+    lives = 3;
+
     hud.init(shaderProgram);
 
 	menu.init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_0_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y));
     menu.setBackground("levels/background01.txt");
 
     loadingScene.init(shaderProgram, camera, hud, glm::ivec2(SCREEN_X, SCREEN_Y));
+    loadingScene.setLives(lives);
 
     // create scenes
     scenes.push_back(new Scene());
@@ -51,8 +55,6 @@ void Game::init()
 	player->setPosition(glm::vec2(initPlayerTiles.x * map->getTileSize(), initPlayerTiles.y * map->getTileSize()));
 	player->setTileMap(map);
     player->setBackgroundMap(backgroundMap);
-
-    // player->moveTo(glm::vec2(500, 0));
 }
 
 bool Game::update(float deltaTime)
@@ -91,13 +93,30 @@ bool Game::update(float deltaTime)
             break;
         case GAME_PLAY:
             scenes[currentSceneIndex]->update(deltaTime, player);
+            hud.setScore(totalScore);
 
             if (scenes[currentSceneIndex]->hasEnded()) {
                 scenes[currentSceneIndex]->setIsOver(false);
                 startRenderingPlayer();
 
                 if (player->isDead() || player->isDying()) {
+                    --lives;
                     player->makeAlive();
+
+                    if (lives == 0) {
+                        currentState = GAME_MENU;
+                        menu.setMenuState(MainMenu::MenuState::TITLE);
+                        hud.hideTimeLeft();
+                        hud.setScore(0);
+                        hud.setCoins(0);
+                        menu.setTopScore(totalScore);
+                        totalScore = 0;
+                        lives = 3;
+                        break;
+                    }
+
+                    loadingScene.setLives(lives);
+
                     changeScene(currentSceneIndex);
                     break;
                 }
@@ -108,8 +127,12 @@ bool Game::update(float deltaTime)
                 } else {
                     currentState = GAME_MENU;
                     menu.setMenuState(MainMenu::MenuState::TITLE);
-                    // falta el poner top score y todo eso
                     hud.hideTimeLeft();
+                    hud.setScore(0);
+                    hud.setCoins(0);
+                    menu.setTopScore(totalScore);
+                    totalScore = 0;
+                    lives = 3;
                 }
             }
 
@@ -185,6 +208,7 @@ void Game::keyPressed(int key)
 void Game::changeScene(int sceneIndex) {
     currentSceneIndex = sceneIndex;
     Scene *newScene = scenes[currentSceneIndex];
+    newScene->reset();
     hud.setWorldNumber(newScene->getWorldNumber());
 
     if (showsLoadingScene) {
@@ -213,6 +237,10 @@ void Game::startRenderingPlayer() {
 
 void Game::stopRenderingPlayer() {
     isRenderingPlayer = false;
+}
+
+void Game::addScore(int score) {
+    totalScore += score;
 }
 
 void Game::keyReleased(int key)

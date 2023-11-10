@@ -92,6 +92,7 @@ private:
     void updatePlayerState(float deltaTime);
     bool updateYState(bool upPressed);
     void updateXState(bool leftPressed, bool rightPressed, bool runPressed);
+    void updateStarFrame();
     glm::vec2 getAcceleration();
 
     void updatePoleAnimation(float deltaTime);
@@ -137,6 +138,7 @@ private:
     void setState(State newState);
     State statePlayer;
     float timeCurrentState;
+
 };
 
 

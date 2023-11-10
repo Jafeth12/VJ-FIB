@@ -177,3 +177,9 @@ void MainMenu::changeOptionDown() {
     cursor.sprite->setPosition(posFromOption(currentOptionSelected));
 }
 
+void MainMenu::setTopScore(int score) {
+    if (score <= topScore) return;
+
+    topScore = score;
+    texts["topScore"]->updateText("TOP- " + zeroFill(topScore, 6));
+}

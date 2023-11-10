@@ -82,4 +82,5 @@ void LoadingScene::setWorldNumber(int worldNumber) {
 
 void LoadingScene::setLives(int lives) {
     this->lives = lives;
+    texts["lives"]->updateText("x " + std::to_string(lives));
 }

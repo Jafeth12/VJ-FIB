@@ -265,6 +265,7 @@ void Player::update(float deltaTime)
 
     if (isFinishing && finishingState == FinishingState::POLE) {
         updatePoleAnimation(deltaTime);
+        updateStarFrame();
         return;
     }
 
@@ -619,10 +620,7 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed, float deltaTim
         animSize = AnimSize::BIG;
     else animSize = AnimSize::SMALL;
 
-    // Figure out animation animation type
-    if (statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR) {
-        currentStarFrame = (currentStarFrame + 1) % 3;
-    }
+    updateStarFrame();
 
     // Update the animation only if it changed
     int nextAnimId = getAnimId(verticalAnim, lateralAnim, animSize);
@@ -674,9 +672,8 @@ glm::vec2 Player::getAcceleration()
             break;
     }
 
-    if (statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR) {
+    if (statePlayer == State::DEAD || statePlayer == State::DYING) {
         acc.x = 0;
-        acc.y *= 1.5f;
     }
 
     return acc;
@@ -798,6 +795,7 @@ bool Player::isDying() const {
 
 void Player::makeAlive() {
     setState(State::SMALL);
+    sprite->changeAnimation(getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::SMALL));
 }
 
 int Player::getCurrentStarFrame() {
@@ -882,4 +880,10 @@ void Player::setIsFinishing(bool isFinishing) {
 
 Player::FinishingState Player::getFinishingState() {
     return finishingState;
+}
+
+void Player::updateStarFrame() {
+    if (statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR) {
+        currentStarFrame = (currentStarFrame + 1) % 3;
+    }
 }

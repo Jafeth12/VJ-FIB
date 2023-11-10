@@ -52,7 +52,6 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
     if (levelFilename[0] != ' ') {
         // Cargar el mapa de tiles
         map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
-
         initEnemies(shaderProgram);
     }
 
@@ -209,6 +208,7 @@ void Scene::update(float deltaTime, Player *player)
             if (glm::abs(alpha) <= ANGLE_TO_DIE) {
                 goombas[i].dieVertical();
                 player->stepOnEnemy();
+                Game::instance().addScore(SCORE_STOMP);
             }
             else {
                 player->takeDamage();
@@ -229,6 +229,7 @@ void Scene::update(float deltaTime, Player *player)
                 if (glm::abs(alpha) <= ANGLE_TO_DIE) {
                     koopas[i].dieVertical();
                     player->stepOnEnemy();
+                    Game::instance().addScore(SCORE_STOMP);
                 }
                 else {
                     player->takeDamage();
@@ -335,15 +336,24 @@ void Scene::resetFlagPosition() {
 }
 
 void Scene::initEnemies(ShaderProgram &program) {
-        TileMap::MapColor color = map->getMapColor();
-        auto goombasPos = map->getGoombas();
-        goombas.resize(goombasPos.size());
-        for (unsigned i = 0; i < goombasPos.size(); ++i)
-            goombas[i].init(glm::ivec2(0, 16), program, map, color, (Enemy::Dir)goombasPos[i].dir, goombasPos[i].initPos);
+    goombas.clear();
+    koopas.clear();
 
-        auto koopasPos = map->getKoopas();
-        koopas.resize(koopasPos.size());
-        for (unsigned i = 0; i < koopas.size(); ++i)
-            koopas[i].init(glm::ivec2(0, 16), program, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
+    TileMap::MapColor color = map->getMapColor();
+    auto goombasPos = map->getGoombas();
+    goombas.resize(goombasPos.size());
+    for (unsigned i = 0; i < goombasPos.size(); ++i)
+        goombas[i].init(glm::ivec2(0, 16), program, map, color, (Enemy::Dir)goombasPos[i].dir, goombasPos[i].initPos);
 
+    auto koopasPos = map->getKoopas();
+    koopas.resize(koopasPos.size());
+    for (unsigned i = 0; i < koopas.size(); ++i)
+        koopas[i].init(glm::ivec2(0, 16), program, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
+}
+
+void Scene::reset() {
+    isOver = false;
+    isFinishing = false;
+    initEnemies(*texProgram);
+    resetFlagPosition();
 }
