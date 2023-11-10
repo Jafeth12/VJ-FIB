@@ -159,6 +159,66 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     sprite->setAnimationSpeed(die, SPEED);
     sprite->addKeyframe(die, glm::vec2(0.f, 2.f));
 
+    // STAND_LEFT_BIG
+    sprite->setAnimationSpeed(standL_big, SPEED);
+    sprite->addKeyframe(standL_big, glm::vec2(0.f, 3.f));
+
+    // STAND_RIGHT_BIG
+    sprite->setAnimationSpeed(standR_big, SPEED);
+    sprite->addKeyframe(standR_big, glm::vec2(0.f, 4.f));
+
+    // WALK_LEFT_BIG
+    sprite->setAnimationSpeed(walkL_big, SPEED);
+    sprite->addKeyframe(walkL_big, glm::vec2(3.f, 4.f));
+    sprite->addKeyframe(walkL_big, glm::vec2(2.f, 4.f));
+    sprite->addKeyframe(walkL_big, glm::vec2(1.f, 4.f));
+
+    // WALK_RIGHT_BIG
+    sprite->setAnimationSpeed(walkR_big, SPEED);
+    sprite->addKeyframe(walkR_big, glm::vec2(3.f, 3.f));
+    sprite->addKeyframe(walkR_big, glm::vec2(2.f, 3.f));
+    sprite->addKeyframe(walkR_big, glm::vec2(1.f, 3.f));
+
+    // RUN_LEFT_BIG
+    sprite->setAnimationSpeed(runL_big, int(1.5f*float(SPEED)));
+    sprite->addKeyframe(runL_big, glm::vec2(3.f, 4.f));
+    sprite->addKeyframe(runL_big, glm::vec2(2.f, 4.f));
+    sprite->addKeyframe(runL_big, glm::vec2(1.f, 4.f));
+
+    // RUN_RIGHT_BIG
+    sprite->setAnimationSpeed(runR_big, int(1.5f*float(SPEED)));
+    sprite->addKeyframe(runR_big, glm::vec2(3.f, 3.f));
+    sprite->addKeyframe(runR_big, glm::vec2(2.f, 3.f));
+    sprite->addKeyframe(runR_big, glm::vec2(1.f, 3.f));
+
+    // SPRINT_LEFT_BIG
+    sprite->setAnimationSpeed(sprintL_big, 2*SPEED);
+    sprite->addKeyframe(sprintL_big, glm::vec2(3.f, 4.f));
+    sprite->addKeyframe(sprintL_big, glm::vec2(2.f, 4.f));
+    sprite->addKeyframe(sprintL_big, glm::vec2(1.f, 4.f));
+
+    // SPRINT_RIGHT_BIG
+    sprite->setAnimationSpeed(sprintR_big, 2*SPEED);
+    sprite->addKeyframe(sprintR_big, glm::vec2(3.f, 3.f));
+    sprite->addKeyframe(sprintR_big, glm::vec2(2.f, 3.f));
+    sprite->addKeyframe(sprintR_big, glm::vec2(1.f, 3.f));
+
+    // JUMP_LEFT_BIG
+    sprite->setAnimationSpeed(jumpL_big, SPEED);
+    sprite->addKeyframe(jumpL_big, glm::vec2(5.f, 4.f));
+
+    // JUMP_RIGHT_BIG
+    sprite->setAnimationSpeed(jumpR_big, SPEED);
+    sprite->addKeyframe(jumpR_big, glm::vec2(5.f, 3.f));
+
+    // BRAKE_LEFT_BIG
+    sprite->setAnimationSpeed(brakeL_big, SPEED);
+    sprite->addKeyframe(brakeL_big, glm::vec2(4.f, 4.f));
+
+    // BRAKE_RIGHT_BIG
+    sprite->setAnimationSpeed(brakeR_big, SPEED);
+    sprite->addKeyframe(brakeR_big, glm::vec2(4.f, 3.f));
+
     // Default animation
     sprite->changeAnimation(standR);
     tileMapDispl = tileMapPos;
