@@ -349,6 +349,12 @@ void Player::updateXState(bool leftPressed, bool rightPressed, bool runPressed) 
 
 void Player::updateAnimation(bool leftPressed, bool rightPressed) const
 {
+    // Overrides
+    if (statePlayer == State::DYING || statePlayer == State::DEAD) {
+        sprite->changeAnimation(getAnimId(SpecialAnim::DIE));
+        return;
+    }
+
     const bool onlyR = !leftPressed && rightPressed;
     const bool onlyL = leftPressed && !rightPressed;
     // Figure out components of the current animation
@@ -369,7 +375,6 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
                 nextVerticalAnim = VerticalAnim::WALK;
             else
                 nextVerticalAnim = VerticalAnim::STAND;
-
 
             if ((velPlayer.x < 0 && onlyR) || (velPlayer.x > 0 && onlyL))
                 nextVerticalAnim = VerticalAnim::BRAKE;
