@@ -50,6 +50,9 @@ public:
     void takeMushroom();
     void takeStar();
 
+    bool isStar() const;
+    int getCurrentStarFrame();
+
 private:
     // Animations
     typedef short enum_t;
@@ -61,15 +64,14 @@ private:
 
     const int NUM_ANIMS = (int)getAnimId(SpecialAnim::_LAST);
 
-    int getAnimId(VerticalAnim v, LateralAnim l, AnimSize as, AnimType t) const;
+    int getAnimId(VerticalAnim v, LateralAnim l, AnimSize as) const;
     int getAnimId(SpecialAnim s) const;
 
     VerticalAnim getVerticalAnim(int a) const;
     LateralAnim getLateralAnim(int a) const;
-    AnimType getAnimType(int a) const;
     AnimSize getAnimSize(int a) const;
 
-    void updateAnimation(bool leftPressed, bool rightPressed) const;
+    void updateAnimation(bool leftPressed, bool rightPressed, float deltaTime);
 
     // Physics
     enum PlayerYState { FLOOR, UPWARDS, DOWNWARDS };
@@ -101,7 +103,9 @@ private:
     LateralAnim lateralAnim;
     AnimSize animSize;
     int currentAnim;
+    int currentStarFrame;
 
+    ShaderProgram *shaderProgram;
 
     enum class State {
         SMALL,
