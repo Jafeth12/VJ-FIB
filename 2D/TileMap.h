@@ -45,6 +45,19 @@ public:
     bool onGround(const glm::ivec2 &pos, const glm::ivec2 &size);
     bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
 
+    // Methods for collision detection with special tiles
+    glm::ivec2 tileOverHead(const glm::ivec2 &pos, const glm::ivec2 &size) const;
+    bool isSpecialTile(const glm::ivec2 &tileCoord);
+    bool isCoinTile(const glm::ivec2 &tileCoord);
+    bool isBrickTile(const glm::ivec2 &tileCoord);
+
+    // Interact with the map
+    void activateSpecialTile(const glm::ivec2 &tileCoord);
+    void activateCoinTile(const glm::ivec2 &tileCoord);
+    void activateBrickTile(const glm::ivec2 &tileCoord);
+    void destroyBrickTile(const glm::ivec2 &tileCoord);
+
+
     MapColor getMapColor() const { return enemiesColor; }
     std::vector<EnemyPosition> getGoombas() const { return goombas; }
     std::vector<EnemyPosition> getKoopas() const { return koopas; }

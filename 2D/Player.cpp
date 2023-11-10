@@ -270,6 +270,23 @@ void Player::update(float deltaTime)
 	// Set the new position of the player
     setPosition(posPlayer);
 
+    // Interactwith the map tiles
+    if (map->headUnderTile(posPlayer, getSize())) {
+        glm::ivec2 tile = map->tileOverHead(posPlayer, getSize());
+        if (map->isSpecialTile(tile)) {
+            map->activateSpecialTile(tile);
+        }
+        else if (map->isCoinTile(tile)) {
+            map->activateCoinTile(tile);
+        }
+        else if (map->isBrickTile(tile)) {
+            if (statePlayer == State::BIG || statePlayer == State::BIG_STAR)
+                map->destroyBrickTile(tile);
+            else
+                map->activateBrickTile(tile);
+        }
+    }
+
 }
 
 void Player::render()

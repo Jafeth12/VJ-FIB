@@ -308,3 +308,59 @@ bool TileMap::solveCollisionsY(const glm::ivec2 &pos0, glm::ivec2 &pos1, const g
 
     return false;
 }
+
+glm::ivec2 TileMap::tileOverHead(const glm::ivec2 &pos, const glm::ivec2 &size) const {
+    // pSpace
+    int psPlayerHeadY = pos.y;
+    int psPixelOverPlayer = psPlayerHeadY - 1;
+
+    // tileSpace
+    int tsPixelOverPlayer = psPixelOverPlayer / tileSize;
+
+    int x0, x1, yFeet;
+
+    x0 = pos.x / tileSize;
+    x1 = (pos.x + size.x - 1) / tileSize;
+
+    for (int x = x0; x<=x1; ++x)
+        if(map[tsPixelOverPlayer*mapSize.x+x] != 0)
+            return glm::ivec2(x, tsPixelOverPlayer); // Encontrada
+
+    return glm::ivec2(x1, tsPixelOverPlayer); // Error, no hay tile sólida encima
+}
+
+bool TileMap::isSpecialTile(const glm::ivec2 &tileCoord) {
+    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
+    return (tile == 2 || tile == 3 || tile == 4 || tile == 5);
+}
+
+bool TileMap::isCoinTile(const glm::ivec2 &tileCoord) {
+    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
+    return (tile == 6);
+}
+
+bool TileMap::isBrickTile(const glm::ivec2 &tileCoord) {
+    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
+    return (tile == 7);
+}
+
+void TileMap::activateSpecialTile(const glm::ivec2 &tileCoord) {
+    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
+    std::cout << "Activating special tile, type: " << tile << std::endl;
+}
+
+void TileMap::activateCoinTile(const glm::ivec2 &tileCoord) {
+    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
+    std::cout << "Activating coin tile, type: " << tile << std::endl;
+}
+
+void TileMap::activateBrickTile(const glm::ivec2 &tileCoord) {
+    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
+    std::cout << "Activating brick tile, type: " << tile << std::endl;
+}
+
+void TileMap::destroyBrickTile(const glm::ivec2 &tileCoord) {
+    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
+    std::cout << "Destroying brick tile, type: " << tile << std::endl;
+    map[tileCoord.y * mapSize.x + tileCoord.x] = 0;
+}
