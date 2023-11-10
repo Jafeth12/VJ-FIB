@@ -192,8 +192,10 @@ glm::ivec2 Player::getPosition() const {
 }
 
 glm::ivec2 Player::getSize() const {
-    if (statePlayer == State::SMALL || statePlayer == State::SMALL_STAR) return PLAYER_SIZE;
-    else return PLAYER_BIG_SIZE;
+    if (statePlayer == State::BIG ||
+        statePlayer == State::BIG_STAR
+        ) return PLAYER_BIG_SIZE;
+    else return PLAYER_SIZE;
 }
 
 bool Player::collidesWithEnemy(const Enemy &enemy) const {
@@ -211,10 +213,16 @@ bool Player::collidesWithEnemy(const Enemy &enemy) const {
 
 float Player::collisionAngle(const Enemy &enemy) const {
     // Puntos de interes:
-    //  - p: centro del player
+    //  - p: punto del player
     //  - e: centro del enemigo
     //  - k: punto tal que angulo entre pk y ke sea 90ª
-    glm::vec2 p = (glm::vec2)posPlayer + (glm::vec2)this->getSize()/2.f;
+    glm::vec2 p;
+    if (statePlayer == State::BIG ||
+        statePlayer == State::BIG_STAR)
+        p = (glm::vec2)posPlayer + glm::vec2(getSize().x/2.f, (float)(getSize().y)*0.75f);
+    else
+        p = (glm::vec2)posPlayer + glm::vec2(getSize())/2.f;
+
     glm::vec2 e = (glm::vec2)enemy.getPosition() + ((glm::vec2)enemy.getSize())/2.f;
     glm::vec2 k = glm::vec2(e.x, p.y);
 
@@ -422,8 +430,6 @@ glm::vec2 Player::getAcceleration()
     // Figure out Y acceleration
     switch (yState) {
         case FLOOR:
-            acc.y = 0.f;
-            break;
         case UPWARDS:
             acc.y = GRAVITY_ACC;
             break;
