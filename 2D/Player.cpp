@@ -464,10 +464,17 @@ void Player::updatePosition(float deltaTime)
     glm::ivec2 next_pos;
     next_pos.x = posPlayer.x + (int)(velPlayer.x * deltaTime);
     next_pos.y = posPlayer.y - (int)(velPlayer.y * deltaTime);
+
+    if (statePlayer == State::DYING) {
+        posPlayer = next_pos;
+        return;
+    }
+
     // Check for collisions and correct the next position accordingly
     bool collisionsx = map->solveCollisionsX(posPlayer, next_pos, getSize());
     bool collisionsy = map->solveCollisionsY(posPlayer, next_pos, getSize());
     // Make the player come to a stop if there was a collision per axis
+
     if (collisionsx) velPlayer.x = 0.0f;
     if (collisionsy) velPlayer.y = 0.0f;
     // Apply the new position
@@ -476,6 +483,8 @@ void Player::updatePosition(float deltaTime)
 
 bool Player::updateYState(bool upPressed)
 {
+    if (statePlayer == State::DYING || statePlayer == State::DEAD) return false;
+
     // Get the state of the player
     bool onGround = map->onGround(posPlayer, getSize());
     bool headUnderTile = map->headUnderTile(posPlayer, getSize());
@@ -516,6 +525,8 @@ bool Player::updateYState(bool upPressed)
 }
 
 void Player::updateXState(bool leftPressed, bool rightPressed, bool runPressed) {
+    if (statePlayer == State::DYING || statePlayer == State::DEAD) return;
+
     const bool _none = !(leftPressed ^ rightPressed); // Or both.
     const bool onlyR = !leftPressed && rightPressed;
     const bool onlyL = leftPressed && !rightPressed;
@@ -663,6 +674,11 @@ glm::vec2 Player::getAcceleration()
             break;
     }
 
+    if (statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR) {
+        acc.x = 0;
+        acc.y *= 1.5f;
+    }
+
     return acc;
 }
 
@@ -746,8 +762,11 @@ void Player::stepOnEnemy() {
 void Player::takeDamage() {
     if (statePlayer == State::BIG)
         setState(State::JUST_TOOK_DAMAGE);
-    else
+    else {
         setState(State::DYING);
+        yState = UPWARDS;
+        velPlayer = glm::vec2(0, 500);
+    }
 }
 
 void Player::fallDie() {
@@ -767,6 +786,18 @@ void Player::takeStar() {
 
 bool Player::isStar() const {
     return statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR;
+}
+
+bool Player::isDead() const {
+    return statePlayer == State::DEAD;
+}
+
+bool Player::isDying() const {
+    return statePlayer == State::DYING;
+}
+
+void Player::makeAlive() {
+    setState(State::SMALL);
 }
 
 int Player::getCurrentStarFrame() {

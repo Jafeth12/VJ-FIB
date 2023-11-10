@@ -67,6 +67,7 @@ protected:
     Camera *camera;
 
 	float currentTime;
+    float lastSecondTime;
     int worldNumber;
 
     bool isOver;

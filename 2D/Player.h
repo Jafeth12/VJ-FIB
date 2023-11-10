@@ -46,6 +46,11 @@ public:
     void takeMushroom();
     void takeStar();
 
+    bool isDead() const;
+    bool isDying() const;
+
+    void makeAlive();
+
     bool isStar() const;
     int getCurrentStarFrame();
     void moveTo(const glm::vec2 &pos);
@@ -128,6 +133,7 @@ private:
         DYING,
         DEAD,
     };
+
     void setState(State newState);
     State statePlayer;
     float timeCurrentState;

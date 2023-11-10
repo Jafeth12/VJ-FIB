@@ -96,6 +96,12 @@ bool Game::update(float deltaTime)
                 scenes[currentSceneIndex]->setIsOver(false);
                 startRenderingPlayer();
 
+                if (player->isDead() || player->isDying()) {
+                    player->makeAlive();
+                    changeScene(currentSceneIndex);
+                    break;
+                }
+
                 int size = scenes.size();
                 if (currentSceneIndex + 1 < size) {
                     changeScene(currentSceneIndex + 1);

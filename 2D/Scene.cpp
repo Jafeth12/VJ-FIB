@@ -47,6 +47,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
     isFinishing = false;
 
 	currentTime = 0.0f;
+    lastSecondTime = 0.0f;
 
     if (levelFilename[0] != ' ') {
         // Cargar el mapa de tiles
@@ -72,9 +73,24 @@ void Scene::update(float deltaTime, Player *player)
 {
     currentTime += deltaTime;
     player->update(deltaTime);
+
+    if (player->isDead() || player->isDying()) {
+        static float timeAtDeath = currentTime;
+        if (timeAtDeath == 0) timeAtDeath = currentTime;
+        float timeToWait = 3.0f;
+
+        if (currentTime - timeAtDeath > timeToWait) {
+            isOver = true;
+            timeAtDeath = 0;
+        }
+
+        return;
+    }
+
     // Check player under the map
     if (player->getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
         player->fallDie();
+        return;
     }
 
     glm::ivec2 playerPos = player->getPosition();
@@ -231,10 +247,14 @@ void Scene::update(float deltaTime, Player *player)
         }
     }
 
-    hud->decrementTimeLeft();
+    // if a second has passed, decrement time left
+    if (currentTime - lastSecondTime > 1.0f) {
+        lastSecondTime = currentTime;
+        hud->decrementTimeLeft();
+    }
 
     if (hud->isTimeLeftZero()) {
-        hud->setTimeLeft(400);
+        player->takeDamage();
     }
 }
 
