@@ -30,9 +30,13 @@ public:
 	virtual void update(float deltaTime, Player *player);
 	virtual void render();
     TileMap* getMap();
+    TileMap* getBackgroundMap();
 
     void setBackground(std::string levelFilename);
     void setForeground(std::string levelFilename);
+
+    bool hasEnded();
+    void setIsOver(bool isOver);
 
     int getWorldNumber();
 
@@ -45,6 +49,9 @@ protected:
 	TileMap *map;
     TileMap *background;
     TileMap *foreground;
+
+    Sprite *flagSprite;
+    Texture flagTexture;
 
     HUD *hud;
 
@@ -62,7 +69,11 @@ protected:
 	float currentTime;
     int worldNumber;
 
+    bool isOver;
+    bool isFinishing;
+
 private:
+    void resetFlagPosition();
 };
 
 

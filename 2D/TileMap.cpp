@@ -9,6 +9,9 @@
 
 using namespace std;
 
+#define POLE 'X'-'0'
+#define POLE_HEAD 'D'-'0'
+#define CASTLE_DOOR 'K'-'0'
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
@@ -20,6 +23,8 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 
 TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
+    casteDoorCoords = glm::vec2(-1);
+    poleHeadCoords = glm::vec2(-1);
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 }
@@ -87,8 +92,14 @@ bool TileMap::loadLevel(const string &levelFile)
 			fin.get(tile);
 			if(tile == ' ')
 				map[j*mapSize.x+i] = 0;
-			else
+			else {
 				map[j*mapSize.x+i] = tile - int('0');
+                if (map[j*mapSize.x+i] == CASTLE_DOOR) {
+                    casteDoorCoords = glm::vec2(i, j);
+                } else if (map[j*mapSize.x+i] == POLE_HEAD) {
+                    poleHeadCoords = glm::vec2(i, j);
+                }
+            }
 		}
 		fin.get(tile);
 #ifndef _WIN32
@@ -218,6 +229,31 @@ bool TileMap::onGround(const glm::ivec2 &pos, const glm::ivec2 &size)
     return false;
 }
 
+bool TileMap::headOnFinishingTile(const glm::ivec2 &pos, const glm::ivec2 &size)
+{
+    // pSpace
+    int psPlayerHeadY = pos.y;
+    int psPixelOnPlayer = psPlayerHeadY;
+
+    // tileSpace
+    int tsPixelOverPlayer = psPixelOnPlayer / tileSize;
+
+	int x0, x1, yFeet;
+
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+
+    for (int x = x0; x<=x1; ++x)
+    {
+        char tile = map[tsPixelOverPlayer*mapSize.x+x];
+		if(tile == POLE || tile == POLE_HEAD)
+		{
+            return true;
+        }
+    }
+    return false;
+}
+
 bool TileMap::headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size)
 {
     // pSpace
@@ -307,4 +343,14 @@ bool TileMap::solveCollisionsY(const glm::ivec2 &pos0, glm::ivec2 &pos1, const g
             }
 
     return false;
+}
+
+glm::ivec2 TileMap::getCastleDoorPos() const {
+    if (casteDoorCoords.x == -1) return glm::ivec2(-1);
+    return glm::ivec2(casteDoorCoords.x * tileSize, casteDoorCoords.y * tileSize);
+}
+
+glm::ivec2 TileMap::getPoleHeadPos() const {
+    if (poleHeadCoords.x == -1) return glm::ivec2(-1);
+    return glm::ivec2(poleHeadCoords.x * tileSize, poleHeadCoords.y * tileSize);
 }

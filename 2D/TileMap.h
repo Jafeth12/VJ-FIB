@@ -44,6 +44,11 @@ public:
     bool solveCollisionsY(const glm::ivec2 &pos0, glm::ivec2 &pos1, const glm::ivec2 &playerSize);
     bool onGround(const glm::ivec2 &pos, const glm::ivec2 &size);
     bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
+    bool headOnFinishingTile(const glm::ivec2 &pos, const glm::ivec2 &size);
+
+    glm::ivec2 getCastleDoorCoords() const { return casteDoorCoords; } // TODO quitar
+    glm::ivec2 getCastleDoorPos() const;
+    glm::ivec2 getPoleHeadPos() const;
 
     MapColor getMapColor() const { return enemiesColor; }
     std::vector<EnemyPosition> getGoombas() const { return goombas; }
@@ -67,6 +72,9 @@ private:
     MapColor enemiesColor;
     std::vector<EnemyPosition> goombas;
     std::vector<EnemyPosition> koopas;
+
+    glm::vec2 casteDoorCoords;
+    glm::vec2 poleHeadCoords;
 };
 
 

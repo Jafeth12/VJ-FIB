@@ -22,7 +22,12 @@
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
+    isOnAutopilot = false;
+    isFinishing = false;
+    targetPos = glm::vec2(0.f);
     bJumping = false;
+    map = NULL;
+    backgroundMap = NULL;
     velPlayer = glm::vec2(0.0f);
     yState = FLOOR;
     xState = NONE;
@@ -70,6 +75,14 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     int brakeL_big = getAnimId(VerticalAnim::BRAKE, LateralAnim::LEFT, AnimSize::BIG);
 
     int die = getAnimId(SpecialAnim::DIE);
+    int climb1_R = getAnimId(VerticalAnim::CLIMB1, LateralAnim::RIGHT, AnimSize::SMALL);
+    int climb1_L = getAnimId(VerticalAnim::CLIMB1, LateralAnim::LEFT, AnimSize::SMALL);
+    int climb2_R = getAnimId(VerticalAnim::CLIMB2, LateralAnim::RIGHT, AnimSize::SMALL);
+    int climb2_L = getAnimId(VerticalAnim::CLIMB2, LateralAnim::LEFT, AnimSize::SMALL);
+    int climb1_R_big = getAnimId(VerticalAnim::CLIMB1, LateralAnim::RIGHT, AnimSize::BIG);
+    int climb1_L_big = getAnimId(VerticalAnim::CLIMB1, LateralAnim::LEFT, AnimSize::BIG);
+    int climb2_R_big = getAnimId(VerticalAnim::CLIMB2, LateralAnim::RIGHT, AnimSize::BIG);
+    int climb2_L_big = getAnimId(VerticalAnim::CLIMB2, LateralAnim::LEFT, AnimSize::BIG);
 
     // STAND_LEFT
     sprite->setAnimationSpeed(standL, SPEED);
@@ -130,6 +143,38 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     // BRAKE_RIGHT
     sprite->setAnimationSpeed(brakeR, SPEED);
     sprite->addKeyframe(brakeR, glm::vec2(4.f, 0.f));
+
+    // CLIMB1_RIGHT
+    sprite->setAnimationSpeed(climb1_R, SPEED);
+    sprite->addKeyframe(climb1_R, glm::vec2(6.f, 0.f));
+
+    // CLIMB1_LEFT
+    sprite->setAnimationSpeed(climb1_L, SPEED);
+    sprite->addKeyframe(climb1_L, glm::vec2(6.f, 1.f));
+
+    // CLIMB2_RIGHT
+    sprite->setAnimationSpeed(climb2_R, SPEED);
+    sprite->addKeyframe(climb2_R, glm::vec2(7.f, 0.f));
+
+    // CLIMB2_LEFT
+    sprite->setAnimationSpeed(climb2_L, SPEED);
+    sprite->addKeyframe(climb2_L, glm::vec2(7.f, 1.f));
+
+    // CLIMB1_RIGHT_BIG
+    sprite->setAnimationSpeed(climb1_R_big, SPEED);
+    sprite->addKeyframe(climb1_R_big, glm::vec2(6.f, 3.f));
+
+    // CLIMB1_LEFT_BIG
+    sprite->setAnimationSpeed(climb1_L_big, SPEED);
+    sprite->addKeyframe(climb1_L_big, glm::vec2(6.f, 4.f));
+
+    // CLIMB2_RIGHT_BIG
+    sprite->setAnimationSpeed(climb2_R_big, SPEED);
+    sprite->addKeyframe(climb2_R_big, glm::vec2(7.f, 3.f));
+
+    // CLIMB2_LEFT_BIG
+    sprite->setAnimationSpeed(climb2_L_big, SPEED);
+    sprite->addKeyframe(climb2_L_big, glm::vec2(7.f, 4.f));
 
     // DIE
     sprite->setAnimationSpeed(die, SPEED);
@@ -208,6 +253,21 @@ void Player::update(float deltaTime)
     if (yState != DOWNWARDS)
         sprite->update(deltaTime);
 
+    bool headOnFinishingTile = false;
+
+    if (backgroundMap != NULL) headOnFinishingTile = backgroundMap->headOnFinishingTile(posPlayer, PLAYER_SIZE);
+
+    if (!isFinishing && headOnFinishingTile) {
+        isFinishing = true;
+        finishingState = FinishingState::POLE;
+        return;
+    }
+
+    if (isFinishing && finishingState == FinishingState::POLE) {
+        updatePoleAnimation(deltaTime);
+        return;
+    }
+
     // Record state of keys
     bool leftPressed = Game::instance().getSpecialKey(GLUT_KEY_LEFT);
     bool rightPressed = Game::instance().getSpecialKey(GLUT_KEY_RIGHT);
@@ -217,6 +277,29 @@ void Player::update(float deltaTime)
     bool rightShiftPressed = Game::instance().getSpecialKey(113);
     bool runPressed = leftShiftPressed || rightShiftPressed;
     
+    if (isOnAutopilot) {
+        glm::ivec2 diff = targetPos - posPlayer;
+
+        // If we are close enough, stop the autopilot
+        if (glm::abs(diff.x) < 2) {
+            isOnAutopilot = false;
+
+            velPlayer = glm::vec2(0.f);
+
+            if (isFinishing && finishingState == FinishingState::WALKING_TO_CASTLE) {
+                finishingState = FinishingState::ON_CASTLE;
+            }
+
+            return;
+        } else {
+            // If we are not close enough, move towards the target
+            if (diff.x > 0) rightPressed = true;
+            else if (diff.x < 0) leftPressed = true;
+
+            runPressed = false;
+        }
+    }
+
     // Update the Animations
     updateAnimation(leftPressed, rightPressed, deltaTime);
 
@@ -239,7 +322,7 @@ void Player::update(float deltaTime)
     // Calculate the acceleration
     glm::vec2 acc = getAcceleration();
 
-    // Act uppon state and the vars
+    // Act upon state and the vars
     updateVelocity(acc, shouldJump, deltaTime);
     updatePosition(deltaTime);
 
@@ -267,10 +350,21 @@ void Player::setTileMap(TileMap *tileMap)
 	map = tileMap;
 }
 
+void Player::setBackgroundMap(TileMap *tileMap)
+{
+    backgroundMap = tileMap;
+}
+
 void Player::setPosition(const glm::vec2 &pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
+
+void Player::moveTo(const glm::vec2 &pos)
+{
+    isOnAutopilot = true;
+    targetPos = pos;
 }
 
 glm::ivec2 Player::getPosition() const {
@@ -677,4 +771,84 @@ bool Player::isStar() const {
 
 int Player::getCurrentStarFrame() {
     return currentStarFrame;
+}
+
+void Player::updatePoleAnimation(float deltaTime) {
+    int currentAnimId = sprite->animation();
+
+    int climb1_R, climb1_L, climb2_R, climb2_L;
+    int isBig = statePlayer == State::BIG || statePlayer == State::BIG_STAR;
+
+    if (isBig) {
+        climb1_R = getAnimId(VerticalAnim::CLIMB1, LateralAnim::RIGHT, AnimSize::BIG);
+        climb1_L = getAnimId(VerticalAnim::CLIMB1, LateralAnim::LEFT, AnimSize::BIG);
+        climb2_R = getAnimId(VerticalAnim::CLIMB2, LateralAnim::RIGHT, AnimSize::BIG);
+        climb2_L = getAnimId(VerticalAnim::CLIMB2, LateralAnim::LEFT, AnimSize::BIG);
+    } else {
+        climb1_R = getAnimId(VerticalAnim::CLIMB1, LateralAnim::RIGHT, AnimSize::SMALL);
+        climb1_L = getAnimId(VerticalAnim::CLIMB1, LateralAnim::LEFT, AnimSize::SMALL);
+        climb2_R = getAnimId(VerticalAnim::CLIMB2, LateralAnim::RIGHT, AnimSize::SMALL);
+        climb2_L = getAnimId(VerticalAnim::CLIMB2, LateralAnim::LEFT, AnimSize::SMALL);
+    }
+
+    static float timeInAnimation = 0.f;
+    timeInAnimation += deltaTime;
+
+    if (currentAnimId != climb1_R && currentAnimId != climb1_L && currentAnimId != climb2_R && currentAnimId != climb2_L) {
+        sprite->changeAnimation(climb1_R);
+        setPosition(glm::ivec2(posPlayer.x + 16, posPlayer.y));
+        return;
+    }
+
+    if (finishingState == FinishingState::POLE) {
+        glm::ivec2 next_pos = posPlayer;
+        next_pos.y += 2;
+
+        bool collisionsy = true;
+
+        if (isBig) collisionsy = map->onGround(next_pos, PLAYER_BIG_SIZE);
+        else collisionsy = map->onGround(next_pos, PLAYER_SIZE);
+
+        if (collisionsy) {
+            if (timeInAnimation < 1.3f) return;
+
+            sprite->changeAnimation(climb1_L);
+            next_pos.x += 48;
+
+            setPosition(next_pos);
+
+            glm::vec2 castleDoorTile = backgroundMap->getCastleDoorCoords();
+            glm::ivec2 castleDoorPos = glm::ivec2(castleDoorTile.x * backgroundMap->getTileSize(), castleDoorTile.y * backgroundMap->getTileSize());
+
+            moveTo(castleDoorPos);
+            finishingState = FinishingState::WALKING_TO_CASTLE;
+
+            velPlayer = glm::vec2(0.f);
+            bJumping = false;
+
+            timeInAnimation = 0.f;
+        } else {
+            setPosition(next_pos);
+
+            if (timeInAnimation < 0.05f) return;
+
+            if (currentAnimId == climb1_R) sprite->changeAnimation(climb2_R);
+            else if (currentAnimId == climb2_R) sprite->changeAnimation(climb1_R);
+
+            timeInAnimation = 0.f;
+        }
+    }
+
+}
+
+bool Player::isOnFinishingState() {
+    return isFinishing;
+}
+
+void Player::setIsFinishing(bool isFinishing) {
+    this->isFinishing = isFinishing;
+}
+
+Player::FinishingState Player::getFinishingState() {
+    return finishingState;
 }

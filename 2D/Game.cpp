@@ -14,6 +14,7 @@ void Game::init()
 {
     currentState = GAME_MENU;
     currentSceneIndex = 0;
+    isRenderingPlayer = true;
 	bPlay = true;
     wireframe = false;
     showsLoadingScene = true;
@@ -36,9 +37,12 @@ void Game::init()
 	scenes[currentSceneIndex]->init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_0_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 1);
     scenes[currentSceneIndex]->setBackground("levels/background01.txt");
 
-	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
+	// scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
+	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
+    scenes[currentSceneIndex+1]->setBackground("levels/background01.txt");
 
     TileMap *map = scenes[currentSceneIndex]->getMap();
+    TileMap *backgroundMap = scenes[currentSceneIndex]->getBackgroundMap();
 
     player = new Player();
 
@@ -46,16 +50,22 @@ void Game::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), shaderProgram);
 	player->setPosition(glm::vec2(initPlayerTiles.x * map->getTileSize(), initPlayerTiles.y * map->getTileSize()));
 	player->setTileMap(map);
+    player->setBackgroundMap(backgroundMap);
+
+    // player->moveTo(glm::vec2(500, 0));
 }
 
 bool Game::update(float deltaTime)
 {
 
     TileMap *newTileMap = scenes[currentSceneIndex]->getMap();
+    TileMap *newBackgroundMap = scenes[currentSceneIndex]->getBackgroundMap();
 
     switch (currentState) {
         case GAME_MENU:
             SoundEngine::instance().stopAllSounds();
+            player->setPosition(glm::vec2(menu.getInitPlayerTiles().x * newTileMap->getTileSize(), menu.getInitPlayerTiles().y * newTileMap->getTileSize()));
+            camera.setPosition(glm::vec2(0, 0));
             menu.update(deltaTime);
             if (menu.getMenuState() == MainMenu::MenuState::PLAY) {
                 currentState = GAME_PLAY;
@@ -65,6 +75,7 @@ bool Game::update(float deltaTime)
             break;
         case GAME_LOADING:
             if (loadingScene.isFinished()) {
+                startRenderingPlayer();
                 hud.showTimeLeft();
                 glm::ivec2 initPlayerTiles = scenes[currentSceneIndex]->getInitPlayerTiles();
                 player->setPosition(glm::vec2(initPlayerTiles.x * newTileMap->getTileSize(), initPlayerTiles.y * newTileMap->getTileSize()));
@@ -72,7 +83,7 @@ bool Game::update(float deltaTime)
                 SoundEngine::instance().playMainTheme();
             } else {
                 SoundEngine::instance().stopAllSounds();
-                player->setPosition(glm::vec2(loadingScene.getInitPlayerTiles().x * newTileMap->getTileSize(), loadingScene.getInitPlayerTiles().y * newTileMap->getTileSize()));
+                // player->setPosition(glm::vec2(loadingScene.getInitPlayerTiles().x * newTileMap->getTileSize(), loadingScene.getInitPlayerTiles().y * newTileMap->getTileSize()));
                 camera.setPosition(glm::vec2(0, 0));
             }
 
@@ -80,6 +91,22 @@ bool Game::update(float deltaTime)
             break;
         case GAME_PLAY:
             scenes[currentSceneIndex]->update(deltaTime, player);
+
+            if (scenes[currentSceneIndex]->hasEnded()) {
+                scenes[currentSceneIndex]->setIsOver(false);
+                startRenderingPlayer();
+
+                int size = scenes.size();
+                if (currentSceneIndex + 1 < size) {
+                    changeScene(currentSceneIndex + 1);
+                } else {
+                    currentState = GAME_MENU;
+                    menu.setMenuState(MainMenu::MenuState::TITLE);
+                    // falta el poner top score y todo eso
+                    hud.hideTimeLeft();
+                }
+            }
+
             break;
     }
 
@@ -110,7 +137,7 @@ void Game::render()
             break;
     }
 
-    player->render();
+    if (isRenderingPlayer) player->render();
 }
 
 void Game::keyPressed(int key)
@@ -155,19 +182,31 @@ void Game::changeScene(int sceneIndex) {
     hud.setWorldNumber(newScene->getWorldNumber());
 
     if (showsLoadingScene) {
+        stopRenderingPlayer();
         currentState = GAME_LOADING;
         loadingScene.setWorldNumber(newScene->getWorldNumber());
         loadingScene.start();
     } else {
+        startRenderingPlayer();
         // Change the map on the player
         TileMap *newTileMap = newScene->getMap();
+        TileMap *newBackgroundMap = newScene->getBackgroundMap();
         glm::ivec2 initPlayerTiles = newScene->getInitPlayerTiles();
         player->setPosition(glm::vec2(initPlayerTiles.x * newTileMap->getTileSize(), initPlayerTiles.y * newTileMap->getTileSize()));
         player->setTileMap(newTileMap);
+        player->setBackgroundMap(newBackgroundMap);
 
         SoundEngine::instance().stopAllSounds();
         SoundEngine::instance().playMainTheme();
     }
+}
+
+void Game::startRenderingPlayer() {
+    isRenderingPlayer = true;
+}
+
+void Game::stopRenderingPlayer() {
+    isRenderingPlayer = false;
 }
 
 void Game::keyReleased(int key)

@@ -6,7 +6,7 @@ images/tiles.png 	-- Tilesheet
 00                                                                                                                                                                                                                  
 00                                                                                                                                                                                                                  
 00                                                                                                                                                                                                                  
-00                                                                                                                                                                                                                  
+00                                                                                                                                                                                                     D            
 00                                                                                                                                                                                                     X            
 00                                                                                                                                                                                                     X            
 00                                                                                                                                                                                                     X            

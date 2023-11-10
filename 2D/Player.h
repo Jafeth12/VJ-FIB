@@ -22,6 +22,7 @@ public:
 	void render();
 
 	void setTileMap(TileMap *tileMap);
+    void setBackgroundMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 
     glm::ivec2 getPosition() const;
@@ -47,11 +48,19 @@ public:
 
     bool isStar() const;
     int getCurrentStarFrame();
+    void moveTo(const glm::vec2 &pos);
+
+    enum class FinishingState { POLE, WALKING_TO_CASTLE, ON_CASTLE };
+
+    bool isOnFinishingState();
+    void setIsFinishing(bool isFinishing);
+
+    FinishingState getFinishingState();
 
 private:
     // Animations
     typedef short enum_t;
-    enum class VerticalAnim : enum_t { WALK, RUN, SPRINT, STAND, JUMP, BRAKE, _LAST };
+    enum class VerticalAnim : enum_t { WALK, RUN, SPRINT, STAND, JUMP, BRAKE, CLIMB1, CLIMB2, _LAST };
     enum class LateralAnim  : enum_t { LEFT, RIGHT, _LAST };
     enum class AnimType     : enum_t { NORMAL, STAR, _LAST };
     enum class AnimSize     : enum_t { SMALL, BIG, _LAST };
@@ -80,15 +89,23 @@ private:
     void updateXState(bool leftPressed, bool rightPressed, bool runPressed);
     glm::vec2 getAcceleration();
 
+    void updatePoleAnimation(float deltaTime);
+
+    bool isOnAutopilot;
+    bool isFinishing;
 	bool bJumping;
+    glm::ivec2 targetPos;
 	glm::ivec2 tileMapDispl;
     Texture spritesheet;
 
 	Sprite *sprite;
 	TileMap *map;
+    TileMap *backgroundMap;
 
     PlayerYState yState;
     PlayerXState xState;
+
+    FinishingState finishingState;
 
     glm::ivec2 posPlayer;
     glm::vec2 velPlayer;

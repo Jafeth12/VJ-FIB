@@ -24,7 +24,10 @@ public:
     void reset();
 
 private:
-    constexpr static glm::ivec2 INIT_PLAYER_TILES = glm::ivec2(6, 8);
+    constexpr static glm::ivec2 INIT_PLAYER_TILES = glm::ivec2(6, 9);
+
+    Sprite *marioSprite;
+    Texture marioSpritesheet;
 
     int worldNumber;
     int lives;
