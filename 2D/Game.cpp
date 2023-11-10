@@ -74,13 +74,14 @@ bool Game::update(float deltaTime)
             break;
         case GAME_LOADING:
             if (loadingScene.isFinished()) {
+                startRenderingPlayer();
                 hud.showTimeLeft();
                 glm::ivec2 initPlayerTiles = scenes[currentSceneIndex]->getInitPlayerTiles();
                 player->setPosition(glm::vec2(initPlayerTiles.x * newTileMap->getTileSize(), initPlayerTiles.y * newTileMap->getTileSize()));
                 player->setTileMap(newTileMap);
                 player->setBackgroundMap(newBackgroundMap);
             } else {
-                player->setPosition(glm::vec2(loadingScene.getInitPlayerTiles().x * newTileMap->getTileSize(), loadingScene.getInitPlayerTiles().y * newTileMap->getTileSize()));
+                // player->setPosition(glm::vec2(loadingScene.getInitPlayerTiles().x * newTileMap->getTileSize(), loadingScene.getInitPlayerTiles().y * newTileMap->getTileSize()));
                 camera.setPosition(glm::vec2(0, 0));
             }
 
@@ -179,10 +180,12 @@ void Game::changeScene(int sceneIndex) {
     hud.setWorldNumber(newScene->getWorldNumber());
 
     if (showsLoadingScene) {
+        stopRenderingPlayer();
         currentState = GAME_LOADING;
         loadingScene.setWorldNumber(newScene->getWorldNumber());
         loadingScene.start();
     } else {
+        startRenderingPlayer();
         // Change the map on the player
         TileMap *newTileMap = newScene->getMap();
         TileMap *newBackgroundMap = newScene->getBackgroundMap();
