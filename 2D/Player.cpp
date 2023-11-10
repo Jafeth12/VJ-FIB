@@ -229,7 +229,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 void Player::update(float deltaTime)
 {
     // Animations and stuff
-	sprite->update(deltaTime);
+    if (yState != DOWNWARDS)
+        sprite->update(deltaTime);
 
     // Record state of keys
     bool leftPressed = Game::instance().getSpecialKey(GLUT_KEY_LEFT);
@@ -517,8 +518,6 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
             verticalAnim = VerticalAnim::JUMP;
             break;
         case DOWNWARDS:
-            if (verticalAnim != VerticalAnim::JUMP)
-                verticalAnim = VerticalAnim::STAND;
             break;
         default:
             break;
