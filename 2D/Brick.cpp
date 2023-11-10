@@ -5,7 +5,7 @@ Brick::Brick(glm::ivec2 tileMapDispl, TileMap *map, glm::vec2 pos, ShaderProgram
 {
     float row = 0.f;
     if (color == TileMap::MapColor::UNDERWORLD)
-        row = 1.f;
+        row = 2.f;
     else // OVERWORLD
         row = 0.f;
 

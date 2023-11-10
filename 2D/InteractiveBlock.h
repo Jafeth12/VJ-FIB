@@ -11,7 +11,7 @@ class InteractiveBlock
         InteractiveBlock(glm::ivec2 tileMapDispl, TileMap *map, glm::vec2 pos, ShaderProgram &shaderProgram, Texture* texture, TileMap::MapColor color);
         virtual ~InteractiveBlock();
 
-    virtual void update(float deltaTime) {};
+        virtual void update(float deltaTime);
         void render();
 
         void activate();

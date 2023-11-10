@@ -2,6 +2,7 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Brick.h"
+#include "Interrogation.h"
 #include "Scene.h"
 #include "Enemy.h"
 #include "Game.h"
@@ -63,7 +64,8 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
         for (unsigned i = 0; i < koopas.size(); ++i)
             koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
 
-        interactiveBlocks.push_back(new Brick(glm::ivec2(0, 16), map, glm::vec2(8, 8), shaderProgram, map->getTexture(), TileMap::MapColor::OVERWORLD));
+        interactiveBlocks.push_back(new Brick(glm::ivec2(0, 16), map, glm::vec2(8, 8), shaderProgram, map->getTexture(), TileMap::MapColor::UNDERWORLD));
+        interactiveBlocks.push_back(new Interrogation(glm::ivec2(0, 16), map, glm::vec2(9, 8), shaderProgram, map->getTexture(), TileMap::MapColor::UNDERWORLD));
         // interactiveBlocks[0].render();
     }
 
@@ -75,6 +77,9 @@ void Scene::update(float deltaTime, Player *player)
 {
     currentTime += deltaTime;
     player->update(deltaTime);
+    
+    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) interactiveBlocks[i]->update(deltaTime);
+
     // Check player under the map
     if (player->getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
         player->fallDie();
@@ -183,6 +188,9 @@ void Scene::update(float deltaTime, Player *player)
             }
         }
     }
+
+    // Player - interactive blocks
+
 
 
 

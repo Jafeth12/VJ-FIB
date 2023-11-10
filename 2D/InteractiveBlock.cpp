@@ -27,6 +27,10 @@ InteractiveBlock::~InteractiveBlock() {
     delete sprite;
 }
 
+void InteractiveBlock::update(float deltaTime) {
+    sprite->update(deltaTime);
+}
+
 void InteractiveBlock::setPosition(glm::vec2 &pos) {
     this->pos = pos;
     sprite->setPosition(glm::vec2(float(tileMapDispl.x + pos.x), float(tileMapDispl.y + pos.y)));
