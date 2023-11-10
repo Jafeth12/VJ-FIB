@@ -211,7 +211,6 @@ void Scene::update(float deltaTime, Player *player)
         if (player->collidesWith(*interactiveBlocks[i])) {
             if (interactiveBlocks[i]->canActivate()) {
                 interactiveBlocks[i]->activate();
-                map->destroyBrickTile(interactiveBlocks[i]->getTile());
             }
         }
     }

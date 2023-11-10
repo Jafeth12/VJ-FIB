@@ -18,7 +18,9 @@ class InteractiveBlock
         glm::ivec2 getPos() const { return pos; }
         glm::ivec2 getSize() const { return glm::ivec2(32); }
 
-        void activate() { state = BlockState::OFF; }
+        void activate() { state = BlockState::OFF; map->destroyBrickTile(getTile()); }
+
+
         bool canActivate() const { return state == BlockState::STATIC; }
         bool shouldRender() const { return state != BlockState::OFF; }
 
