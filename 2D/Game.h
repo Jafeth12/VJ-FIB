@@ -66,6 +66,8 @@ public:
     void startRenderingPlayer();
     void stopRenderingPlayer();
 
+    void addScore(int score);
+
 private:
     bool wireframe;
 	bool bPlay;                       // Continue to play game?
@@ -85,6 +87,9 @@ private:
     GameState currentState;
     Player *player;
     bool isRenderingPlayer;
+
+    int totalScore;
+    int lives;
 };
 
 

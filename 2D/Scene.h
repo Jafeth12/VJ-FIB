@@ -75,6 +75,7 @@ protected:
 
 private:
     void resetFlagPosition();
+    void initEnemies(ShaderProgram &program);
 };
 
 

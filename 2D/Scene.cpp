@@ -53,18 +53,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
         // Cargar el mapa de tiles
         map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
 
-        // Cargar los enemigos del mapa
-        // Not my proudest fap
-        TileMap::MapColor color = map->getMapColor();
-        auto goombasPos = map->getGoombas();
-        goombas.resize(goombasPos.size());
-        for (unsigned i = 0; i < goombasPos.size(); ++i)
-            goombas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, (Enemy::Dir)goombasPos[i].dir, goombasPos[i].initPos);
-
-        auto koopasPos = map->getKoopas();
-        koopas.resize(koopasPos.size());
-        for (unsigned i = 0; i < koopas.size(); ++i)
-            koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
+        initEnemies(shaderProgram);
     }
 
 }
@@ -81,6 +70,7 @@ void Scene::update(float deltaTime, Player *player)
 
         if (currentTime - timeAtDeath > timeToWait) {
             isOver = true;
+            initEnemies(*texProgram);
             timeAtDeath = 0;
         }
 
@@ -342,4 +332,18 @@ void Scene::resetFlagPosition() {
     glm::ivec2 poleHeadPos = background->getPoleHeadPos();
     if (poleHeadPos.x != -1)
         flagSprite->setPosition(glm::vec2(poleHeadPos.x - 16, poleHeadPos.y + 48));
+}
+
+void Scene::initEnemies(ShaderProgram &program) {
+        TileMap::MapColor color = map->getMapColor();
+        auto goombasPos = map->getGoombas();
+        goombas.resize(goombasPos.size());
+        for (unsigned i = 0; i < goombasPos.size(); ++i)
+            goombas[i].init(glm::ivec2(0, 16), program, map, color, (Enemy::Dir)goombasPos[i].dir, goombasPos[i].initPos);
+
+        auto koopasPos = map->getKoopas();
+        koopas.resize(koopasPos.size());
+        for (unsigned i = 0; i < koopas.size(); ++i)
+            koopas[i].init(glm::ivec2(0, 16), program, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
+
 }
