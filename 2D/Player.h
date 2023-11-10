@@ -46,6 +46,8 @@ private:
     enum PlayerYState { FLOOR, UPWARDS, DOWNWARDS };
     enum PlayerXState { RUN_LEFT, WALK_LEFT, NONE, WALK_RIGHT, RUN_RIGHT };
 
+    enum class FinishingState : enum_t { POLE, WALKING_TO_CASTLE, ON_CASTLE };
+
     void updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime);
     void updatePosition(float deltaTime);
     bool updateYState(bool upPressed);
@@ -55,8 +57,8 @@ private:
     void updatePoleAnimation(float deltaTime);
 
     bool isOnAutopilot;
-    bool isEndingScene;
     bool isOnPoleAnimation;
+    bool isFinishing;
     bool isOnPole;
 	bool bJumping;
     glm::ivec2 targetPos;
@@ -68,6 +70,8 @@ private:
 
     PlayerYState yState;
     PlayerXState xState;
+
+    FinishingState finishingState;
 
     glm::ivec2 posPlayer;
     glm::vec2 velPlayer;

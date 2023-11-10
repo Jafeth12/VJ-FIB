@@ -28,8 +28,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     isOnPoleAnimation = false;
     isOnPole = false;
     isOnAutopilot = false;
+    isFinishing = false;
     targetPos = glm::vec2(0.f);
-    isEndingScene = false;
     bJumping = false;
     map = NULL;
     backgroundMap = NULL;
@@ -162,13 +162,13 @@ void Player::update(float deltaTime)
 
     if (backgroundMap != NULL) headOnFinishingTile = backgroundMap->headOnFinishingTile(posPlayer, PLAYER_SIZE);
 
-    if (!isOnPoleAnimation && headOnFinishingTile) {
-        isOnPoleAnimation = true;
-        bJumping = false;
-        return ;
+    if (!isFinishing && headOnFinishingTile) {
+        isFinishing = true;
+        finishingState = FinishingState::POLE;
+        return;
     }
 
-    if (isOnPoleAnimation) {
+    if (isFinishing && finishingState == FinishingState::POLE) {
         updatePoleAnimation(deltaTime);
         return;
     }
@@ -188,6 +188,14 @@ void Player::update(float deltaTime)
         // If we are close enough, stop the autopilot
         if (glm::abs(diff.x) < 2) {
             isOnAutopilot = false;
+
+            velPlayer = glm::vec2(0.f);
+
+            if (isFinishing && finishingState == FinishingState::WALKING_TO_CASTLE) {
+                finishingState = FinishingState::ON_CASTLE;
+                isFinishing = false;
+            }
+
             return;
         } else {
             // If we are not close enough, move towards the target
@@ -476,17 +484,24 @@ void Player::updatePoleAnimation(float deltaTime) {
         return;
     }
 
-    if (isOnPole) {
+    if (finishingState == FinishingState::POLE) {
         glm::ivec2 next_pos = posPlayer;
         next_pos.y += 2;
 
         bool collisionsy = map->onGround(next_pos, PLAYER_SIZE);
         if (collisionsy) {
+            if (timeInAnimation < 1.3f) return;
+
             sprite->changeAnimation(climb1_L);
             next_pos.x += 48;
 
             setPosition(next_pos);
-            isOnPole = false;
+
+            glm::vec2 castleDoorTile = backgroundMap->getCastleDoorCoords();
+            glm::ivec2 castleDoorPos = glm::ivec2(castleDoorTile.x * backgroundMap->getTileSize(), castleDoorTile.y * backgroundMap->getTileSize());
+
+            moveTo(castleDoorPos);
+            finishingState = FinishingState::WALKING_TO_CASTLE;
 
             velPlayer = glm::vec2(0.f);
             bJumping = false;
@@ -502,14 +517,6 @@ void Player::updatePoleAnimation(float deltaTime) {
 
             timeInAnimation = 0.f;
         }
-    } else {
-        if (timeInAnimation < 0.8f) return;
-
-        glm::vec2 castleDoorTile = backgroundMap->getCastleDoorCoords();
-        glm::ivec2 castleDoorPos = glm::ivec2(castleDoorTile.x * backgroundMap->getTileSize(), castleDoorTile.y * backgroundMap->getTileSize());
-
-        moveTo(castleDoorPos);
-        isOnPoleAnimation = false;
     }
 
 }
