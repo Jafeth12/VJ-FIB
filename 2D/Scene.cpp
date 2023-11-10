@@ -88,7 +88,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
             }
         }
     }
-    coin.init(shaderProgram, glm::ivec2(0, 16), map);
+    coin.init(shaderProgram, glm::ivec2(0, 16), map, map->getTexture());
 }
 
 void Scene::update(float deltaTime, Player *player)

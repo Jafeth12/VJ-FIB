@@ -3,14 +3,16 @@
 
 
 
-void Coin::init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map) {
+void Coin::init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map, Texture *texture) {
 
     this->map = map;
 
-    texture = new Texture();
-    texture->loadFromFile("images/coin.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    texture->setMagFilter(GL_NEAREST);
-    texture->setMinFilter(GL_NEAREST);
+    // texture = new Texture();
+    // texture->loadFromFile("images/coin.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    // texture->setMagFilter(GL_NEAREST);
+    // texture->setMinFilter(GL_NEAREST);
+
+    this->texture = texture;
 
     float sizeX = 8.f / texture->width(),
           sizeY = 16.f / texture->height();

@@ -7,7 +7,7 @@
 class Coin
 {
     public:
-        void init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map);
+        void init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map, Texture *texture);
         void update(float deltaTime);
         void render();
 
