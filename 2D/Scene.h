@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <map>
 #include <vector>
+#include "Brick.h"
 #include "Camera.h"
 #include "Koopa.h"
 #include "ShaderProgram.h"
@@ -13,6 +14,9 @@
 #include "Text.h"
 #include "Goomba.h"
 #include "HUD.h"
+#include "InteractiveBlock.h"
+
+#include "Coin.h"
 
 
 // Scene contains all the entities of our game.
@@ -59,6 +63,10 @@ protected:
 
     std::vector<Goomba> goombas;
     std::vector<Koopa> koopas;
+
+    std::vector<InteractiveBlock*> interactiveBlocks;
+
+    std::vector<Coin> coins;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;

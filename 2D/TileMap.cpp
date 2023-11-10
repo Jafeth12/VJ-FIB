@@ -4,7 +4,9 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include "Game.h"
 #include "TileMap.h"
+
 
 
 using namespace std;
@@ -25,6 +27,7 @@ TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProg
 {
     casteDoorCoords = glm::vec2(-1);
     poleHeadCoords = glm::vec2(-1);
+    shaderProgram = &program;
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 }
@@ -83,6 +86,18 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream.str(line);
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
+
+    char color;
+	getline(fin, line);
+	sstream.str(line);
+    sstream >> color;
+    if (color == 'O') enemiesColor = MapColor::OVERWORLD;
+    else if (color == 'U') enemiesColor = MapColor::UNDERWORLD;
+    else {
+        cerr << "Error: unknown enemy color" << endl;
+        fin.close();
+        return false;
+    }
 	
 	map = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
@@ -90,15 +105,21 @@ bool TileMap::loadLevel(const string &levelFile)
 		for(int i=0; i<mapSize.x; i++)
 		{
 			fin.get(tile);
-			if(tile == ' ')
+			if(tile == ' ') {
 				map[j*mapSize.x+i] = 0;
-			else {
-				map[j*mapSize.x+i] = tile - int('0');
-                if (map[j*mapSize.x+i] == CASTLE_DOOR) {
-                    casteDoorCoords = glm::vec2(i, j);
-                } else if (map[j*mapSize.x+i] == POLE_HEAD) {
-                    poleHeadCoords = glm::vec2(i, j);
+            } else {
+                if (tile == '2') {
+                    interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), BRICK, NONE } );
+                    map[j*mapSize.x+i] = 'o' - '0';
                 }
+                else if (tile == '-' || tile == '.' || tile == '/') {
+                    if (tile == '-') interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), INTERROGATION, COIN } );
+                    else if (tile == '.') interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), INTERROGATION, MUSHROOM } );
+                    else if (tile == '/') interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), INTERROGATION, STAR } );
+                    map[j*mapSize.x+i] = 'o' - int('0');
+                }
+                else
+                    map[j*mapSize.x+i] = tile - int('0');
             }
 		}
 		fin.get(tile);
@@ -116,15 +137,6 @@ bool TileMap::loadLevel(const string &levelFile)
     if (nEnemies == 0) {
         fin.close();
         return true;
-    }
-    char color;
-    sstream >> color;
-    if (color == 'O') enemiesColor = MapColor::OVERWORLD;
-    else if (color == 'U') enemiesColor = MapColor::UNDERWORLD;
-    else {
-        cerr << "Error: unknown enemy color" << endl;
-        fin.close();
-        return false;
     }
 
     for (unsigned i = 0; i < nEnemies; ++i) {
@@ -201,6 +213,16 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 	glBufferData(GL_ARRAY_BUFFER, 24 * nTiles * sizeof(float), &vertices[0], GL_STATIC_DRAW);
 	posLocation = program.bindVertexAttribute("position", 2, 4*sizeof(float), 0);
 	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
+}
+
+void TileMap::deleteBuffers() {
+    glDeleteBuffers(1, &vbo);
+    glDeleteVertexArrays(1, &vao);
+}
+
+void TileMap::remesh() {
+    deleteBuffers();
+    prepareArrays(glm::vec2(SCREEN_X, SCREEN_Y), *this->shaderProgram);
 }
 
 bool TileMap::onGround(const glm::ivec2 &pos, const glm::ivec2 &size)
@@ -353,4 +375,41 @@ glm::ivec2 TileMap::getCastleDoorPos() const {
 glm::ivec2 TileMap::getPoleHeadPos() const {
     if (poleHeadCoords.x == -1) return glm::ivec2(-1);
     return glm::ivec2(poleHeadCoords.x * tileSize, poleHeadCoords.y * tileSize);
+}
+
+bool TileMap::centerXUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size) {
+    // pSpace
+    int psPlayerHeight = size.y;
+    int psPlayerHeadY = pos.y;
+    int psPlayerFeetY = psPlayerHeadY + psPlayerHeight;
+    int psPixelUnderPlayer = psPlayerFeetY + 1;
+
+    // tileSpace
+    int tsPixelUnderPlayer = psPixelUnderPlayer / tileSize;
+    int playerCenterX = (pos.x + size.x/2) / tileSize;
+
+    return (map[tsPixelUnderPlayer*mapSize.x+playerCenterX] != 0);
+
+}
+
+glm::ivec2 TileMap::tileOverHead(const glm::ivec2 &pos, const glm::ivec2 &size) const {
+    // pSpace
+    int psPlayerHeadY = pos.y;
+    int psPixelOverPlayer = psPlayerHeadY - 1;
+
+    // tileSpace
+    int tsPixelOverPlayer = psPixelOverPlayer / tileSize;
+    int playerCenterX = (pos.x + size.x/2) / tileSize;
+
+    return glm::ivec2(playerCenterX, tsPixelOverPlayer);
+}
+
+bool TileMap::isBrickTile(const glm::ivec2 &tileCoord) {
+    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
+    return (tile =='o' - '0');
+}
+
+void TileMap::destroyBrickTile(const glm::ivec2 &tileCoord) {
+    map[tileCoord.y * mapSize.x + tileCoord.x] = 0;
+    remesh();
 }

@@ -19,6 +19,9 @@
 #define SCREEN_HEIGHT 512
 
 #define SCORE_STOMP 100
+#define SCREEN_X 0
+#define SCREEN_Y 16
+
 
 // Game is a singleton (a class with a single instance) that represents our whole application
 

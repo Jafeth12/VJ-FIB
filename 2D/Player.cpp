@@ -5,6 +5,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include "InteractiveBlock.h"
 #include "Player.h"
 #include "Game.h"
 
@@ -330,6 +331,15 @@ void Player::update(float deltaTime)
 	// Set the new position of the player
     setPosition(posPlayer);
 
+    // // Interactwith the map tiles
+    // if (map->headUnderTile(posPlayer, getSize())) {
+    //     auto tile = map->tileOverHead(posPlayer, getSize());
+    //     if (map->isBrickTile(tile)) {
+    //         if (statePlayer == State::BIG || statePlayer == State::BIG_STAR)
+    //             map->destroyBrickTile(tile);
+    //     }
+    // }
+
 }
 
 void Player::render()
@@ -379,7 +389,7 @@ glm::ivec2 Player::getSize() const {
     else return PLAYER_SIZE;
 }
 
-bool Player::collidesWithEnemy(const Enemy &enemy) const {
+bool Player::collidesWith(const Enemy &enemy) const {
     glm::ivec2 enemySize = enemy.getSize();
     glm::ivec2 enemyPos = enemy.getPosition();
     glm::ivec2 enemyCenter = enemyPos + enemySize/2;
@@ -388,6 +398,18 @@ bool Player::collidesWithEnemy(const Enemy &enemy) const {
     glm::ivec2 minDist = (getSize() + enemySize)/2;
     if (dist.x < minDist.x && dist.y < minDist.y)
         return true;
+    return false;
+}
+
+bool Player::collidesWith(const InteractiveBlock &block) const {
+    if (yState != UPWARDS) return false;
+
+    if (map->headUnderTile(posPlayer, getSize())) {
+        auto collidedTile = map->tileOverHead(posPlayer, getSize());
+        if (collidedTile == block.getTile()) {
+            return true;
+        }
+    }
     return false;
 }
 
@@ -779,18 +801,6 @@ void Player::takeStar() {
         setState(State::SMALL_STAR);
     else
      setState(State::BIG_STAR);
-}
-
-bool Player::isStar() const {
-    return statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR;
-}
-
-bool Player::isDead() const {
-    return statePlayer == State::DEAD;
-}
-
-bool Player::isDying() const {
-    return statePlayer == State::DYING;
 }
 
 void Player::makeAlive() {

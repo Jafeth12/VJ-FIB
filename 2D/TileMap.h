@@ -19,6 +19,14 @@ struct EnemyPosition {
     char dir;
 };
 
+enum ObjectType { NONE, COIN, MUSHROOM, STAR };
+enum BlockType { BRICK, INTERROGATION };
+struct IntBlockPosition {
+    glm::ivec2 pos;
+    BlockType type;
+    ObjectType object;
+};
+
 class TileMap
 {
 
@@ -36,6 +44,8 @@ public:
 	void render() const;
 	void free();
 
+    Texture* getTexture() { return &tilesheet; }
+
 	int getTileSize() const { return tileSize; }
     glm::ivec2 getMapSize() const { return mapSize; }
 
@@ -50,17 +60,33 @@ public:
     glm::ivec2 getCastleDoorPos() const;
     glm::ivec2 getPoleHeadPos() const;
 
+    bool centerXUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
+
+    // Methods for collision detection with special tiles
+    glm::ivec2 tileOverHead(const glm::ivec2 &pos, const glm::ivec2 &size) const;
+    bool isSpecialTile(const glm::ivec2 &tileCoord);
+    bool isCoinTile(const glm::ivec2 &tileCoord);
+    bool isBrickTile(const glm::ivec2 &tileCoord);
+
+    // Interact with the map
+    void destroyBrickTile(const glm::ivec2 &tileCoord);
+
+
     MapColor getMapColor() const { return enemiesColor; }
     std::vector<EnemyPosition> getGoombas() const { return goombas; }
     std::vector<EnemyPosition> getKoopas() const { return koopas; }
+    std::vector<IntBlockPosition> getInteractiveBlocks() const { return interactiveBlocks; }
 
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
+    void deleteBuffers();
+    void remesh();
 
 private:
 	GLuint vao;
 	GLuint vbo;
+    ShaderProgram *shaderProgram;
 	GLint posLocation, texCoordLocation;
 	int nTiles;
 	glm::ivec2 position, mapSize, tilesheetSize;
@@ -72,9 +98,9 @@ private:
     MapColor enemiesColor;
     std::vector<EnemyPosition> goombas;
     std::vector<EnemyPosition> koopas;
-
     glm::vec2 casteDoorCoords;
     glm::vec2 poleHeadCoords;
+    std::vector<IntBlockPosition> interactiveBlocks;
 };
 
 

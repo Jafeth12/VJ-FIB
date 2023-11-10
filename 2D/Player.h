@@ -3,6 +3,7 @@
 
 
 #include "Camera.h"
+#include "InteractiveBlock.h"
 #include "Sprite.h"
 #include "TileMap.h"
 #include "Enemy.h"
@@ -28,7 +29,13 @@ public:
     glm::ivec2 getPosition() const;
     glm::ivec2 getSize() const;
 
-    bool collidesWithEnemy(const Enemy &enemy) const;
+    bool isDead() const { return statePlayer == State::DEAD; }
+    bool isDying() const { return statePlayer == State::DYING; }
+    bool isBig() const { return statePlayer == State::BIG || statePlayer == State::BIG_STAR; }
+    bool isStar() const { return statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR; };
+
+    bool collidesWith(const Enemy &enemy) const;
+    bool collidesWith(const InteractiveBlock &block) const;
 
     /**
      * @brief Retorna el ángulo entre la recta
@@ -46,12 +53,9 @@ public:
     void takeMushroom();
     void takeStar();
 
-    bool isDead() const;
-    bool isDying() const;
 
     void makeAlive();
 
-    bool isStar() const;
     int getCurrentStarFrame();
     void moveTo(const glm::vec2 &pos);
 

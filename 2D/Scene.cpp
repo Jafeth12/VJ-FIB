@@ -3,7 +3,12 @@
 #include <iostream>
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Brick.h"
+#include "Interrogation.h"
+#include "Scene.h"
 #include "Enemy.h"
+#include "Game.h"
+#include "TileMap.h"
 
 #define DISTANCE_TO_ACTIVATE_ENEMY 500.f
 #define ANGLE_TO_DIE (M_PI/2.f)
@@ -26,6 +31,8 @@ Scene::~Scene()
         delete foreground;
     if (flagSprite != NULL)
         delete flagSprite;
+
+    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) delete interactiveBlocks[i];
 
     for (auto &text : texts) {
         delete text.second;
@@ -53,8 +60,34 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
         // Cargar el mapa de tiles
         map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
         initEnemies(shaderProgram);
+        TileMap::MapColor color = map->getMapColor();
+
+        auto interactiveBlocksPos = map->getInteractiveBlocks();
+        interactiveBlocks.resize(interactiveBlocksPos.size());
+        for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
+            if (interactiveBlocksPos[i].type == BRICK) {
+                interactiveBlocks[i] = new Brick(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color);
+            }
+            else if (interactiveBlocksPos[i].type == INTERROGATION) {
+                switch (interactiveBlocksPos[i].object) {
+                case COIN:
+                    interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::COIN);
+                    break;
+                case MUSHROOM:
+                    interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::MUSHROOM);
+                    break;
+                case STAR:
+                    interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::STAR);
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
     }
 
+    coins.resize(1);
+    coins[0].init(shaderProgram, glm::ivec2(0, 16), map);
 }
 
 void Scene::update(float deltaTime, Player *player)
@@ -75,6 +108,9 @@ void Scene::update(float deltaTime, Player *player)
 
         return;
     }
+
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i].update(deltaTime);
+    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) interactiveBlocks[i]->update(deltaTime);
 
     // Check player under the map
     if (player->getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
@@ -203,7 +239,7 @@ void Scene::update(float deltaTime, Player *player)
 
     // Player - goombas
     for (unsigned i = 0; i < goombas.size(); ++i)
-        if (goombas[i].shouldCollide() && player->collidesWithEnemy(goombas[i])) {
+        if (goombas[i].shouldCollide() && player->collidesWith(goombas[i])) {
             float alpha = player->collisionAngle(goombas[i]);
             if (glm::abs(alpha) <= ANGLE_TO_DIE) {
                 goombas[i].dieVertical();
@@ -217,7 +253,7 @@ void Scene::update(float deltaTime, Player *player)
 
     // Player - koopas
     for (unsigned i = 0; i < koopas.size(); ++i) {
-        if (koopas[i].shouldCollide() && player->collidesWithEnemy(koopas[i])) {
+        if (koopas[i].shouldCollide() && player->collidesWith(koopas[i])) {
             if (koopas[i].isShell() && !koopas[i].isMovingShell()) {
                 koopas[i].kick(koopas[i].kickDirection(*player));
             }
@@ -245,8 +281,19 @@ void Scene::update(float deltaTime, Player *player)
     }
 
     if (hud->isTimeLeftZero()) {
+        // hay que hacer que player se peke priemro
         player->takeDamage();
     }
+
+    // Player - interactiveBlocks
+    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
+        if (player->collidesWith(*interactiveBlocks[i])) {
+            if (interactiveBlocks[i]->canActivate()) {
+                interactiveBlocks[i]->activate();
+            }
+        }
+    }
+
 }
 
 glm::ivec2 Scene::getInitPlayerTiles() {
@@ -289,12 +336,13 @@ void Scene::render() {
     if (foreground != NULL) foreground->render();
     if (flagSprite != NULL) flagSprite->render();
 
-    for (unsigned i = 0; i < goombas.size(); ++i) 
-        if (!goombas[i].isDead())
-                goombas[i].render();
-    for (unsigned i = 0; i < koopas.size(); ++i)
-        if (!koopas[i].isDead())
-                koopas[i].render();
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i].render();
+
+    for (unsigned i = 0; i < interactiveBlocks.size(); ++i)
+        if (interactiveBlocks[i]->shouldRender())
+            interactiveBlocks[i]->render();
+    for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].render();
+    for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].render();
 
     if (worldNumber > 0) hud->setWorldNumber(worldNumber);
     hud->render();

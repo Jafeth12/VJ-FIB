@@ -2,9 +2,6 @@
 #include <GL/glut.h>
 #include "Game.h"
 
-#define SCREEN_X 0
-#define SCREEN_Y 16
-
 #define SCENE_0_INIT_PLAYER_TILES glm::ivec2(3, 13)
 #define SCENE_1_INIT_PLAYER_TILES glm::ivec2(3, 13)
 
