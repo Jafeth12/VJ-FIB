@@ -13,7 +13,6 @@
 #define SPEED 16 //FIXME SPEED -> ANIM_SPEED
 #define PLAYER_SIZE glm::ivec2(32, 32)
 #define PLAYER_BIG_SIZE glm::ivec2(32, 64)
-#define PLAYER_SIZE_IN_SPRITESHEET 16.f
 #define X_WALK_SPEED 225.f
 #define X_RUN_SPEED 2.f * X_WALK_SPEED
 #define X_ACC  550.f
@@ -29,16 +28,17 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     xState = NONE;
     statePlayer = State::SMALL;
 
-    spritesheet.loadFromFile("images/small_mario_3.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    spritesheet.loadFromFile("images/all_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
     spritesheet.setMinFilter(GL_NEAREST);
     spritesheet.setMagFilter(GL_NEAREST);
+    float sizeX = 16.f / spritesheet.width();
+    float sizeY = 32.f / spritesheet.height();
+    sprite = Sprite::createSprite(PLAYER_BIG_SIZE, glm::vec2(sizeX, sizeY), &spritesheet, &shaderProgram);
+    sprite->setNumberAnimations(NUM_ANIMS);
 
     // spritesheet.width() = spritesheet.height() = 128
     // cada sprite es de 16x16, así que el size es 16/128 = 0.125
 
-    float size = PLAYER_SIZE_IN_SPRITESHEET / spritesheet.width();
-    sprite = Sprite::createSprite(getSize(), glm::vec2(size, size), &spritesheet, &shaderProgram);
-    sprite->setNumberAnimations(numAnims);
 
     // Unique animation identifiers
     int standR = getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::NORMAL);
@@ -278,9 +278,9 @@ float Player::collisionAngle(const Enemy &enemy) const {
 // Animations dark magic
 int Player::getAnimId(VerticalAnim v, LateralAnim l, AnimSize as, AnimType t) const {
     return 
-        (enum_t)t * (enum_t)AnimSize::_LAST * (enum_t)LateralAnim::_LAST * (enum_t)VerticalAnim::_LAST
+        (enum_t)as * (enum_t)AnimType::_LAST * (enum_t)LateralAnim::_LAST * (enum_t)VerticalAnim::_LAST
         +
-        (enum_t)as * (enum_t)LateralAnim::_LAST * (enum_t)VerticalAnim::_LAST
+        (enum_t)t * (enum_t)LateralAnim::_LAST * (enum_t)VerticalAnim::_LAST
         +
         (enum_t)l * (enum_t)VerticalAnim::_LAST
         +
@@ -289,8 +289,8 @@ int Player::getAnimId(VerticalAnim v, LateralAnim l, AnimSize as, AnimType t) co
 
 int Player::getAnimId(SpecialAnim s) const {
     return
-        (enum_t)AnimType::_LAST *
         (enum_t)AnimSize::_LAST *
+        (enum_t)AnimType::_LAST *
         (enum_t)LateralAnim::_LAST *
         (enum_t)VerticalAnim::_LAST
         +
@@ -303,11 +303,11 @@ Player::VerticalAnim Player::getVerticalAnim(int a) const {
 Player::LateralAnim Player::getLateralAnim(int a) const {
     return (LateralAnim)(((enum_t)a / (enum_t)VerticalAnim::_LAST) % (enum_t)LateralAnim::_LAST);
 };
-Player::AnimSize Player::getAnimSize(int a) const {
-    return (AnimSize)(((enum_t)a / ((enum_t)VerticalAnim::_LAST * (enum_t)LateralAnim::_LAST)) % (enum_t)AnimSize::_LAST);
-};
 Player::AnimType Player::getAnimType(int a) const {
-    return (AnimType)(((enum_t)a / ((enum_t)VerticalAnim::_LAST * (enum_t)LateralAnim::_LAST * (enum_t)AnimSize::_LAST)) % (enum_t)AnimType::_LAST);
+    return (AnimType)(((enum_t)a / (enum_t)VerticalAnim::_LAST * (enum_t)LateralAnim::_LAST) % (enum_t)AnimType::_LAST);
+};
+Player::AnimSize Player::getAnimSize(int a) const {
+    return (AnimSize)(((enum_t)a / ((enum_t)VerticalAnim::_LAST * (enum_t)LateralAnim::_LAST) * (enum_t)AnimType::_LAST) % (enum_t)AnimSize::_LAST);
 };
 
 void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)

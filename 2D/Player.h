@@ -50,17 +50,19 @@ private:
     typedef short enum_t;
     enum class VerticalAnim : enum_t { WALK, RUN, SPRINT, STAND, JUMP, BRAKE, _LAST };
     enum class LateralAnim  : enum_t { LEFT, RIGHT, _LAST };
-    enum class AnimSize     : enum_t { SMALL, BIG, _LAST };
     enum class AnimType     : enum_t { NORMAL, STAR, _LAST };
+    enum class AnimSize     : enum_t { SMALL, BIG, _LAST };
     enum class SpecialAnim  : enum_t { DIE, _LAST };
 
-    const int numAnims = (int)getAnimId(SpecialAnim::_LAST);
+    const int NUM_ANIMS = (int)getAnimId(SpecialAnim::_LAST);
+
     int getAnimId(VerticalAnim v, LateralAnim l, AnimSize as, AnimType t) const;
     int getAnimId(SpecialAnim s) const;
+
     VerticalAnim getVerticalAnim(int a) const;
     LateralAnim getLateralAnim(int a) const;
-    AnimSize getAnimSize(int a) const;
     AnimType getAnimType(int a) const;
+    AnimSize getAnimSize(int a) const;
 
     void updateAnimation(bool leftPressed, bool rightPressed) const;
 
@@ -78,7 +80,8 @@ private:
 
 	bool bJumping;
 	glm::ivec2 tileMapDispl;
-	Texture spritesheet;
+    Texture spritesheet;
+
 	Sprite *sprite;
 	TileMap *map;
 
