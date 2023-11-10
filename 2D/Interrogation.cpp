@@ -1,8 +1,11 @@
 #include "Interrogation.h"
 #include "TileMap.h"
 
-Interrogation::Interrogation(glm::ivec2 tileMapDispl, TileMap *map, glm::vec2 pos, ShaderProgram &shaderProgram, Texture* texture, TileMap::MapColor color) : InteractiveBlock(tileMapDispl, map, pos, shaderProgram, texture, color)
+Interrogation::Interrogation(glm::ivec2 tileMapDispl, TileMap *map, glm::vec2 pos, ShaderProgram &shaderProgram, Texture* texture, TileMap::MapColor color, BlockContent content) :
+    InteractiveBlock(tileMapDispl, map, pos, shaderProgram, texture, color)
 {
+    this->content = content;
+
     sprite->setNumberAnimations(1);
 
     sprite->setAnimationSpeed(0, 8);

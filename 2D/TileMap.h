@@ -19,10 +19,12 @@ struct EnemyPosition {
     char dir;
 };
 
+enum ObjectType { NONE, COIN, MUSHROOM, STAR };
+enum BlockType { BRICK, INTERROGATION };
 struct IntBlockPosition {
     glm::ivec2 pos;
-    char type;
-    char objectInside;
+    BlockType type;
+    ObjectType object;
 };
 
 class TileMap
@@ -52,6 +54,8 @@ public:
     bool solveCollisionsY(const glm::ivec2 &pos0, glm::ivec2 &pos1, const glm::ivec2 &playerSize);
     bool onGround(const glm::ivec2 &pos, const glm::ivec2 &size);
     bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
+
+    bool centerXUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
 
     // Methods for collision detection with special tiles
     glm::ivec2 tileOverHead(const glm::ivec2 &pos, const glm::ivec2 &size) const;

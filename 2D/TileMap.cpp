@@ -104,12 +104,14 @@ bool TileMap::loadLevel(const string &levelFile)
 				map[j*mapSize.x+i] = 0;
             } else {
                 if (tile == '2') {
-                    interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), 'B', 0 } );
+                    interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), BRICK, NONE } );
                     map[j*mapSize.x+i] = 'o' - '0';
                 }
-                else if (tile == '=') {
-                    interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), '?', 'C' } );
-                    map[j*mapSize.x+i] = tile - int('0');
+                else if (tile == '-' || tile == '.' || tile == '/') {
+                    if (tile == '-') interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), INTERROGATION, COIN } );
+                    else if (tile == '.') interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), INTERROGATION, MUSHROOM } );
+                    else if (tile == '/') interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), INTERROGATION, STAR } );
+                    map[j*mapSize.x+i] = 'o' - int('0');
                 }
                 else
                     map[j*mapSize.x+i] = tile - int('0');
@@ -333,6 +335,21 @@ bool TileMap::solveCollisionsY(const glm::ivec2 &pos0, glm::ivec2 &pos1, const g
             }
 
     return false;
+}
+
+bool TileMap::centerXUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size) {
+    // pSpace
+    int psPlayerHeight = size.y;
+    int psPlayerHeadY = pos.y;
+    int psPlayerFeetY = psPlayerHeadY + psPlayerHeight;
+    int psPixelUnderPlayer = psPlayerFeetY + 1;
+
+    // tileSpace
+    int tsPixelUnderPlayer = psPixelUnderPlayer / tileSize;
+    int playerCenterX = (pos.x + size.x/2) / tileSize;
+
+    return (map[tsPixelUnderPlayer*mapSize.x+playerCenterX] != 0);
+
 }
 
 glm::ivec2 TileMap::tileOverHead(const glm::ivec2 &pos, const glm::ivec2 &size) const {

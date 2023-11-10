@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Enemy.h"
 #include "Game.h"
+#include "TileMap.h"
 
 #define DISTANCE_TO_ACTIVATE_ENEMY 500.f
 #define ANGLE_TO_DIE (M_PI/2.f)
@@ -67,11 +68,23 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
         auto interactiveBlocksPos = map->getInteractiveBlocks();
         interactiveBlocks.resize(interactiveBlocksPos.size());
         for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
-            if (interactiveBlocksPos[i].type == 'B') {
+            if (interactiveBlocksPos[i].type == BRICK) {
                 interactiveBlocks[i] = new Brick(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color);
             }
-            else if (interactiveBlocksPos[i].type == '?') {
-                interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color);
+            else if (interactiveBlocksPos[i].type == INTERROGATION) {
+                switch (interactiveBlocksPos[i].object) {
+                case COIN:
+                    interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::COIN);
+                    break;
+                case MUSHROOM:
+                    interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::MUSHROOM);
+                    break;
+                case STAR:
+                    interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::STAR);
+                    break;
+                default:
+                    break;
+                }
             }
         }
     }
@@ -196,7 +209,6 @@ void Scene::update(float deltaTime, Player *player)
     // Player - interactiveBlocks
     for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
         if (player->collidesWith(*interactiveBlocks[i])) {
-            std::cout << "Player collides with block" << std::endl;
             if (interactiveBlocks[i]->canActivate()) {
                 interactiveBlocks[i]->activate();
                 map->destroyBrickTile(interactiveBlocks[i]->getTile());

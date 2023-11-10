@@ -247,14 +247,14 @@ void Player::update(float deltaTime)
 	// Set the new position of the player
     setPosition(posPlayer);
 
-    // Interactwith the map tiles
-    if (map->headUnderTile(posPlayer, getSize())) {
-        auto tile = map->tileOverHead(posPlayer, getSize());
-        if (map->isBrickTile(tile)) {
-            if (statePlayer == State::BIG || statePlayer == State::BIG_STAR)
-                map->destroyBrickTile(tile);
-        }
-    }
+    // // Interactwith the map tiles
+    // if (map->headUnderTile(posPlayer, getSize())) {
+    //     auto tile = map->tileOverHead(posPlayer, getSize());
+    //     if (map->isBrickTile(tile)) {
+    //         if (statePlayer == State::BIG || statePlayer == State::BIG_STAR)
+    //             map->destroyBrickTile(tile);
+    //     }
+    // }
 
 }
 
@@ -307,8 +307,9 @@ bool Player::collidesWith(const Enemy &enemy) const {
 }
 
 bool Player::collidesWith(const InteractiveBlock &block) const {
+    if (yState != UPWARDS) return false;
+
     if (map->headUnderTile(posPlayer, getSize())) {
-        std::cout << "Head is under tile" << std::endl;
         auto collidedTile = map->tileOverHead(posPlayer, getSize());
         if (collidedTile == block.getTile()) {
             return true;
