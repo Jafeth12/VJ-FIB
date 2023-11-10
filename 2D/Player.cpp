@@ -25,8 +25,6 @@
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
-    isOnPoleAnimation = false;
-    isOnPole = false;
     isOnAutopilot = false;
     isFinishing = false;
     targetPos = glm::vec2(0.f);
@@ -193,7 +191,6 @@ void Player::update(float deltaTime)
 
             if (isFinishing && finishingState == FinishingState::WALKING_TO_CASTLE) {
                 finishingState = FinishingState::ON_CASTLE;
-                isFinishing = false;
             }
 
             return;
@@ -480,7 +477,6 @@ void Player::updatePoleAnimation(float deltaTime) {
     if (currentAnimId != climb1_R && currentAnimId != climb1_L && currentAnimId != climb2_R && currentAnimId != climb2_L) {
         sprite->changeAnimation(climb1_R);
         setPosition(glm::ivec2(posPlayer.x + 16, posPlayer.y));
-        isOnPole = true;
         return;
     }
 
@@ -519,4 +515,16 @@ void Player::updatePoleAnimation(float deltaTime) {
         }
     }
 
+}
+
+bool Player::isOnFinishingState() {
+    return isFinishing;
+}
+
+void Player::setIsFinishing(bool isFinishing) {
+    this->isFinishing = isFinishing;
+}
+
+Player::FinishingState Player::getFinishingState() {
+    return finishingState;
 }

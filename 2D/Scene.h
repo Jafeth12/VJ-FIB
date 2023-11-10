@@ -32,6 +32,9 @@ public:
     void setBackground(std::string levelFilename);
     void setForeground(std::string levelFilename);
 
+    bool hasEnded();
+    void setIsOver(bool isOver);
+
     int getWorldNumber();
 
     glm::ivec2 getInitPlayerTiles();
@@ -56,6 +59,9 @@ protected:
 
 	float currentTime;
     int worldNumber;
+
+    bool isOver;
+    bool isFinishing;
 
 private:
 };

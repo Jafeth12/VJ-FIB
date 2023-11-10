@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Game.h"
 #include <iostream>
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
@@ -36,6 +37,8 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
     this->worldNumber = worldNumber;
 
     autoRenderAllText = true;
+    isOver = false;
+    isFinishing = false;
 
 	if (levelFilename != "") map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
 
@@ -47,14 +50,50 @@ void Scene::update(float deltaTime, Player *player)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 
+    glm::vec2 playerPos = player->getPosition();
+
+    if (player->isOnFinishingState() && !isOver) {
+        float timeToWait = 5.0f;
+
+        Player::FinishingState finishingState = player->getFinishingState();
+
+        switch (finishingState) {
+            case Player::FinishingState::POLE:
+                if (!isFinishing) {
+                    // play pole sound;
+                }
+                break;
+            case Player::FinishingState::WALKING_TO_CASTLE:
+                if (!isFinishing) {
+                    // play end sound
+                }
+
+                break;
+            case Player::FinishingState::ON_CASTLE:
+                Game::instance().stopRenderingPlayer();
+
+                static float timeAtFinishingState = currentTime;
+
+                if (currentTime - timeAtFinishingState > timeToWait) {
+                    isOver = true;
+                    isFinishing = false;
+                    player->setIsFinishing(false);
+                }
+
+                return;         
+        }
+
+        isFinishing = true;
+    }
+
+
     hud->decrementTimeLeft();
 
     if (hud->isTimeLeftZero()) {
         hud->setTimeLeft(400);
     }
 
-    glm::vec2 playerPos = player->getPosition();
-    camera->setXPosition(playerPos.x - initPlayerTiles.x * map->getTileSize());
+    if (!isFinishing) camera->setXPosition(playerPos.x - initPlayerTiles.x * map->getTileSize());
 }
 
 glm::ivec2 Scene::getInitPlayerTiles() {
@@ -98,6 +137,14 @@ void Scene::render() {
 
 	texProgram->setUniformMatrix4f("view", view);   // esto está aquí porque el render de player necesita la view matrix de la cámara
                                                     // el player se renderiza justo después de esto. habría que mirárselo.
+}
+
+bool Scene::hasEnded() {
+    return isOver;
+}
+
+void Scene::setIsOver(bool isOver) {
+    this->isOver = isOver;
 }
 
 int Scene::getWorldNumber() {

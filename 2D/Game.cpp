@@ -36,7 +36,9 @@ void Game::init()
 	scenes[currentSceneIndex]->init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_0_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 1);
     scenes[currentSceneIndex]->setBackground("levels/background01.txt");
 
-	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
+	// scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
+	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
+    scenes[currentSceneIndex+1]->setBackground("levels/background01.txt");
 
     TileMap *map = scenes[currentSceneIndex]->getMap();
     TileMap *backgroundMap = scenes[currentSceneIndex]->getBackgroundMap();
@@ -49,7 +51,7 @@ void Game::init()
 	player->setTileMap(map);
     player->setBackgroundMap(backgroundMap);
 
-    player->moveTo(glm::vec2(500, 0));
+    // player->moveTo(glm::vec2(500, 0));
 }
 
 bool Game::update(float deltaTime)
@@ -60,6 +62,9 @@ bool Game::update(float deltaTime)
 
     switch (currentState) {
         case GAME_MENU:
+            player->setPosition(glm::vec2(menu.getInitPlayerTiles().x * newTileMap->getTileSize(), menu.getInitPlayerTiles().y * newTileMap->getTileSize()));
+            camera.setPosition(glm::vec2(0, 0));
+
             menu.update(deltaTime);
             if (menu.getMenuState() == MainMenu::MenuState::PLAY) {
                 currentState = GAME_PLAY;
@@ -83,6 +88,22 @@ bool Game::update(float deltaTime)
             break;
         case GAME_PLAY:
             scenes[currentSceneIndex]->update(deltaTime, player);
+
+            if (scenes[currentSceneIndex]->hasEnded()) {
+                scenes[currentSceneIndex]->setIsOver(false);
+                startRenderingPlayer();
+
+                int size = scenes.size();
+                if (currentSceneIndex + 1 < size) {
+                    changeScene(currentSceneIndex + 1);
+                } else {
+                    currentState = GAME_MENU;
+                    menu.setMenuState(MainMenu::MenuState::TITLE);
+                    // falta el poner top score y todo eso
+                    hud.hideTimeLeft();
+                }
+            }
+
             break;
     }
 

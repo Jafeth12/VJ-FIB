@@ -26,7 +26,15 @@ public:
 
     void moveTo(const glm::vec2 &pos);
 
+    enum class FinishingState { POLE, WALKING_TO_CASTLE, ON_CASTLE };
+
+    bool isOnFinishingState();
+    void setIsFinishing(bool isFinishing);
+
+    FinishingState getFinishingState();
+
     glm::vec2 getPosition();
+
 
 private:
     // Animations
@@ -46,8 +54,6 @@ private:
     enum PlayerYState { FLOOR, UPWARDS, DOWNWARDS };
     enum PlayerXState { RUN_LEFT, WALK_LEFT, NONE, WALK_RIGHT, RUN_RIGHT };
 
-    enum class FinishingState : enum_t { POLE, WALKING_TO_CASTLE, ON_CASTLE };
-
     void updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime);
     void updatePosition(float deltaTime);
     bool updateYState(bool upPressed);
@@ -57,9 +63,7 @@ private:
     void updatePoleAnimation(float deltaTime);
 
     bool isOnAutopilot;
-    bool isOnPoleAnimation;
     bool isFinishing;
-    bool isOnPole;
 	bool bJumping;
     glm::ivec2 targetPos;
 	glm::ivec2 tileMapDispl;
