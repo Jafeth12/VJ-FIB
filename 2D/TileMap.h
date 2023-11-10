@@ -52,9 +52,6 @@ public:
     bool isBrickTile(const glm::ivec2 &tileCoord);
 
     // Interact with the map
-    void activateSpecialTile(const glm::ivec2 &tileCoord);
-    void activateCoinTile(const glm::ivec2 &tileCoord);
-    void activateBrickTile(const glm::ivec2 &tileCoord);
     void destroyBrickTile(const glm::ivec2 &tileCoord);
 
 
@@ -65,10 +62,13 @@ public:
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
+    void deleteBuffers();
+    void remesh();
 
 private:
 	GLuint vao;
 	GLuint vbo;
+    ShaderProgram *shaderProgram;
 	GLint posLocation, texCoordLocation;
 	int nTiles;
 	glm::ivec2 position, mapSize, tilesheetSize;

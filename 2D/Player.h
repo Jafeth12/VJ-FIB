@@ -27,6 +27,11 @@ public:
     glm::ivec2 getPosition() const;
     glm::ivec2 getSize() const;
 
+    bool isDead() const { return statePlayer == State::DEAD; }
+    bool isDying() const { return statePlayer == State::DYING; }
+    bool isBig() const { return statePlayer == State::BIG || statePlayer == State::BIG_STAR; }
+    bool isStar() const { return statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR; };
+
     bool collidesWithEnemy(const Enemy &enemy) const;
 
     /**

@@ -4,7 +4,9 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include "Game.h"
 #include "TileMap.h"
+
 
 
 using namespace std;
@@ -20,6 +22,7 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 
 TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
+    shaderProgram = &program;
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 }
@@ -192,6 +195,16 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
 }
 
+void TileMap::deleteBuffers() {
+    glDeleteBuffers(1, &vbo);
+    glDeleteVertexArrays(1, &vao);
+}
+
+void TileMap::remesh() {
+    deleteBuffers();
+    prepareArrays(glm::vec2(SCREEN_X, SCREEN_Y), *this->shaderProgram);
+}
+
 bool TileMap::onGround(const glm::ivec2 &pos, const glm::ivec2 &size)
 {
     // pSpace
@@ -316,51 +329,18 @@ glm::ivec2 TileMap::tileOverHead(const glm::ivec2 &pos, const glm::ivec2 &size) 
 
     // tileSpace
     int tsPixelOverPlayer = psPixelOverPlayer / tileSize;
+    int playerCenterX = (pos.x + size.x/2) / tileSize;
 
-    int x0, x1, yFeet;
-
-    x0 = pos.x / tileSize;
-    x1 = (pos.x + size.x - 1) / tileSize;
-
-    for (int x = x0; x<=x1; ++x)
-        if(map[tsPixelOverPlayer*mapSize.x+x] != 0)
-            return glm::ivec2(x, tsPixelOverPlayer); // Encontrada
-
-    return glm::ivec2(x1, tsPixelOverPlayer); // Error, no hay tile sólida encima
-}
-
-bool TileMap::isSpecialTile(const glm::ivec2 &tileCoord) {
-    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
-    return (tile == 2 || tile == 3 || tile == 4 || tile == 5);
-}
-
-bool TileMap::isCoinTile(const glm::ivec2 &tileCoord) {
-    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
-    return (tile == 6);
+    return glm::ivec2(playerCenterX, tsPixelOverPlayer);
 }
 
 bool TileMap::isBrickTile(const glm::ivec2 &tileCoord) {
     int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
-    return (tile == 7);
-}
-
-void TileMap::activateSpecialTile(const glm::ivec2 &tileCoord) {
-    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
-    std::cout << "Activating special tile, type: " << tile << std::endl;
-}
-
-void TileMap::activateCoinTile(const glm::ivec2 &tileCoord) {
-    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
-    std::cout << "Activating coin tile, type: " << tile << std::endl;
-}
-
-void TileMap::activateBrickTile(const glm::ivec2 &tileCoord) {
-    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
-    std::cout << "Activating brick tile, type: " << tile << std::endl;
+    return (tile =='2' - '0');
 }
 
 void TileMap::destroyBrickTile(const glm::ivec2 &tileCoord) {
     int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
-    std::cout << "Destroying brick tile, type: " << tile << std::endl;
     map[tileCoord.y * mapSize.x + tileCoord.x] = 0;
+    remesh();
 }
