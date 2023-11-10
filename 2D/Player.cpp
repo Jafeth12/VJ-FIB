@@ -235,6 +235,7 @@ void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
     if (shouldJump) {
         velPlayer.y = JUMP_VEL;
         bJumping = true;
+        SoundEngine::instance().playJump();
     }
 }
 
