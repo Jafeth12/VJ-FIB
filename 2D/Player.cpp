@@ -679,10 +679,6 @@ void Player::takeStar() {
      setState(State::BIG_STAR);
 }
 
-bool Player::isStar() const {
-    return statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR;
-}
-
 int Player::getCurrentStarFrame() {
     return currentStarFrame;
 }

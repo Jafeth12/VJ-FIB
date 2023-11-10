@@ -50,7 +50,6 @@ public:
     void takeMushroom();
     void takeStar();
 
-    bool isStar() const;
     int getCurrentStarFrame();
 
 private:
