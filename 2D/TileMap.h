@@ -39,6 +39,8 @@ public:
     bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
     bool headOnFinishingTile(const glm::ivec2 &pos, const glm::ivec2 &size);
 
+    glm::ivec2 getCastleDoorCoords() const { return casteDoorCoords; }
+
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
@@ -53,6 +55,8 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
+
+    glm::vec2 casteDoorCoords;
 
 };
 

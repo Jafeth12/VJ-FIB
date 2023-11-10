@@ -62,6 +62,9 @@ public:
 
     void changeScene(int sceneIndex);
 
+    void startRenderingPlayer();
+    void stopRenderingPlayer();
+
 private:
     bool wireframe;
 	bool bPlay;                       // Continue to play game?
@@ -80,6 +83,7 @@ private:
     int currentSceneIndex;
     GameState currentState;
     Player *player;
+    bool isRenderingPlayer;
 };
 
 

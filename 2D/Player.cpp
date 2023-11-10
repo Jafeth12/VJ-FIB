@@ -27,6 +27,9 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
     isOnPoleAnimation = false;
     isOnPole = false;
+    isOnAutopilot = false;
+    targetPos = glm::vec2(0.f);
+    isEndingScene = false;
     bJumping = false;
     map = NULL;
     backgroundMap = NULL;
@@ -179,6 +182,22 @@ void Player::update(float deltaTime)
     bool rightShiftPressed = Game::instance().getSpecialKey(113);
     bool runPressed = leftShiftPressed || rightShiftPressed;
 
+    if (isOnAutopilot) {
+        glm::ivec2 diff = targetPos - posPlayer;
+
+        // If we are close enough, stop the autopilot
+        if (glm::abs(diff.x) < 2) {
+            isOnAutopilot = false;
+            return;
+        } else {
+            // If we are not close enough, move towards the target
+            if (diff.x > 0) rightPressed = true;
+            else if (diff.x < 0) leftPressed = true;
+
+            runPressed = false;
+        }
+    }
+
     // Change the movement state of the player, based on inputs
     bool shouldJump = updateYState(upPressed);
     updateXState(leftPressed, rightPressed, runPressed);
@@ -186,7 +205,7 @@ void Player::update(float deltaTime)
     // Calculate the acceleration
     glm::vec2 acc = getAcceleration();
 
-    // Act uppon state and the vars
+    // Act upon state and the vars
     updateVelocity(acc, shouldJump, deltaTime);
     updatePosition(deltaTime);
 
@@ -217,6 +236,12 @@ void Player::setPosition(const glm::vec2 &pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
+
+void Player::moveTo(const glm::vec2 &pos)
+{
+    isOnAutopilot = true;
+    targetPos = pos;
 }
 
 glm::vec2 Player::getPosition() {
@@ -458,7 +483,7 @@ void Player::updatePoleAnimation(float deltaTime) {
         bool collisionsy = map->onGround(next_pos, PLAYER_SIZE);
         if (collisionsy) {
             sprite->changeAnimation(climb1_L);
-            next_pos.x += 16;
+            next_pos.x += 48;
 
             setPosition(next_pos);
             isOnPole = false;
@@ -478,7 +503,13 @@ void Player::updatePoleAnimation(float deltaTime) {
             timeInAnimation = 0.f;
         }
     } else {
+        if (timeInAnimation < 0.8f) return;
 
+        glm::vec2 castleDoorTile = backgroundMap->getCastleDoorCoords();
+        glm::ivec2 castleDoorPos = glm::ivec2(castleDoorTile.x * backgroundMap->getTileSize(), castleDoorTile.y * backgroundMap->getTileSize());
+
+        moveTo(castleDoorPos);
+        isOnPoleAnimation = false;
     }
 
 }

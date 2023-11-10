@@ -24,6 +24,8 @@ public:
     void setBackgroundMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 
+    void moveTo(const glm::vec2 &pos);
+
     glm::vec2 getPosition();
 
 private:
@@ -52,9 +54,12 @@ private:
 
     void updatePoleAnimation(float deltaTime);
 
+    bool isOnAutopilot;
+    bool isEndingScene;
     bool isOnPoleAnimation;
     bool isOnPole;
 	bool bJumping;
+    glm::ivec2 targetPos;
 	glm::ivec2 tileMapDispl;
 	Texture spritesheet;
 	Sprite *sprite;

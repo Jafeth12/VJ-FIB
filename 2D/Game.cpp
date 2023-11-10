@@ -14,6 +14,7 @@ void Game::init()
 {
     currentState = GAME_MENU;
     currentSceneIndex = 0;
+    isRenderingPlayer = true;
 	bPlay = true;
     wireframe = false;
     showsLoadingScene = true;
@@ -47,6 +48,8 @@ void Game::init()
 	player->setPosition(glm::vec2(initPlayerTiles.x * map->getTileSize(), initPlayerTiles.y * map->getTileSize()));
 	player->setTileMap(map);
     player->setBackgroundMap(backgroundMap);
+
+    player->moveTo(glm::vec2(500, 0));
 }
 
 bool Game::update(float deltaTime)
@@ -110,7 +113,7 @@ void Game::render()
             break;
     }
 
-    player->render();
+    if (isRenderingPlayer) player->render();
 }
 
 void Game::keyPressed(int key)
@@ -167,6 +170,14 @@ void Game::changeScene(int sceneIndex) {
         player->setTileMap(newTileMap);
         player->setBackgroundMap(newBackgroundMap);
     }
+}
+
+void Game::startRenderingPlayer() {
+    isRenderingPlayer = true;
+}
+
+void Game::stopRenderingPlayer() {
+    isRenderingPlayer = false;
 }
 
 void Game::keyReleased(int key)

@@ -10,6 +10,7 @@ using namespace std;
 
 #define POLE 'D'-'0'
 #define POLE_HEAD 'X'-'0'
+#define CASTLE_DOOR 'K'-'0'
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
@@ -21,6 +22,7 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 
 TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
+    casteDoorCoords = glm::vec2(-1);
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 }
@@ -88,8 +90,12 @@ bool TileMap::loadLevel(const string &levelFile)
 			fin.get(tile);
 			if(tile == ' ')
 				map[j*mapSize.x+i] = 0;
-			else
+			else {
 				map[j*mapSize.x+i] = tile - int('0');
+                if (map[j*mapSize.x+i] == CASTLE_DOOR) {
+                    casteDoorCoords = glm::vec2(i, j);
+                }
+            }
 		}
 		fin.get(tile);
 #ifndef _WIN32
