@@ -57,7 +57,7 @@ protected:
 
     std::vector<InteractiveBlock*> interactiveBlocks;
 
-    Coin coin;
+    std::vector<Coin> coins;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;

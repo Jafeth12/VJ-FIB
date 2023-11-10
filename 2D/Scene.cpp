@@ -88,7 +88,9 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
             }
         }
     }
-    coin.init(shaderProgram, glm::ivec2(0, 16), map, map->getTexture());
+
+    coins.resize(1);
+    coins[0].init(shaderProgram, glm::ivec2(0, 16), map);
 }
 
 void Scene::update(float deltaTime, Player *player)
@@ -96,7 +98,7 @@ void Scene::update(float deltaTime, Player *player)
     currentTime += deltaTime;
     player->update(deltaTime);
 
-    coin.update(deltaTime);
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i].update(deltaTime);
     
     for (unsigned i = 0; i < interactiveBlocks.size(); ++i) interactiveBlocks[i]->update(deltaTime);
 
@@ -263,7 +265,7 @@ void Scene::render() {
 	if (map != NULL) map->render();
     if (foreground != NULL) foreground->render();
 
-    coin.render();
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i].render();
 
     for (unsigned i = 0; i < interactiveBlocks.size(); ++i)
         if (interactiveBlocks[i]->shouldRender())

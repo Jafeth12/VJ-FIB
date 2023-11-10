@@ -1,31 +1,34 @@
 #include <iostream>
 #include "Coin.h"
+#include "TileMap.h"
 
 
 
-void Coin::init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map, Texture *texture) {
+void Coin::init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map) {
 
     this->map = map;
+    this->texture = map->getTexture();
+    
 
-    // texture = new Texture();
-    // texture->loadFromFile("images/coin.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    // texture->setMagFilter(GL_NEAREST);
-    // texture->setMinFilter(GL_NEAREST);
-
-    this->texture = texture;
-
-    float sizeX = 8.f / texture->width(),
-          sizeY = 16.f / texture->height();
+    float sizeX = 32.f / texture->width();
+    float sizeY = 32.f / texture->height();
 
     sprite = Sprite::createSprite(glm::ivec2(getSize()), glm::vec2(sizeX, sizeY), texture, &shaderProgram);
 
-    sprite->setNumberAnimations(1);
 
+    sprite->setNumberAnimations(1);
     sprite->setAnimationSpeed(0, 8);
-    sprite->addKeyframe(0, glm::vec2(0.f, 0.f));
-    sprite->addKeyframe(0, glm::vec2(1.f, 0.f));
-    sprite->addKeyframe(0, glm::vec2(2.f, 0.f));
-    sprite->addKeyframe(0, glm::vec2(3.f, 0.f));
+
+    if (map->getMapColor() == TileMap::MapColor::OVERWORLD) {
+        sprite->addKeyframe(0, glm::vec2(11.f, 1.f));
+        sprite->addKeyframe(0, glm::vec2(12.f, 1.f));
+        sprite->addKeyframe(0, glm::vec2(13.f, 1.f));
+    }
+    else {
+        sprite->addKeyframe(0, glm::vec2(9.f, 2.f));
+        sprite->addKeyframe(0, glm::vec2(10.f, 2.f));
+        sprite->addKeyframe(0, glm::vec2(11.f, 2.f));
+    }
 
     sprite->changeAnimation(0);
 
