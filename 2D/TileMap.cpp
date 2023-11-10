@@ -105,11 +105,14 @@ bool TileMap::loadLevel(const string &levelFile)
             } else {
                 if (tile == '2') {
                     interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), 'B', 0 } );
+                    map[j*mapSize.x+i] = 'o' - '0';
                 }
                 else if (tile == '=') {
                     interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), '?', 'C' } );
+                    map[j*mapSize.x+i] = tile - int('0');
                 }
-                map[j*mapSize.x+i] = tile - int('0');
+                else
+                    map[j*mapSize.x+i] = tile - int('0');
             }
 		}
 		fin.get(tile);
@@ -346,11 +349,10 @@ glm::ivec2 TileMap::tileOverHead(const glm::ivec2 &pos, const glm::ivec2 &size) 
 
 bool TileMap::isBrickTile(const glm::ivec2 &tileCoord) {
     int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
-    return (tile =='2' - '0');
+    return (tile =='o' - '0');
 }
 
 void TileMap::destroyBrickTile(const glm::ivec2 &tileCoord) {
-    int tile = map[tileCoord.y * mapSize.x + tileCoord.x];
     map[tileCoord.y * mapSize.x + tileCoord.x] = 0;
     remesh();
 }

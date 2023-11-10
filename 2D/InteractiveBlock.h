@@ -16,8 +16,9 @@ class InteractiveBlock
 
         glm::ivec2 getTile() const { return pos / map->getTileSize(); }
 
-        void activate();
-        bool canActivate() const;
+        void activate() { state = BlockState::OFF; }
+        bool canActivate() const { return state == BlockState::STATIC; }
+        bool shouldRender() const { return state != BlockState::OFF; }
 
 
     protected:

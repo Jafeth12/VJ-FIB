@@ -199,6 +199,7 @@ void Scene::update(float deltaTime, Player *player)
             std::cout << "Player collides with block" << std::endl;
             if (interactiveBlocks[i]->canActivate()) {
                 interactiveBlocks[i]->activate();
+                map->destroyBrickTile(interactiveBlocks[i]->getTile());
             }
         }
     }
@@ -248,7 +249,9 @@ void Scene::render() {
 	if (map != NULL) map->render();
     if (foreground != NULL) foreground->render();
 
-    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) interactiveBlocks[i]->render();
+    for (unsigned i = 0; i < interactiveBlocks.size(); ++i)
+        if (interactiveBlocks[i]->shouldRender())
+            interactiveBlocks[i]->render();
     for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].render();
     for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].render();
 

@@ -40,13 +40,3 @@ void InteractiveBlock::render() {
     if (state != BlockState::OFF)
         sprite->render();
 }
-
-
-
-void InteractiveBlock::activate() {
-    state = BlockState::JUMPING;
-}
-
-bool InteractiveBlock::canActivate() const {
-    return state == BlockState::STATIC;
-}
