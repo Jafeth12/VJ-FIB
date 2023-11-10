@@ -24,8 +24,8 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 
-    glm::vec2 getPosition() const;
-    glm::vec2 getSize() const;
+    glm::ivec2 getPosition() const;
+    glm::ivec2 getSize() const;
 
     bool collidesWithEnemy(const Enemy &enemy) const;
 
@@ -41,6 +41,9 @@ public:
     void stepOnEnemy();
     void takeDamage();
     void fallDie();
+
+    void takeMushroom();
+    void takeStar();
 
 private:
     // Animations
@@ -62,6 +65,8 @@ private:
 
     void updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime);
     void updatePosition(float deltaTime);
+
+    void updatePlayerState(float deltaTime);
     bool updateYState(bool upPressed);
     void updateXState(bool leftPressed, bool rightPressed, bool runPressed);
     glm::vec2 getAcceleration();
@@ -77,6 +82,19 @@ private:
 
     glm::ivec2 posPlayer;
     glm::vec2 velPlayer;
+
+    enum class State {
+        SMALL,
+        BIG,
+        SMALL_STAR,
+        BIG_STAR,
+        JUST_TOOK_DAMAGE,
+        DYING,
+        DEAD,
+    };
+    void setState(State newState);
+    State statePlayer;
+    float timeCurrentState;
 };
 
 

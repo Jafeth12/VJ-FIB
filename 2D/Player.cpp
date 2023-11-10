@@ -12,6 +12,7 @@
 
 #define SPEED 16 //FIXME SPEED -> ANIM_SPEED
 #define PLAYER_SIZE glm::ivec2(32, 32)
+#define PLAYER_BIG_SIZE glm::ivec2(32, 64)
 #define PLAYER_SIZE_IN_SPRITESHEET 16.f
 #define X_WALK_SPEED 225.f
 #define X_RUN_SPEED 2.f * X_WALK_SPEED
@@ -26,6 +27,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     velPlayer = glm::vec2(0.0f);
     yState = FLOOR;
     xState = NONE;
+    statePlayer = State::SMALL;
+
     spritesheet.loadFromFile("images/small_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
     spritesheet.setMinFilter(GL_NEAREST);
     spritesheet.setMagFilter(GL_NEAREST);
@@ -34,7 +37,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     // cada sprite es de 16x16, así que el size es 16/128 = 0.125
 
     float size = PLAYER_SIZE_IN_SPRITESHEET / spritesheet.width();
-    sprite = Sprite::createSprite(PLAYER_SIZE, glm::vec2(size, size), &spritesheet, &shaderProgram);
+    sprite = Sprite::createSprite(getSize(), glm::vec2(size, size), &spritesheet, &shaderProgram);
     sprite->setNumberAnimations(numAnims);
 
     // Unique animation identifiers
@@ -137,6 +140,18 @@ void Player::update(float deltaTime)
     bool rightShiftPressed = Game::instance().getSpecialKey(113);
     bool runPressed = leftShiftPressed || rightShiftPressed;
 
+    // Shortcuts
+    if (Game::instance().getKey('S')) { setState(State::SMALL); }
+    if (Game::instance().getKey('M')) { setState(State::BIG); }
+    if (Game::instance().getKey('G')) {
+        if (statePlayer == State::SMALL || statePlayer == State::SMALL_STAR) setState(State::SMALL_STAR);
+        else if (statePlayer == State::BIG || statePlayer == State::BIG_STAR) setState(State::BIG_STAR);
+    }
+
+    // The real deal. Update the state of the player.
+    // Basically based on time.
+    updatePlayerState(deltaTime);
+
     // Change the movement state of the player, based on inputs
     bool shouldJump = updateYState(upPressed);
     updateXState(leftPressed, rightPressed, runPressed);
@@ -172,21 +187,22 @@ void Player::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
-glm::vec2 Player::getPosition() const {
+glm::ivec2 Player::getPosition() const {
     return posPlayer;
 }
 
-glm::vec2 Player::getSize() const {
-    return PLAYER_SIZE;
+glm::ivec2 Player::getSize() const {
+    if (statePlayer == State::SMALL || statePlayer == State::SMALL_STAR) return PLAYER_SIZE;
+    else return PLAYER_BIG_SIZE;
 }
 
 bool Player::collidesWithEnemy(const Enemy &enemy) const {
     glm::ivec2 enemySize = enemy.getSize();
     glm::ivec2 enemyPos = enemy.getPosition();
     glm::ivec2 enemyCenter = enemyPos + enemySize/2;
-    glm::ivec2 playerCenter = posPlayer + PLAYER_SIZE/2;
+    glm::ivec2 playerCenter = posPlayer + getSize()/2;
     glm::ivec2 dist = glm::abs(enemyCenter - playerCenter);
-    glm::ivec2 minDist = (PLAYER_SIZE + enemySize)/2;
+    glm::ivec2 minDist = (getSize() + enemySize)/2;
     if (dist.x < minDist.x && dist.y < minDist.y)
         return true;
     return false;
@@ -198,7 +214,7 @@ float Player::collisionAngle(const Enemy &enemy) const {
     //  - p: centro del player
     //  - e: centro del enemigo
     //  - k: punto tal que angulo entre pk y ke sea 90ª
-    glm::vec2 p = (glm::vec2)posPlayer + this->getSize()/2.f;
+    glm::vec2 p = (glm::vec2)posPlayer + (glm::vec2)this->getSize()/2.f;
     glm::vec2 e = (glm::vec2)enemy.getPosition() + ((glm::vec2)enemy.getSize())/2.f;
     glm::vec2 k = glm::vec2(e.x, p.y);
 
@@ -209,20 +225,6 @@ float Player::collisionAngle(const Enemy &enemy) const {
     if (p.y > e.y) alpha += M_PI;
 
     return alpha;
-}
-
-void Player::stepOnEnemy() {
-    this->velPlayer.y = STEP_ON_ENEMY_JUMP_VEL;
-}
-
-void Player::takeDamage() {
-    // TODO
-    std::cout << "Player::takedamage() todo" << std::endl;
-}
-
-void Player::fallDie() {
-    // TODO
-    std::cout << "Player::fallDie() todo" << std::endl;
 }
 
 void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
@@ -245,8 +247,8 @@ void Player::updatePosition(float deltaTime)
     next_pos.x = posPlayer.x + (int)(velPlayer.x * deltaTime);
     next_pos.y = posPlayer.y - (int)(velPlayer.y * deltaTime);
     // Check for collisions and correct the next position accordingly
-    bool collisionsx = map->solveCollisionsX(posPlayer, next_pos, PLAYER_SIZE);
-    bool collisionsy = map->solveCollisionsY(posPlayer, next_pos, PLAYER_SIZE);
+    bool collisionsx = map->solveCollisionsX(posPlayer, next_pos, getSize());
+    bool collisionsy = map->solveCollisionsY(posPlayer, next_pos, getSize());
     // Make the player come to a stop if there was a collision per axis
     if (collisionsx) velPlayer.x = 0.0f;
     if (collisionsy) velPlayer.y = 0.0f;
@@ -257,8 +259,8 @@ void Player::updatePosition(float deltaTime)
 bool Player::updateYState(bool upPressed)
 {
     // Get the state of the player
-    bool onGround = map->onGround(posPlayer, PLAYER_SIZE);
-    bool headUnderTile = map->headUnderTile(posPlayer, PLAYER_SIZE);
+    bool onGround = map->onGround(posPlayer, getSize());
+    bool headUnderTile = map->headUnderTile(posPlayer, getSize());
     // Declare the return variable
     bool shouldJump = false;
     // Update the state
@@ -356,7 +358,6 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
             else if (glm::abs(velPlayer.x) > (1.f/3.f) * X_RUN_SPEED)
                 nextVerticalAnim = VerticalAnim::RUN;
             else if (glm::abs(velPlayer.x) > X_WALK_SPEED/4.f) // FIXME: Magic number (1/4 de X_WALK_SPEED).
-                                                               // TODO: Corregir formulas de velocidad para que tengan en cuenta el framerate
                 nextVerticalAnim = VerticalAnim::WALK;
             else
                 nextVerticalAnim = VerticalAnim::STAND;
@@ -434,4 +435,103 @@ glm::vec2 Player::getAcceleration()
     }
 
     return acc;
+}
+
+// === === State shit === ===
+
+void Player::updatePlayerState(float deltaTime) {
+    timeCurrentState += deltaTime;
+    switch (statePlayer) {
+        case State::SMALL:
+            break;
+        case State::BIG:
+            break;
+        case State::SMALL_STAR:
+            if (timeCurrentState > 10.f) {
+                setState(State::SMALL);
+                timeCurrentState = 0.f;
+            }
+            break;
+        case State::BIG_STAR:
+            if (timeCurrentState > 10.f) {
+                setState(State::BIG);
+                timeCurrentState = 0.f;
+            }
+            break;
+        case State::JUST_TOOK_DAMAGE:
+            if (timeCurrentState > 8.f) {
+                setState(State::SMALL);
+                timeCurrentState = 0.f;
+            }
+            break;
+        case State::DYING:
+            if (timeCurrentState > 2.f) {
+                setState(State::DEAD);
+                timeCurrentState = 0.f;
+            }
+            break;
+        case State::DEAD:
+            break;
+    }
+}
+
+void Player::setState(State newState) {
+    if (statePlayer != newState) {
+        timeCurrentState = 0.f;
+
+        switch (statePlayer) {
+            case State::SMALL:
+                if (newState == State::BIG)
+                    posPlayer.y -= PLAYER_BIG_SIZE.y - PLAYER_SIZE.y;
+                break;
+            case State::BIG:
+                if (newState == State::SMALL)
+                    posPlayer.y += PLAYER_BIG_SIZE.y - PLAYER_SIZE.y;
+                break;
+            case State::SMALL_STAR:
+                if (newState == State::BIG || newState == State::BIG_STAR)
+                    posPlayer.y -= PLAYER_BIG_SIZE.y - PLAYER_SIZE.y;
+                break;
+            case State::BIG_STAR:
+                if (newState == State::SMALL || newState == State::SMALL_STAR) // Imposible
+                    posPlayer.y += PLAYER_BIG_SIZE.y - PLAYER_SIZE.y;
+                break;
+            case State::JUST_TOOK_DAMAGE:
+                if (newState == State::BIG)
+                    posPlayer.y -= PLAYER_BIG_SIZE.y - PLAYER_SIZE.y;
+                break;
+            case State::DYING:
+                break;
+            case State::DEAD:
+                break;
+        }
+
+        statePlayer = newState;
+    }
+}
+
+void Player::stepOnEnemy() {
+    this->velPlayer.y = STEP_ON_ENEMY_JUMP_VEL;
+}
+
+void Player::takeDamage() {
+    if (statePlayer == State::BIG)
+        setState(State::JUST_TOOK_DAMAGE);
+    else
+        setState(State::DYING);
+}
+
+void Player::fallDie() {
+    setState(State::DEAD);
+}
+
+void Player::takeMushroom() {
+    setState(State::BIG);
+}
+
+void Player::takeStar() {
+    if (statePlayer == State::SMALL)
+        setState(State::SMALL_STAR);
+    else
+     setState(State::BIG_STAR);
 }
