@@ -8,8 +8,8 @@
 
 using namespace std;
 
-#define POLE 'D'-'0'
-#define POLE_HEAD 'X'-'0'
+#define POLE 'X'-'0'
+#define POLE_HEAD 'D'-'0'
 #define CASTLE_DOOR 'K'-'0'
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
@@ -23,6 +23,7 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
     casteDoorCoords = glm::vec2(-1);
+    poleHeadCoords = glm::vec2(-1);
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 }
@@ -94,6 +95,8 @@ bool TileMap::loadLevel(const string &levelFile)
 				map[j*mapSize.x+i] = tile - int('0');
                 if (map[j*mapSize.x+i] == CASTLE_DOOR) {
                     casteDoorCoords = glm::vec2(i, j);
+                } else if (map[j*mapSize.x+i] == POLE_HEAD) {
+                    poleHeadCoords = glm::vec2(i, j);
                 }
             }
 		}
@@ -295,4 +298,14 @@ bool TileMap::solveCollisionsY(const glm::ivec2 &pos0, glm::ivec2 &pos1, const g
             }
 
     return false;
+}
+
+glm::ivec2 TileMap::getCastleDoorPos() const {
+    if (casteDoorCoords.x == -1) return glm::ivec2(-1);
+    return glm::ivec2(casteDoorCoords.x * tileSize, casteDoorCoords.y * tileSize);
+}
+
+glm::ivec2 TileMap::getPoleHeadPos() const {
+    if (poleHeadCoords.x == -1) return glm::ivec2(-1);
+    return glm::ivec2(poleHeadCoords.x * tileSize, poleHeadCoords.y * tileSize);
 }

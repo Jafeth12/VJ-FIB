@@ -47,6 +47,9 @@ protected:
     TileMap *background;
     TileMap *foreground;
 
+    Sprite *flagSprite;
+    Texture flagTexture;
+
     HUD *hud;
 
     glm::ivec2 initPlayerTiles;
@@ -64,6 +67,7 @@ protected:
     bool isFinishing;
 
 private:
+    void resetFlagPosition();
 };
 
 

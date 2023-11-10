@@ -10,6 +10,7 @@ Scene::Scene()
 	map = NULL;
     background = NULL;
     foreground = NULL;
+    flagSprite = NULL;
 }
 
 Scene::~Scene()
@@ -20,6 +21,8 @@ Scene::~Scene()
         delete background;
     if (foreground != NULL) 
         delete foreground;
+    if (flagSprite != NULL)
+        delete flagSprite;
 
     for (auto &text : texts) {
         delete text.second;
@@ -55,6 +58,17 @@ void Scene::update(float deltaTime, Player *player)
     if (player->isOnFinishingState() && !isOver) {
         float timeToWait = 5.0f;
 
+        if (flagSprite != NULL) {
+            glm::vec2 flagPos = flagSprite->getPosition();
+            glm::vec2 newPos = glm::vec2(flagPos.x, flagPos.y + 2);
+
+            bool collision = map->onGround(newPos, glm::ivec2(32, 32));
+            if (!collision) {
+                flagSprite->setPosition(newPos);
+            }
+
+        }
+
         Player::FinishingState finishingState = player->getFinishingState();
 
         switch (finishingState) {
@@ -78,6 +92,7 @@ void Scene::update(float deltaTime, Player *player)
                     isOver = true;
                     isFinishing = false;
                     player->setIsFinishing(false);
+                    resetFlagPosition();
                 }
 
                 return;         
@@ -103,6 +118,15 @@ glm::ivec2 Scene::getInitPlayerTiles() {
 void Scene::setBackground(std::string levelFilename) {
     if (background != NULL) delete background;
     background = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
+
+    glm::ivec2 poleHeadPos = background->getPoleHeadPos();
+    if (poleHeadPos.x != -1) {
+        flagTexture.loadFromFile("images/banderita.png", TEXTURE_PIXEL_FORMAT_RGBA);
+        flagTexture.setMinFilter(GL_NEAREST);
+        flagTexture.setMagFilter(GL_NEAREST);
+        flagSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.f, 1.f), &flagTexture, texProgram);
+        flagSprite->setPosition(glm::vec2(poleHeadPos.x - 16, poleHeadPos.y + 48));
+    }
 }
 
 void Scene::setForeground(std::string levelFilename) {
@@ -125,6 +149,7 @@ void Scene::render() {
     if (background != NULL) background->render();
 	if (map != NULL) map->render();
     if (foreground != NULL) foreground->render();
+    if (flagSprite != NULL) flagSprite->render();
 
     if (worldNumber > 0) hud->setWorldNumber(worldNumber);
     hud->render();
@@ -157,4 +182,10 @@ TileMap* Scene::getBackgroundMap() {
 
 TileMap* Scene::getMap() {
     return map;
+}
+
+void Scene::resetFlagPosition() {
+    glm::ivec2 poleHeadPos = background->getPoleHeadPos();
+    if (poleHeadPos.x != -1)
+        flagSprite->setPosition(glm::vec2(poleHeadPos.x - 16, poleHeadPos.y + 48));
 }

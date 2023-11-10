@@ -39,7 +39,9 @@ public:
     bool headUnderTile(const glm::ivec2 &pos, const glm::ivec2 &size);
     bool headOnFinishingTile(const glm::ivec2 &pos, const glm::ivec2 &size);
 
-    glm::ivec2 getCastleDoorCoords() const { return casteDoorCoords; }
+    glm::ivec2 getCastleDoorCoords() const { return casteDoorCoords; } // TODO quitar
+    glm::ivec2 getCastleDoorPos() const;
+    glm::ivec2 getPoleHeadPos() const;
 
 private:
 	bool loadLevel(const string &levelFile);
@@ -57,6 +59,7 @@ private:
 	int *map;
 
     glm::vec2 casteDoorCoords;
+    glm::vec2 poleHeadCoords;
 
 };
 
