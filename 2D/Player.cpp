@@ -27,6 +27,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
     yState = FLOOR;
     xState = NONE;
     statePlayer = State::SMALL;
+    currentStarFrame = 0;
+    this->shaderProgram = &shaderProgram;
 
     spritesheet.loadFromFile("images/all_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
     spritesheet.setMinFilter(GL_NEAREST);
@@ -41,57 +43,31 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 
     // Unique animation identifiers
-    int standR = getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::NORMAL);
-    int standL = getAnimId(VerticalAnim::STAND, LateralAnim::LEFT, AnimSize::SMALL, AnimType::NORMAL);
-    int walkR = getAnimId(VerticalAnim::WALK, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::NORMAL);
-    int walkL = getAnimId(VerticalAnim::WALK, LateralAnim::LEFT, AnimSize::SMALL, AnimType::NORMAL);
-    int runR = getAnimId(VerticalAnim::RUN, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::NORMAL);
-    int runL = getAnimId(VerticalAnim::RUN, LateralAnim::LEFT, AnimSize::SMALL, AnimType::NORMAL);
-    int sprintR = getAnimId(VerticalAnim::SPRINT, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::NORMAL);
-    int sprintL = getAnimId(VerticalAnim::SPRINT, LateralAnim::LEFT, AnimSize::SMALL, AnimType::NORMAL);
-    int jumpR = getAnimId(VerticalAnim::JUMP, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::NORMAL);
-    int jumpL = getAnimId(VerticalAnim::JUMP, LateralAnim::LEFT, AnimSize::SMALL, AnimType::NORMAL);
-    int brakeR = getAnimId(VerticalAnim::BRAKE, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::NORMAL);
-    int brakeL = getAnimId(VerticalAnim::BRAKE, LateralAnim::LEFT, AnimSize::SMALL, AnimType::NORMAL);
+    int standR = getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::SMALL);
+    int standL = getAnimId(VerticalAnim::STAND, LateralAnim::LEFT, AnimSize::SMALL);
+    int walkR = getAnimId(VerticalAnim::WALK, LateralAnim::RIGHT, AnimSize::SMALL);
+    int walkL = getAnimId(VerticalAnim::WALK, LateralAnim::LEFT, AnimSize::SMALL);
+    int runR = getAnimId(VerticalAnim::RUN, LateralAnim::RIGHT, AnimSize::SMALL);
+    int runL = getAnimId(VerticalAnim::RUN, LateralAnim::LEFT, AnimSize::SMALL);
+    int sprintR = getAnimId(VerticalAnim::SPRINT, LateralAnim::RIGHT, AnimSize::SMALL);
+    int sprintL = getAnimId(VerticalAnim::SPRINT, LateralAnim::LEFT, AnimSize::SMALL);
+    int jumpR = getAnimId(VerticalAnim::JUMP, LateralAnim::RIGHT, AnimSize::SMALL);
+    int jumpL = getAnimId(VerticalAnim::JUMP, LateralAnim::LEFT, AnimSize::SMALL);
+    int brakeR = getAnimId(VerticalAnim::BRAKE, LateralAnim::RIGHT, AnimSize::SMALL);
+    int brakeL = getAnimId(VerticalAnim::BRAKE, LateralAnim::LEFT, AnimSize::SMALL);
 
-    int standR_big = getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::BIG, AnimType::NORMAL);
-    int standL_big = getAnimId(VerticalAnim::STAND, LateralAnim::LEFT, AnimSize::BIG, AnimType::NORMAL);
-    int walkR_big = getAnimId(VerticalAnim::WALK, LateralAnim::RIGHT, AnimSize::BIG, AnimType::NORMAL);
-    int walkL_big = getAnimId(VerticalAnim::WALK, LateralAnim::LEFT, AnimSize::BIG, AnimType::NORMAL);
-    int runR_big = getAnimId(VerticalAnim::RUN, LateralAnim::RIGHT, AnimSize::BIG, AnimType::NORMAL);
-    int runL_big = getAnimId(VerticalAnim::RUN, LateralAnim::LEFT, AnimSize::BIG, AnimType::NORMAL);
-    int sprintR_big = getAnimId(VerticalAnim::SPRINT, LateralAnim::RIGHT, AnimSize::BIG, AnimType::NORMAL);
-    int sprintL_big = getAnimId(VerticalAnim::SPRINT, LateralAnim::LEFT, AnimSize::BIG, AnimType::NORMAL);
-    int jumpR_big = getAnimId(VerticalAnim::JUMP, LateralAnim::RIGHT, AnimSize::BIG, AnimType::NORMAL);
-    int jumpL_big = getAnimId(VerticalAnim::JUMP, LateralAnim::LEFT, AnimSize::BIG, AnimType::NORMAL);
-    int brakeR_big = getAnimId(VerticalAnim::BRAKE, LateralAnim::RIGHT, AnimSize::BIG, AnimType::NORMAL);
-    int brakeL_big = getAnimId(VerticalAnim::BRAKE, LateralAnim::LEFT, AnimSize::BIG, AnimType::NORMAL);
-
-    int standR_star = getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::STAR);
-    int standL_star = getAnimId(VerticalAnim::STAND, LateralAnim::LEFT, AnimSize::SMALL, AnimType::STAR);
-    int walkR_star = getAnimId(VerticalAnim::WALK, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::STAR);
-    int walkL_star = getAnimId(VerticalAnim::WALK, LateralAnim::LEFT, AnimSize::SMALL, AnimType::STAR);
-    int runR_star = getAnimId(VerticalAnim::RUN, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::STAR);
-    int runL_star = getAnimId(VerticalAnim::RUN, LateralAnim::LEFT, AnimSize::SMALL, AnimType::STAR);
-    int sprintR_star = getAnimId(VerticalAnim::SPRINT, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::STAR);
-    int sprintL_star = getAnimId(VerticalAnim::SPRINT, LateralAnim::LEFT, AnimSize::SMALL, AnimType::STAR);
-    int jumpR_star = getAnimId(VerticalAnim::JUMP, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::STAR);
-    int jumpL_star = getAnimId(VerticalAnim::JUMP, LateralAnim::LEFT, AnimSize::SMALL, AnimType::STAR);
-    int brakeR_star = getAnimId(VerticalAnim::BRAKE, LateralAnim::RIGHT, AnimSize::SMALL, AnimType::STAR);
-    int brakeL_star = getAnimId(VerticalAnim::BRAKE, LateralAnim::LEFT, AnimSize::SMALL, AnimType::STAR);
-
-    int standR_big_star = getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::BIG, AnimType::STAR);
-    int standL_big_star = getAnimId(VerticalAnim::STAND, LateralAnim::LEFT, AnimSize::BIG, AnimType::STAR);
-    int walkR_big_star = getAnimId(VerticalAnim::WALK, LateralAnim::RIGHT, AnimSize::BIG, AnimType::STAR);
-    int walkL_big_star = getAnimId(VerticalAnim::WALK, LateralAnim::LEFT, AnimSize::BIG, AnimType::STAR);
-    int runR_big_star = getAnimId(VerticalAnim::RUN, LateralAnim::RIGHT, AnimSize::BIG, AnimType::STAR);
-    int runL_big_star = getAnimId(VerticalAnim::RUN, LateralAnim::LEFT, AnimSize::BIG, AnimType::STAR);
-    int sprintR_big_star = getAnimId(VerticalAnim::SPRINT, LateralAnim::RIGHT, AnimSize::BIG, AnimType::STAR);
-    int sprintL_big_star = getAnimId(VerticalAnim::SPRINT, LateralAnim::LEFT, AnimSize::BIG, AnimType::STAR);
-    int jumpR_big_star = getAnimId(VerticalAnim::JUMP, LateralAnim::RIGHT, AnimSize::BIG, AnimType::STAR);
-    int jumpL_big_star = getAnimId(VerticalAnim::JUMP, LateralAnim::LEFT, AnimSize::BIG, AnimType::STAR);
-    int brakeR_big_star = getAnimId(VerticalAnim::BRAKE, LateralAnim::RIGHT, AnimSize::BIG, AnimType::STAR);
-    int brakeL_big_star = getAnimId(VerticalAnim::BRAKE, LateralAnim::LEFT, AnimSize::BIG, AnimType::STAR);
+    int standR_big = getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::BIG);
+    int standL_big = getAnimId(VerticalAnim::STAND, LateralAnim::LEFT, AnimSize::BIG);
+    int walkR_big = getAnimId(VerticalAnim::WALK, LateralAnim::RIGHT, AnimSize::BIG);
+    int walkL_big = getAnimId(VerticalAnim::WALK, LateralAnim::LEFT, AnimSize::BIG);
+    int runR_big = getAnimId(VerticalAnim::RUN, LateralAnim::RIGHT, AnimSize::BIG);
+    int runL_big = getAnimId(VerticalAnim::RUN, LateralAnim::LEFT, AnimSize::BIG);
+    int sprintR_big = getAnimId(VerticalAnim::SPRINT, LateralAnim::RIGHT, AnimSize::BIG);
+    int sprintL_big = getAnimId(VerticalAnim::SPRINT, LateralAnim::LEFT, AnimSize::BIG);
+    int jumpR_big = getAnimId(VerticalAnim::JUMP, LateralAnim::RIGHT, AnimSize::BIG);
+    int jumpL_big = getAnimId(VerticalAnim::JUMP, LateralAnim::LEFT, AnimSize::BIG);
+    int brakeR_big = getAnimId(VerticalAnim::BRAKE, LateralAnim::RIGHT, AnimSize::BIG);
+    int brakeL_big = getAnimId(VerticalAnim::BRAKE, LateralAnim::LEFT, AnimSize::BIG);
 
     int die = getAnimId(SpecialAnim::DIE);
 
@@ -240,6 +216,9 @@ void Player::update(float deltaTime)
     bool leftShiftPressed = Game::instance().getSpecialKey(112);
     bool rightShiftPressed = Game::instance().getSpecialKey(113);
     bool runPressed = leftShiftPressed || rightShiftPressed;
+    
+    // Update the Animations
+    updateAnimation(leftPressed, rightPressed, deltaTime);
 
     // Shortcuts
     if (Game::instance().getKey('S')) { setState(State::SMALL); }
@@ -264,9 +243,6 @@ void Player::update(float deltaTime)
     updateVelocity(acc, shouldJump, deltaTime);
     updatePosition(deltaTime);
 
-    // Update the Animations
-    updateAnimation(leftPressed, rightPressed);
-
 	// Set the new position of the player
     setPosition(posPlayer);
 
@@ -274,7 +250,16 @@ void Player::update(float deltaTime)
 
 void Player::render()
 {
+
+    if (isStar()) {
+        shaderProgram->use();
+        shaderProgram->setUniform1i("starEffect", 1);
+        shaderProgram->setUniform1i("starFrame", currentStarFrame);
+    }
+
 	sprite->render();
+
+    if (isStar()) shaderProgram->setUniform1i("starEffect", 0);
 }
 
 void Player::setTileMap(TileMap *tileMap)
@@ -337,11 +322,9 @@ float Player::collisionAngle(const Enemy &enemy) const {
 }
 
 // Animations dark magic
-int Player::getAnimId(VerticalAnim v, LateralAnim l, AnimSize as, AnimType t) const {
+int Player::getAnimId(VerticalAnim v, LateralAnim l, AnimSize as) const {
     return 
-        (enum_t)as * (enum_t)AnimType::_LAST * (enum_t)LateralAnim::_LAST * (enum_t)VerticalAnim::_LAST
-        +
-        (enum_t)t * (enum_t)LateralAnim::_LAST * (enum_t)VerticalAnim::_LAST
+        (enum_t)as * (enum_t)LateralAnim::_LAST * (enum_t)VerticalAnim::_LAST
         +
         (enum_t)l * (enum_t)VerticalAnim::_LAST
         +
@@ -351,7 +334,6 @@ int Player::getAnimId(VerticalAnim v, LateralAnim l, AnimSize as, AnimType t) co
 int Player::getAnimId(SpecialAnim s) const {
     return
         (enum_t)AnimSize::_LAST *
-        (enum_t)AnimType::_LAST *
         (enum_t)LateralAnim::_LAST *
         (enum_t)VerticalAnim::_LAST
         +
@@ -364,11 +346,8 @@ Player::VerticalAnim Player::getVerticalAnim(int a) const {
 Player::LateralAnim Player::getLateralAnim(int a) const {
     return (LateralAnim)(((enum_t)a / (enum_t)VerticalAnim::_LAST) % (enum_t)LateralAnim::_LAST);
 };
-Player::AnimType Player::getAnimType(int a) const {
-    return (AnimType)(((enum_t)a / (enum_t)VerticalAnim::_LAST * (enum_t)LateralAnim::_LAST) % (enum_t)AnimType::_LAST);
-};
 Player::AnimSize Player::getAnimSize(int a) const {
-    return (AnimSize)(((enum_t)a / ((enum_t)VerticalAnim::_LAST * (enum_t)LateralAnim::_LAST) * (enum_t)AnimType::_LAST) % (enum_t)AnimSize::_LAST);
+    return (AnimSize)(((enum_t)a / ((enum_t)VerticalAnim::_LAST * (enum_t)LateralAnim::_LAST) % (enum_t)AnimSize::_LAST));
 };
 
 void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
@@ -483,7 +462,7 @@ void Player::updateXState(bool leftPressed, bool rightPressed, bool runPressed) 
     }
 }
 
-void Player::updateAnimation(bool leftPressed, bool rightPressed) const
+void Player::updateAnimation(bool leftPressed, bool rightPressed, float deltaTime)
 {
     // Overrides
     if (statePlayer == State::DYING || statePlayer == State::DEAD) {
@@ -498,7 +477,6 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
     VerticalAnim verticalAnim = getVerticalAnim(currentAnimId);
     LateralAnim lateralAnim = getLateralAnim(currentAnimId);
     AnimSize animSize = getAnimSize(currentAnimId);
-    AnimType animType = getAnimType(currentAnimId);
     // Figure out next vertical animation
     switch (yState) {
         case FLOOR:
@@ -536,14 +514,15 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed) const
     else animSize = AnimSize::SMALL;
 
     // Figure out animation animation type
-    if (statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR)
-        animType = AnimType::STAR;
-    else animType = AnimType::NORMAL;
+    if (statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR) {
+        currentStarFrame = (currentStarFrame + 1) % 3;
+    }
 
     // Update the animation only if it changed
-    int nextAnimId = getAnimId(verticalAnim, lateralAnim, animSize, animType);
-    if (nextAnimId != currentAnimId)
+    int nextAnimId = getAnimId(verticalAnim, lateralAnim, animSize);
+    if (nextAnimId != currentAnimId) {
         sprite->changeAnimation(nextAnimId);
+    }
 }
 
 glm::vec2 Player::getAcceleration()
@@ -689,4 +668,12 @@ void Player::takeStar() {
         setState(State::SMALL_STAR);
     else
      setState(State::BIG_STAR);
+}
+
+bool Player::isStar() const {
+    return statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR;
+}
+
+int Player::getCurrentStarFrame() {
+    return currentStarFrame;
 }
