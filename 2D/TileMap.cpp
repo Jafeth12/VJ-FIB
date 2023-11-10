@@ -81,6 +81,18 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream.str(line);
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
+
+    char color;
+	getline(fin, line);
+	sstream.str(line);
+    sstream >> color;
+    if (color == 'O') enemiesColor = MapColor::OVERWORLD;
+    else if (color == 'U') enemiesColor = MapColor::UNDERWORLD;
+    else {
+        cerr << "Error: unknown enemy color" << endl;
+        fin.close();
+        return false;
+    }
 	
 	map = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
@@ -88,10 +100,17 @@ bool TileMap::loadLevel(const string &levelFile)
 		for(int i=0; i<mapSize.x; i++)
 		{
 			fin.get(tile);
-			if(tile == ' ')
+			if(tile == ' ') {
 				map[j*mapSize.x+i] = 0;
-			else
-				map[j*mapSize.x+i] = tile - int('0');
+            } else {
+                if (tile == '2') {
+                    interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), 'B', 0 } );
+                }
+                else if (tile == '=') {
+                    interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), '?', 'C' } );
+                }
+                map[j*mapSize.x+i] = tile - int('0');
+            }
 		}
 		fin.get(tile);
 #ifndef _WIN32
@@ -108,15 +127,6 @@ bool TileMap::loadLevel(const string &levelFile)
     if (nEnemies == 0) {
         fin.close();
         return true;
-    }
-    char color;
-    sstream >> color;
-    if (color == 'O') enemiesColor = MapColor::OVERWORLD;
-    else if (color == 'U') enemiesColor = MapColor::UNDERWORLD;
-    else {
-        cerr << "Error: unknown enemy color" << endl;
-        fin.close();
-        return false;
     }
 
     for (unsigned i = 0; i < nEnemies; ++i) {

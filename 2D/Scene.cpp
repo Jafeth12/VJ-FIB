@@ -64,13 +64,17 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
         for (unsigned i = 0; i < koopas.size(); ++i)
             koopas[i].init(glm::ivec2(0, 16), shaderProgram, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
 
-        interactiveBlocks.push_back(new Brick(glm::ivec2(0, 16), map, glm::vec2(21, 10), shaderProgram, map->getTexture(), TileMap::MapColor::UNDERWORLD));
-        interactiveBlocks.push_back(new Interrogation(glm::ivec2(0, 16), map, glm::vec2(22, 10), shaderProgram, map->getTexture(), TileMap::MapColor::UNDERWORLD));
-        // interactiveBlocks[0].render();
+        auto interactiveBlocksPos = map->getInteractiveBlocks();
+        interactiveBlocks.resize(interactiveBlocksPos.size());
+        for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
+            if (interactiveBlocksPos[i].type == 'B') {
+                interactiveBlocks[i] = new Brick(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color);
+            }
+            else if (interactiveBlocksPos[i].type == '?') {
+                interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color);
+            }
+        }
     }
-
-
-
 }
 
 void Scene::update(float deltaTime, Player *player)

@@ -3,6 +3,7 @@ TILEMAP
 32 32 							-- Tile size & block size
 images/tiles.png 	-- Tilesheet
 20 8 								-- Number of tiles in tilesheet
+U
 00                                                                    00
 00                                                                    00
 00                                                                    00
@@ -19,7 +20,7 @@ images/tiles.png 	-- Tilesheet
 00                                    UV             334433           00
 111111111111111111111111111111111000111111111111111111111111111111111111
 111111111111111111111111111111111000111111111111111111111111111111111111
-4 U
+4
 G 4 13 L
 G 5 13 L
 K 6 13 R

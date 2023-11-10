@@ -19,6 +19,12 @@ struct EnemyPosition {
     char dir;
 };
 
+struct IntBlockPosition {
+    glm::ivec2 pos;
+    char type;
+    char objectInside;
+};
+
 class TileMap
 {
 
@@ -60,6 +66,7 @@ public:
     MapColor getMapColor() const { return enemiesColor; }
     std::vector<EnemyPosition> getGoombas() const { return goombas; }
     std::vector<EnemyPosition> getKoopas() const { return koopas; }
+    std::vector<IntBlockPosition> getInteractiveBlocks() const { return interactiveBlocks; }
 
 private:
 	bool loadLevel(const string &levelFile);
@@ -82,6 +89,7 @@ private:
     MapColor enemiesColor;
     std::vector<EnemyPosition> goombas;
     std::vector<EnemyPosition> koopas;
+    std::vector<IntBlockPosition> interactiveBlocks;
 };
 
 
