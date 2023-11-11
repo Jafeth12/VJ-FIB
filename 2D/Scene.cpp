@@ -145,8 +145,8 @@ void Scene::update(float deltaTime, Player *player)
 
     if (!isFinishing) camera->setXPosition(playerPos.x - initPlayerTiles.x * map->getTileSize());
 
-    // if a second has passed, decrement time left
-    if (currentTime - lastSecondTime > 1.0f) {
+    // if a quarter of a second has passed, decrement time left
+    if (currentTime - lastSecondTime > 0.4f) {
         lastSecondTime = currentTime;
         hud->decrementTimeLeft();
     }
