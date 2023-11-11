@@ -276,10 +276,6 @@ void Scene::update(float deltaTime, Player *player)
     // Player - interactiveBlocks
     for (unsigned i = 0; i < bricks.size(); ++i) {
         if (player->collidesWith(*bricks[i])) {
-            // if (bricks[i]->canActivate() && player->isBig()) {
-            //     bricks[i]->activate();
-            // }
-
             if (bricks[i]->canActivate()) {
                 if (player->isBig()) {
                     bricks[i]->activate();
@@ -295,6 +291,27 @@ void Scene::update(float deltaTime, Player *player)
         if (player->collidesWith(*interrogations[i])) {
             if (interrogations[i]->canActivate()) {
                 interrogations[i]->activate();
+
+                glm::ivec2 pos = interrogations[i]->getPos();
+                Interrogation::BlockContent content = interrogations[i]->getObjectInside();
+
+                switch (content) {
+                    case Interrogation::BlockContent::COIN:
+                        break;
+                    case Interrogation::BlockContent::MUSHROOM:
+                        for (unsigned i = 0; i < mushrooms.size(); ++i) {
+                            if (mushrooms[i]->getPos() == glm::ivec2(pos.x, pos.y - map->getTileSize())) {
+                                mushrooms[i]->activate();
+                                SoundEngine::instance().playPowerup();
+                            }
+                        }
+                        break;
+                    case Interrogation::BlockContent::STAR:
+                        // TODO
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -308,13 +325,16 @@ void Scene::update(float deltaTime, Player *player)
         }
     }
 
-    // for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
-    //     if (player->collidesWith(*interactiveBlocks[i])) {
-    //         if (interactiveBlocks[i]->canActivate() && player->isBig()) {
-    //             interactiveBlocks[i]->activate();
-    //         }
-    //     }
-    // }
+    for (unsigned i = 0; i < mushrooms.size(); ++i) {
+        mushrooms[i]->update(deltaTime);
+
+        if (player->collidesWith(*mushrooms[i]) && mushrooms[i]->canBeConsumed()) {
+            mushrooms[i]->consume();
+            player->makeBig();
+            SoundEngine::instance().playGrow();
+            Game::instance().addScore(SCORE_POWERUP);
+        }
+    }
 
 }
 
@@ -371,9 +391,11 @@ void Scene::render() {
             interrogations[i]->render();
     }
 
-    // for (unsigned i = 0; i < interactiveBlocks.size(); ++i)
-    //     if (interactiveBlocks[i]->shouldRender())
-    //         interactiveBlocks[i]->render();
+    for (unsigned i = 0; i < mushrooms.size(); ++i) {
+        if (mushrooms[i]->canBeConsumed())
+            mushrooms[i]->render();
+    }
+
     for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].render();
     for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].render();
 
@@ -438,19 +460,21 @@ void Scene::initEnemies() {
 void Scene::initInteractiveBlocks() {
     auto interactiveBlocksPos = map->getInteractiveBlocks();
     for (unsigned i = 0; i < interactiveBlocksPos.size(); ++i) {
+        glm::ivec2 pos = interactiveBlocksPos[i].pos;
         if (interactiveBlocksPos[i].type == BRICK) {
-            bricks.push_back(new Brick(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, *texProgram, map->getTexture(), map->getMapColor()));
+            bricks.push_back(new Brick(glm::ivec2(0, 16), map, pos, *texProgram, map->getTexture(), map->getMapColor()));
         }
         else if (interactiveBlocksPos[i].type == INTERROGATION) {
             switch (interactiveBlocksPos[i].object) {
             case COIN:
-                interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, *texProgram, map->getTexture(), map->getMapColor(), Interrogation::BlockContent::COIN));
+                interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, pos, *texProgram, map->getTexture(), map->getMapColor(), Interrogation::BlockContent::COIN));
                 break;
             case MUSHROOM:
-                interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, *texProgram, map->getTexture(), map->getMapColor(), Interrogation::BlockContent::MUSHROOM));
+                interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, pos, *texProgram, map->getTexture(), map->getMapColor(), Interrogation::BlockContent::MUSHROOM));
+                mushrooms.push_back(new Mushroom(glm::ivec2(pos.x, pos.y - 1), *texProgram, map, isOverworld));
                 break;
             case STAR:
-                interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, *texProgram, map->getTexture(), map->getMapColor(), Interrogation::BlockContent::STAR));
+                interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, pos, *texProgram, map->getTexture(), map->getMapColor(), Interrogation::BlockContent::STAR));
                 break;
             default:
                 break;

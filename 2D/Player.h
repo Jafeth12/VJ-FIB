@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Coin.h"
 #include "InteractiveBlock.h"
+#include "Mushroom.h"
 #include "Sprite.h"
 #include "TileMap.h"
 #include "Enemy.h"
@@ -38,6 +39,7 @@ public:
     bool collidesWith(const Enemy &enemy) const;
     bool collidesWith(const InteractiveBlock &block) const;
     bool collidesWith(const Coin &coin) const;
+    bool collidesWith(const Mushroom &coin) const;
 
     /**
      * @brief Retorna el ángulo entre la recta
@@ -57,6 +59,8 @@ public:
 
     void makeAlive();
     void makeSmall();
+    void makeBig();
+    void makeStar();
 
     int getCurrentStarFrame();
     void moveTo(const glm::vec2 &pos);

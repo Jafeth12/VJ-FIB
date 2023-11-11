@@ -15,7 +15,7 @@ class Coin
         void update(float deltaTime);
         void render();
 
-        glm::ivec2 getSize() const { return glm::ivec2(16, 32); };
+        glm::ivec2 getSize() const { return glm::ivec2(32, 32); };
         glm::ivec2 getPos() const { return pos; };
 
         void setPos(glm::ivec2 pos);

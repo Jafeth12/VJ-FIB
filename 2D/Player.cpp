@@ -309,12 +309,9 @@ void Player::update(float deltaTime)
     updateAnimation(leftPressed, rightPressed, deltaTime);
 
     // Shortcuts
-    if (Game::instance().getKey('S')) { setState(State::SMALL); }
-    if (Game::instance().getKey('M')) { setState(State::BIG); }
-    if (Game::instance().getKey('G')) {
-        if (statePlayer == State::SMALL || statePlayer == State::SMALL_STAR) setState(State::SMALL_STAR);
-        else if (statePlayer == State::BIG || statePlayer == State::BIG_STAR) setState(State::BIG_STAR);
-    }
+    if (Game::instance().getKey('S')) { makeSmall(); }
+    if (Game::instance().getKey('M')) { makeBig(); }
+    if (Game::instance().getKey('G')) { makeStar(); }
 
     // The real deal. Update the state of the player.
     // Basically based on time.
@@ -334,15 +331,6 @@ void Player::update(float deltaTime)
 	// Set the new position of the player
     setPosition(posPlayer);
 
-    // // Interactwith the map tiles
-    // if (map->headUnderTile(posPlayer, getSize())) {
-    //     auto tile = map->tileOverHead(posPlayer, getSize());
-    //     if (map->isBrickTile(tile)) {
-    //         if (statePlayer == State::BIG || statePlayer == State::BIG_STAR)
-    //             map->destroyBrickTile(tile);
-    //     }
-    // }
-
 }
 
 void Player::render()
@@ -352,11 +340,16 @@ void Player::render()
         shaderProgram->use();
         shaderProgram->setUniform1i("starEffect", 1);
         shaderProgram->setUniform1i("starFrame", currentStarFrame);
+    } else if (statePlayer == State::JUST_TOOK_DAMAGE) {
+        shaderProgram->use();
+        shaderProgram->setUniform1i("justTookDamage", 1);
+        shaderProgram->setUniform1i("starFrame", currentStarFrame);
     }
 
 	sprite->render();
 
     if (isStar()) shaderProgram->setUniform1i("starEffect", 0);
+    if (statePlayer == State::JUST_TOOK_DAMAGE) shaderProgram->setUniform1i("justTookDamage", 0);
 }
 
 void Player::setTileMap(TileMap *tileMap)
@@ -423,6 +416,19 @@ bool Player::collidesWith(const Coin &coin) const {
     glm::ivec2 playerCenter = posPlayer + getSize()/2;
     glm::ivec2 dist = glm::abs(coinCenter - playerCenter);
     glm::ivec2 minDist = (getSize() + coinSize)/2;
+    if (dist.x < minDist.x && dist.y < minDist.y) {
+        return true;
+    }
+    return false;
+}
+
+bool Player::collidesWith(const Mushroom &mushroom) const {
+    glm::ivec2 mushroomSize = mushroom.getSize();
+    glm::ivec2 mushroomPos = mushroom.getPos();
+    glm::ivec2 mushroomCenter = mushroomPos + mushroomSize/2;
+    glm::ivec2 playerCenter = posPlayer + getSize()/2;
+    glm::ivec2 dist = glm::abs(mushroomCenter - playerCenter);
+    glm::ivec2 minDist = (getSize() + mushroomSize)/2;
     if (dist.x < minDist.x && dist.y < minDist.y) {
         return true;
     }
@@ -739,7 +745,7 @@ void Player::updatePlayerState(float deltaTime) {
             }
             break;
         case State::JUST_TOOK_DAMAGE:
-            if (timeCurrentState > 8.f) {
+            if (timeCurrentState > 3.f) {
                 setState(State::SMALL);
                 timeCurrentState = 0.f;
             }
@@ -795,9 +801,10 @@ void Player::stepOnEnemy() {
 }
 
 void Player::takeDamage() {
-    if (statePlayer == State::BIG)
+    if (statePlayer == State::BIG) {
         setState(State::JUST_TOOK_DAMAGE);
-    else {
+        SoundEngine::instance().playPowerdown();
+    } else {
         setState(State::DYING);
         SoundEngine::instance().stopAllSounds();
         SoundEngine::instance().playDie();
@@ -828,6 +835,17 @@ void Player::makeAlive() {
 
 void Player::makeSmall() {
     setState(State::SMALL);
+}
+
+void Player::makeBig() {
+    setState(State::BIG);
+}
+
+void Player::makeStar() {
+    if (statePlayer == State::BIG)
+        setState(State::BIG_STAR);
+    else 
+        setState(State::SMALL_STAR);
 }
 
 int Player::getCurrentStarFrame() {
@@ -919,7 +937,5 @@ Player::FinishingState Player::getFinishingState() {
 }
 
 void Player::updateStarFrame() {
-    if (statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR) {
-        currentStarFrame = (currentStarFrame + 1) % 3;
-    }
+    currentStarFrame = (currentStarFrame + 1) % 3;
 }

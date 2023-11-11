@@ -15,6 +15,8 @@ class Interrogation : public InteractiveBlock
         void activate() override;
         ~Interrogation() override;
 
+        BlockContent getObjectInside() const { return content; };
+
     private:
         BlockContent content;
 };

@@ -37,6 +37,9 @@ public:
     void playGameOver();
     void playBump();
     void playHurryUp();
+    void playGrow();
+    void playPowerup();
+    void playPowerdown();
 
     bool isMainThemePlaying() { return !mainTheme->getIsPaused(); }
 
@@ -49,6 +52,7 @@ private:
     irrklang::ISoundSource *coin;
     irrklang::ISoundSource *game_over;
     irrklang::ISoundSource *stomp;
+    irrklang::ISoundSource *grow;
     irrklang::ISoundSource *jump_big;
     irrklang::ISoundSource *stage_clear;
     irrklang::ISoundSource *flagpole;
@@ -56,6 +60,8 @@ private:
     irrklang::ISoundSource *break_block;
     irrklang::ISoundSource *bump;
     irrklang::ISoundSource *hurry_up;
+    irrklang::ISoundSource *powerup;
+    irrklang::ISoundSource *powerdown;
 
     bool isPlayingSound;
 

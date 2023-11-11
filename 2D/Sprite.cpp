@@ -3,6 +3,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Sprite.h"
 
+Sprite::Sprite() {
+    texture = NULL;
+    shaderProgram = NULL;
+    position = glm::vec2(0.f);
+}
 
 Sprite *Sprite::createSprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program)
 {

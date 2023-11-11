@@ -13,7 +13,10 @@ class Koopa : public Enemy {
         void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, TileMap::MapColor color, Enemy::Dir initialDirection, const glm::ivec2 &initPos) override;
         void update(float deltaTime, const glm::ivec2 &playerPos);
 
-        glm::ivec2 getSize() const override { return KOOPA_SIZE; };
+        glm::ivec2 getSize() const override { 
+            if (currentState == State::SHELL) return KOOPA_SHELL_SIZE; 
+            return KOOPA_SIZE; 
+        };
 
         void becomeShell() { currentState = State::SHELL; vel.x = 0.f; dir = Dir::NONE; };
         void kick(Dir dir);

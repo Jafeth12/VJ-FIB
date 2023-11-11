@@ -21,7 +21,9 @@ void SoundEngine::init() {
     break_block = engine->addSoundSourceFromFile("sounds/breakblock.wav");
     bump = engine->addSoundSourceFromFile("sounds/bump.wav");
     hurry_up = engine->addSoundSourceFromFile("sounds/hurry.wav");
-    // hurry_up = engine->addSoundSourceFromFile("sounds/warning_time.wav");
+    grow = engine->addSoundSourceFromFile("sounds/grows.wav");
+    powerup = engine->addSoundSourceFromFile("sounds/powerup.wav");
+    powerdown = engine->addSoundSourceFromFile("sounds/pipe_powerdown.wav");
 }
 
 SoundEngine::~SoundEngine() {
@@ -105,3 +107,17 @@ void SoundEngine::playGameOver() {
     isPlayingSound = true;
 }
 
+void SoundEngine::playGrow() {
+    engine->play2D(grow, false);
+    isPlayingSound = true;
+}
+
+void SoundEngine::playPowerup() {
+    engine->play2D(powerup, false);
+    isPlayingSound = true;
+}
+
+void SoundEngine::playPowerdown() {
+    engine->play2D(powerdown, false);
+    isPlayingSound = true;
+}

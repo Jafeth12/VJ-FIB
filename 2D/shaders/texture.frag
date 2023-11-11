@@ -4,6 +4,7 @@ uniform vec4 color;
 uniform sampler2D tex;
 
 uniform int starEffect;
+uniform int justTookDamage;
 uniform int starFrame;
 
 in vec2 texCoordFrag;
@@ -12,6 +13,10 @@ out vec4 outColor;
 vec4 STAR_COLOR0 = vec4(1.5, 1.5, 1.5, 1.0);
 vec4 STAR_COLOR1 = vec4(0.3, 0.3, 0.3, 1.0);
 vec4 STAR_COLOR2 = vec4(0.0, 0.5, 0.0, 1.0);
+
+vec4 DAMAGE_COLOR0 = vec4(0.2, 0.2, 0.2, 0.2);
+vec4 DAMAGE_COLOR1 = vec4(0.5, 0.5, 0.5, 0.2);
+vec4 DAMAGE_COLOR2 = vec4(0.8, 0.8, 0.8, 0.2);
 
 void main()
 {
@@ -32,6 +37,21 @@ void main()
                 colorModifier = STAR_COLOR2;
                 break;
         }
+    }
+
+    if (justTookDamage == 1) {
+        switch (starFrame) {
+            case 0:
+                colorModifier = DAMAGE_COLOR0;
+                break;
+            case 1:
+                colorModifier = DAMAGE_COLOR1;
+                break;
+            case 2:
+                colorModifier = DAMAGE_COLOR2;
+                break;
+        }
+
     }
 
 	if(texColor.a < 0.5f)
