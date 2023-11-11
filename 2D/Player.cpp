@@ -809,6 +809,10 @@ void Player::makeAlive() {
     sprite->changeAnimation(getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::SMALL));
 }
 
+void Player::makeSmall() {
+    setState(State::SMALL);
+}
+
 int Player::getCurrentStarFrame() {
     return currentStarFrame;
 }

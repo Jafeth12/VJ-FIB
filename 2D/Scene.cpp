@@ -284,13 +284,14 @@ void Scene::update(float deltaTime, Player *player)
 
     if (hud->isTimeLeftZero()) {
         // hay que hacer que player se peke priemro
+        player->makeSmall();
         player->takeDamage();
     }
 
     // Player - interactiveBlocks
     for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
         if (player->collidesWith(*interactiveBlocks[i])) {
-            if (interactiveBlocks[i]->canActivate()) {
+            if (interactiveBlocks[i]->canActivate() && player->isBig()) {
                 interactiveBlocks[i]->activate();
             }
         }

@@ -53,8 +53,8 @@ public:
     void takeMushroom();
     void takeStar();
 
-
     void makeAlive();
+    void makeSmall();
 
     int getCurrentStarFrame();
     void moveTo(const glm::vec2 &pos);
