@@ -7,7 +7,8 @@ void SoundEngine::init() {
         std::cout << "Error creating sound engine" << std::endl;
     }
 
-    mainTheme = engine->addSoundSourceFromFile("sounds/main_theme.wav");
+    mainTheme = engine->play2D("sounds/main_theme.wav", true, true, true);
+    mainTheme->setIsPaused(true);
     jump = engine->addSoundSourceFromFile("sounds/jump.wav");
     die = engine->addSoundSourceFromFile("sounds/die.wav");
     coin = engine->addSoundSourceFromFile("sounds/coin.wav");
@@ -19,6 +20,8 @@ void SoundEngine::init() {
     kick = engine->addSoundSourceFromFile("sounds/kick.wav");
     break_block = engine->addSoundSourceFromFile("sounds/breakblock.wav");
     bump = engine->addSoundSourceFromFile("sounds/bump.wav");
+    hurry_up = engine->addSoundSourceFromFile("sounds/hurry.wav");
+    // hurry_up = engine->addSoundSourceFromFile("sounds/warning_time.wav");
 }
 
 SoundEngine::~SoundEngine() {
@@ -30,8 +33,20 @@ void SoundEngine::stopAllSounds() {
     isPlayingSound = false;
 }
 
-void SoundEngine::playMainTheme() {
-    engine->play2D(mainTheme, true);
+void SoundEngine::playMainTheme(float playbackSpeed) {
+    mainTheme = engine->play2D("sounds/main_theme.wav", true, false, true);
+    mainTheme->setPlaybackSpeed(playbackSpeed);
+    // engine->play2D(mainTheme, true);
+    isPlayingSound = true;
+}
+
+void SoundEngine::stopMainTheme() {
+    mainTheme->setIsPaused(true);
+    isPlayingSound = false;
+}
+
+void SoundEngine::playHurryUp() {
+    engine->play2D(hurry_up, false);
     isPlayingSound = true;
 }
 

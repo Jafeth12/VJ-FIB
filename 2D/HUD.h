@@ -29,6 +29,7 @@ public:
     void setTimeLeft(int timeLeft);
     void decrementTimeLeft();
     bool isTimeLeftZero() { return timeLeft == 0; }
+    int getTimeLeft() { return timeLeft; }
 
     void showTimeLeft() { renderTimeLeft = true; }
     void hideTimeLeft() { renderTimeLeft = false; }

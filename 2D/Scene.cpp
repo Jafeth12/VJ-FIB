@@ -149,6 +149,10 @@ void Scene::update(float deltaTime, Player *player)
     if (currentTime - lastSecondTime > 0.4f) {
         lastSecondTime = currentTime;
         hud->decrementTimeLeft();
+        if (hud->getTimeLeft() == 100) {
+            SoundEngine::instance().stopMainTheme();
+            SoundEngine::instance().playHurryUp();
+        }
     }
 
     if (hud->isTimeLeftZero()) {

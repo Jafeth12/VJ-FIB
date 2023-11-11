@@ -23,7 +23,8 @@ public:
 
     void stopAllSounds();
 
-    void playMainTheme();
+    void playMainTheme(float playbackSpeed = 1);
+    void stopMainTheme();
     void playJump();
     void playJumpBig();
     void playStageClear();
@@ -35,11 +36,14 @@ public:
     void playCoin();
     void playGameOver();
     void playBump();
+    void playHurryUp();
+
+    bool isMainThemePlaying() { return !mainTheme->getIsPaused(); }
 
 private:
     irrklang::ISoundEngine *engine;
 
-    irrklang::ISoundSource *mainTheme;
+    irrklang::ISound *mainTheme;
     irrklang::ISoundSource *jump;
     irrklang::ISoundSource *die;
     irrklang::ISoundSource *coin;
@@ -51,6 +55,7 @@ private:
     irrklang::ISoundSource *kick;
     irrklang::ISoundSource *break_block;
     irrklang::ISoundSource *bump;
+    irrklang::ISoundSource *hurry_up;
 
     bool isPlayingSound;
 

@@ -101,6 +101,10 @@ bool Game::update(float deltaTime)
                     --lives;
                     player->makeAlive();
 
+                    if (hud.isTimeLeftZero()) {
+                        hud.setTimeLeft(400);
+                    }
+
                     if (lives == 0) {
                         currentState = GAME_MENU;
                         menu.setMenuState(MainMenu::MenuState::TITLE);
@@ -113,6 +117,7 @@ bool Game::update(float deltaTime)
                         loadingScene.setLives(lives);
                         break;
                     }
+
 
                     loadingScene.setLives(lives);
                     changeScene(currentSceneIndex);
