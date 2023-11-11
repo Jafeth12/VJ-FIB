@@ -108,7 +108,7 @@ void Scene::update(float deltaTime, Player *player)
 
         if (flagSprite != NULL) {
             glm::vec2 flagPos = flagSprite->getPosition();
-            glm::vec2 newPos = glm::vec2(flagPos.x, flagPos.y + 2);
+            glm::vec2 newPos = glm::vec2(flagPos.x, flagPos.y + 4);
 
             bool collision = map->onGround(newPos, glm::ivec2(32, 32));
             if (!collision) {
@@ -121,20 +121,14 @@ void Scene::update(float deltaTime, Player *player)
 
         switch (finishingState) {
             case Player::FinishingState::POLE:
-                if (!isFinishing) {
-                    // play pole sound;
-                }
                 break;
             case Player::FinishingState::WALKING_TO_CASTLE:
-                if (!isFinishing) {
-                    // play end sound
-                }
-
                 break;
             case Player::FinishingState::ON_CASTLE:
                 Game::instance().stopRenderingPlayer();
 
                 static float timeAtFinishingState = currentTime;
+                if (timeAtFinishingState == 0) timeAtFinishingState = currentTime;
 
                 if (currentTime - timeAtFinishingState > timeToWait) {
                     isOver = true;
@@ -211,6 +205,7 @@ void Scene::update(float deltaTime, Player *player)
             if (goombas[i].shouldCollide() && koopas[j].shouldCollide() && goombas[i].collidesWith(koopas[j])) {
                 if (koopas[j].isMovingShell()) {
                     goombas[i].dieLateral();
+                    SoundEngine::instance().playKick();
                 } else {
                     goombas[i].invertDirection();
                     koopas[j].invertDirection();
@@ -224,6 +219,7 @@ void Scene::update(float deltaTime, Player *player)
                 if (koopas[i].isMovingShell() ^ koopas[j].isMovingShell()) {
                     if (koopas[i].isMovingShell()) {
                         koopas[j].dieLateral();
+                        SoundEngine::instance().playKick();
                     } else {
                         koopas[i].dieLateral();
                     }
@@ -240,6 +236,7 @@ void Scene::update(float deltaTime, Player *player)
             if (glm::abs(alpha) <= ANGLE_TO_DIE) {
                 goombas[i].dieVertical();
                 player->stepOnEnemy();
+                SoundEngine::instance().playStomp();
                 Game::instance().addScore(SCORE_STOMP);
             }
             else {
@@ -261,6 +258,7 @@ void Scene::update(float deltaTime, Player *player)
                 if (glm::abs(alpha) <= ANGLE_TO_DIE) {
                     koopas[i].dieVertical();
                     player->stepOnEnemy();
+                    SoundEngine::instance().playStomp();
                     Game::instance().addScore(SCORE_STOMP);
                 }
                 else {
@@ -274,15 +272,24 @@ void Scene::update(float deltaTime, Player *player)
     // Player - interactiveBlocks
     for (unsigned i = 0; i < bricks.size(); ++i) {
         if (player->collidesWith(*bricks[i])) {
-            if (bricks[i]->canActivate() && player->isBig()) {
-                bricks[i]->activate();
+            // if (bricks[i]->canActivate() && player->isBig()) {
+            //     bricks[i]->activate();
+            // }
+
+            if (bricks[i]->canActivate()) {
+                if (player->isBig()) {
+                    bricks[i]->activate();
+                    SoundEngine::instance().playBreakBlock();
+                } else {
+                    SoundEngine::instance().playBump();
+                }
             }
         }
     }
 
     for (unsigned i = 0; i < interrogations.size(); ++i) {
         if (player->collidesWith(*interrogations[i])) {
-            if (interrogations[i]->canActivate() && player->isBig()) {
+            if (interrogations[i]->canActivate()) {
                 interrogations[i]->activate();
             }
         }

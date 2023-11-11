@@ -5,6 +5,8 @@
 #define SCENE_0_INIT_PLAYER_TILES glm::ivec2(3, 13)
 #define SCENE_1_INIT_PLAYER_TILES glm::ivec2(3, 13)
 
+#define LIVES 3
+
 Game::~Game() {}
 
 void Game::init()
@@ -22,7 +24,7 @@ void Game::init()
     SoundEngine::instance().init();
 
     totalScore = 0;
-    lives = 3;
+    lives = LIVES;
 
     hud.init(shaderProgram);
 
@@ -39,8 +41,8 @@ void Game::init()
     scenes[currentSceneIndex]->setBackground("levels/background01.txt");
 
 	// scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
-	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
-    // scenes[currentSceneIndex+1]->setBackground("levels/background01.txt");
+	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
+    scenes[currentSceneIndex+1]->setBackground("levels/background01.txt");
 
     TileMap *map = scenes[currentSceneIndex]->getMap();
     TileMap *backgroundMap = scenes[currentSceneIndex]->getBackgroundMap();
@@ -107,12 +109,12 @@ bool Game::update(float deltaTime)
                         hud.setCoins(0);
                         menu.setTopScore(totalScore);
                         totalScore = 0;
-                        lives = 3;
+                        lives = LIVES;
+                        loadingScene.setLives(lives);
                         break;
                     }
 
                     loadingScene.setLives(lives);
-
                     changeScene(currentSceneIndex);
                     break;
                 }
@@ -128,7 +130,7 @@ bool Game::update(float deltaTime)
                     hud.setCoins(0);
                     menu.setTopScore(totalScore);
                     totalScore = 0;
-                    lives = 3;
+                    lives = LIVES;
                     loadingScene.setLives(lives);
                 }
             }

@@ -262,6 +262,8 @@ void Player::update(float deltaTime)
     if (!isFinishing && headOnFinishingTile) {
         isFinishing = true;
         finishingState = FinishingState::POLE;
+        SoundEngine::instance().stopAllSounds();
+        SoundEngine::instance().playFlagpole();
         return;
     }
 
@@ -490,7 +492,8 @@ void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
     if (shouldJump) {
         velPlayer.y = JUMP_VEL;
         bJumping = true;
-        SoundEngine::instance().playJump();
+        if (statePlayer == State::BIG || statePlayer == State::BIG_STAR) SoundEngine::instance().playJumpBig();
+        else SoundEngine::instance().playJump();
     }
 }
 
@@ -796,6 +799,8 @@ void Player::takeDamage() {
         setState(State::JUST_TOOK_DAMAGE);
     else {
         setState(State::DYING);
+        SoundEngine::instance().stopAllSounds();
+        SoundEngine::instance().playDie();
         yState = UPWARDS;
         velPlayer = glm::vec2(0, 500);
     }
@@ -858,7 +863,7 @@ void Player::updatePoleAnimation(float deltaTime) {
 
     if (finishingState == FinishingState::POLE) {
         glm::ivec2 next_pos = posPlayer;
-        next_pos.y += 2;
+        next_pos.y += 4;
 
         bool collisionsy = true;
 
@@ -877,6 +882,10 @@ void Player::updatePoleAnimation(float deltaTime) {
             glm::ivec2 castleDoorPos = glm::ivec2(castleDoorTile.x * backgroundMap->getTileSize(), castleDoorTile.y * backgroundMap->getTileSize());
 
             moveTo(castleDoorPos);
+
+            SoundEngine::instance().stopAllSounds();
+            SoundEngine::instance().playStageClear();
+
             finishingState = FinishingState::WALKING_TO_CASTLE;
 
             velPlayer = glm::vec2(0.f);

@@ -25,9 +25,16 @@ public:
 
     void playMainTheme();
     void playJump();
+    void playJumpBig();
+    void playStageClear();
+    void playFlagpole();
+    void playStomp();
+    void playKick();
+    void playBreakBlock();
     void playDie();
     void playCoin();
     void playGameOver();
+    void playBump();
 
 private:
     irrklang::ISoundEngine *engine;
@@ -37,6 +44,13 @@ private:
     irrklang::ISoundSource *die;
     irrklang::ISoundSource *coin;
     irrklang::ISoundSource *game_over;
+    irrklang::ISoundSource *stomp;
+    irrklang::ISoundSource *jump_big;
+    irrklang::ISoundSource *stage_clear;
+    irrklang::ISoundSource *flagpole;
+    irrklang::ISoundSource *kick;
+    irrklang::ISoundSource *break_block;
+    irrklang::ISoundSource *bump;
 
     bool isPlayingSound;
 
