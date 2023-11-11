@@ -3,6 +3,9 @@
 #include "TileMap.h"
 
 
+Coin::Coin(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map) {
+    init(shaderProgram, pos, map);
+}
 
 void Coin::init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map) {
 
@@ -32,6 +35,8 @@ void Coin::init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map) {
 
     sprite->changeAnimation(0);
 
+    pos.x *= map->getTileSize();
+    pos.y *= map->getTileSize();
     setPos(pos);
 }
 

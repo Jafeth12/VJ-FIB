@@ -27,6 +27,10 @@ struct IntBlockPosition {
     ObjectType object;
 };
 
+struct CoinPosition {
+    glm::ivec2 pos;
+};
+
 class TileMap
 {
 
@@ -77,6 +81,7 @@ public:
     std::vector<EnemyPosition> getGoombas() const { return goombas; }
     std::vector<EnemyPosition> getKoopas() const { return koopas; }
     std::vector<IntBlockPosition> getInteractiveBlocks() const { return interactiveBlocks; }
+    std::vector<CoinPosition> getCoins() const { return coins; }
 
 private:
 	bool loadLevel(const string &levelFile);
@@ -102,6 +107,7 @@ private:
     glm::vec2 casteDoorCoords;
     glm::vec2 poleHeadCoords;
     std::vector<IntBlockPosition> interactiveBlocks;
+    std::vector<CoinPosition> coins;
 };
 
 

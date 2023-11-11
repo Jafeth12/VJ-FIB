@@ -7,11 +7,15 @@
 class Coin
 {
     public:
+        Coin() {};
+        Coin(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map);
+        ~Coin() {};
+
         void init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map);
         void update(float deltaTime);
         void render();
 
-        glm::ivec2 getSize() const { return glm::ivec2(8, 16); };
+        glm::ivec2 getSize() const { return glm::ivec2(16, 32); };
         glm::ivec2 getPos() const { return pos; };
 
         void setPos(glm::ivec2 pos);

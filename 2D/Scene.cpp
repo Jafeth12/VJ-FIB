@@ -93,8 +93,11 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
             }
         }
 
-        coins.resize(1);
-        coins[0].init(shaderProgram, glm::ivec2(0, 16), map);
+        auto coinsPos = map->getCoins();
+        for (unsigned i = 0; i < coinsPos.size(); ++i) {
+            coins.push_back(new Coin(shaderProgram, coinsPos[i].pos, map));
+        }
+
     }
 
 }
@@ -118,7 +121,7 @@ void Scene::update(float deltaTime, Player *player)
         return;
     }
 
-    for (unsigned i = 0; i < coins.size(); ++i) coins[i].update(deltaTime);
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i]->update(deltaTime);
     for (unsigned i = 0; i < bricks.size(); ++i) bricks[i]->update(deltaTime);
     for (unsigned i = 0; i < interrogations.size(); ++i) interrogations[i]->update(deltaTime);
     // for (unsigned i = 0; i < interactiveBlocks.size(); ++i) interactiveBlocks[i]->update(deltaTime);
@@ -364,7 +367,7 @@ void Scene::render() {
     if (foreground != NULL) foreground->render();
     if (flagSprite != NULL) flagSprite->render();
 
-    for (unsigned i = 0; i < coins.size(); ++i) coins[i].render();
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i]->render();
 
     for (unsigned i = 0; i < bricks.size(); ++i) {
         if (bricks[i]->shouldRender())

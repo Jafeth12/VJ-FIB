@@ -69,7 +69,7 @@ protected:
     std::vector<Brick*> bricks;
     std::vector<Interrogation*> interrogations;
 
-    std::vector<Coin> coins;
+    std::vector<Coin*> coins;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;

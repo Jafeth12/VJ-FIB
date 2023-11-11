@@ -118,6 +118,10 @@ bool TileMap::loadLevel(const string &levelFile)
                     else if (tile == '/') interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), INTERROGATION, STAR } );
                     map[j*mapSize.x+i] = 'o' - int('0');
                 }
+                else if (tile == ',') {
+                    coins.push_back( CoinPosition { glm::ivec2(i, j) } );
+                    map[j*mapSize.x+i] = 0;
+                }
                 else if (tile == POLE_HEAD) {
                     poleHeadCoords = glm::ivec2(i, j);
                     map[j*mapSize.x+i] = tile - int('0');
