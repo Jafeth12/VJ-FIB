@@ -138,7 +138,6 @@ bool TileMap::loadLevel(const string &levelFile)
 
     unsigned nEnemies;
 	getline(fin, line);
-	sstream.clear();
 	sstream.str(line);
 	sstream >> nEnemies;
 
@@ -153,6 +152,7 @@ bool TileMap::loadLevel(const string &levelFile)
         glm::ivec2 enemyPos;
 
         getline(fin, line);
+        sstream.clear();
         sstream.str(line);
         sstream >> enemyType >> enemyPos.x >> enemyPos.y >> dir;
 
