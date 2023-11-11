@@ -86,6 +86,8 @@ protected:
     bool isOver;
     bool isFinishing;
 
+    bool isOverworld;
+
 private:
     void resetFlagPosition();
     void initEnemies(ShaderProgram &program);
