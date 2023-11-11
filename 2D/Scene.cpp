@@ -109,6 +109,19 @@ void Scene::update(float deltaTime, Player *player)
     currentTime += deltaTime;
     player->update(deltaTime);
 
+    // if a second has passed, decrement time left
+    if (currentTime - lastSecondTime > 1.0f) {
+        lastSecondTime = currentTime;
+        hud->decrementTimeLeft();
+    }
+
+    if (hud->isTimeLeftZero()) {
+        // hay que hacer que player se peke priemro
+        player->makeSmall();
+        player->takeDamage();
+        return;
+    }
+
     if (player->isDead() || player->isDying()) {
         static float timeAtDeath = currentTime;
         if (timeAtDeath == 0) timeAtDeath = currentTime;
@@ -290,17 +303,6 @@ void Scene::update(float deltaTime, Player *player)
         }
     }
 
-    // if a second has passed, decrement time left
-    if (currentTime - lastSecondTime > 1.0f) {
-        lastSecondTime = currentTime;
-        hud->decrementTimeLeft();
-    }
-
-    if (hud->isTimeLeftZero()) {
-        // hay que hacer que player se peke priemro
-        player->makeSmall();
-        player->takeDamage();
-    }
 
     // Player - interactiveBlocks
     for (unsigned i = 0; i < bricks.size(); ++i) {
@@ -316,6 +318,14 @@ void Scene::update(float deltaTime, Player *player)
             if (interrogations[i]->canActivate() && player->isBig()) {
                 interrogations[i]->activate();
             }
+        }
+    }
+
+    for (unsigned i = 0; i < coins.size(); ++i) {
+        if (player->collidesWith(*coins[i]) && coins[i]->canTake()) {
+            coins[i]->take();
+            SoundEngine::instance().playCoin();
+            Game::instance().addScore(SCORE_COIN);
         }
     }
 

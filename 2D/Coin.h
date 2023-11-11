@@ -20,10 +20,15 @@ class Coin
 
         void setPos(glm::ivec2 pos);
 
+        void take();
+        bool canTake() const;
+
     private:
         Texture *texture;
         Sprite *sprite;
         TileMap *map;
+
+        bool isTaken = false;
 
         glm::ivec2 tileMapDispl;
         glm::ivec2 pos;

@@ -3,6 +3,7 @@
 
 
 #include "Camera.h"
+#include "Coin.h"
 #include "InteractiveBlock.h"
 #include "Sprite.h"
 #include "TileMap.h"
@@ -36,6 +37,7 @@ public:
 
     bool collidesWith(const Enemy &enemy) const;
     bool collidesWith(const InteractiveBlock &block) const;
+    bool collidesWith(const Coin &coin) const;
 
     /**
      * @brief Retorna el ángulo entre la recta

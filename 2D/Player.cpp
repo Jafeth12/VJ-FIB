@@ -414,6 +414,18 @@ bool Player::collidesWith(const InteractiveBlock &block) const {
     return false;
 }
 
+bool Player::collidesWith(const Coin &coin) const {
+    glm::ivec2 coinSize = coin.getSize();
+    glm::ivec2 coinPos = coin.getPos();
+    glm::ivec2 coinCenter = coinPos + coinSize/2;
+    glm::ivec2 playerCenter = posPlayer + getSize()/2;
+    glm::ivec2 dist = glm::abs(coinCenter - playerCenter);
+    glm::ivec2 minDist = (getSize() + coinSize)/2;
+    if (dist.x < minDist.x && dist.y < minDist.y) {
+        return true;
+    }
+    return false;
+}
 
 float Player::collisionAngle(const Enemy &enemy) const {
     // Puntos de interes:

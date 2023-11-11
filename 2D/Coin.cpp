@@ -11,7 +11,8 @@ void Coin::init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map) {
 
     this->map = map;
     this->texture = map->getTexture();
-    
+
+    isTaken = false;
 
     float sizeX = 32.f / texture->width();
     float sizeY = 32.f / texture->height();
@@ -41,11 +42,21 @@ void Coin::init(ShaderProgram &shaderProgram, glm::ivec2 pos, TileMap *map) {
 }
 
 void Coin::update(float deltaTime) {
+    if (isTaken) return;
     sprite->update(deltaTime);
 }
 
 void Coin::render() {
+    if (isTaken) return;
     sprite->render();
+}
+
+void Coin::take() {
+    isTaken = true;
+}
+
+bool Coin::canTake() const {
+    return !isTaken;
 }
 
 void Coin::setPos(glm::ivec2 pos) {
