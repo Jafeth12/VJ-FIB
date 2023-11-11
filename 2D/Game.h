@@ -19,6 +19,7 @@
 #define SCREEN_HEIGHT 512
 
 #define SCORE_STOMP 100
+#define SCORE_COIN 100
 #define SCREEN_X 0
 #define SCREEN_Y 16
 
