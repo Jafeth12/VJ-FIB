@@ -22,7 +22,7 @@ LoadingScene::~LoadingScene() {
 
 void LoadingScene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, glm::ivec2 minCoords) {
     initPlayerTiles = INIT_PLAYER_TILES;
-    Scene::init(shaderProgram, camera, hud, "", initPlayerTiles, minCoords, -2);
+    Scene::init(shaderProgram, camera, hud, " ", initPlayerTiles, minCoords, -2);
 
     worldNumber = -1;
     lives = -1;

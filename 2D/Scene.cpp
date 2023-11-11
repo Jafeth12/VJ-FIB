@@ -1,7 +1,8 @@
+#define _USE_MATH_DEFINES 
+#include <cmath>
 #include "Scene.h"
 #include "Game.h"
 #include <iostream>
-#include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Brick.h"
 #include "Interrogation.h"
@@ -84,10 +85,11 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
                 }
             }
         }
+
+        coins.resize(1);
+        coins[0].init(shaderProgram, glm::ivec2(0, 16), map);
     }
 
-    coins.resize(1);
-    coins[0].init(shaderProgram, glm::ivec2(0, 16), map);
 }
 
 void Scene::update(float deltaTime, Player *player)

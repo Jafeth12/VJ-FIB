@@ -11,9 +11,9 @@
 
 using namespace std;
 
-#define POLE 'X'-'0'
-#define POLE_HEAD 'D'-'0'
-#define CASTLE_DOOR 'K'-'0'
+#define POLE 'X'
+#define POLE_HEAD 'D'
+#define CASTLE_DOOR 'K'
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
@@ -118,6 +118,14 @@ bool TileMap::loadLevel(const string &levelFile)
                     else if (tile == '/') interactiveBlocks.push_back( IntBlockPosition { glm::ivec2(i, j), INTERROGATION, STAR } );
                     map[j*mapSize.x+i] = 'o' - int('0');
                 }
+                else if (tile == POLE_HEAD) {
+                    poleHeadCoords = glm::ivec2(i, j);
+                    map[j*mapSize.x+i] = tile - int('0');
+                }
+                else if (tile == CASTLE_DOOR) {
+                    casteDoorCoords = glm::ivec2(i, j);
+                    map[j*mapSize.x+i] = tile - int('0');
+                }
                 else
                     map[j*mapSize.x+i] = tile - int('0');
             }
@@ -130,6 +138,7 @@ bool TileMap::loadLevel(const string &levelFile)
 
     unsigned nEnemies;
 	getline(fin, line);
+	sstream.clear();
 	sstream.str(line);
 	sstream >> nEnemies;
 
@@ -268,7 +277,7 @@ bool TileMap::headOnFinishingTile(const glm::ivec2 &pos, const glm::ivec2 &size)
     for (int x = x0; x<=x1; ++x)
     {
         char tile = map[tsPixelOverPlayer*mapSize.x+x];
-		if(tile == POLE || tile == POLE_HEAD)
+		if(tile == POLE-'0' || tile == POLE_HEAD-'0')
 		{
             return true;
         }

@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <glm/common.hpp>
 #include <glm/fwd.hpp>
