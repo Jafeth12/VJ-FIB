@@ -70,6 +70,7 @@ public:
 
     // Interact with the map
     void destroyBrickTile(const glm::ivec2 &tileCoord);
+    void placeTile(const glm::ivec2 &tileCoord, int tileType);
 
 
     MapColor getMapColor() const { return enemiesColor; }

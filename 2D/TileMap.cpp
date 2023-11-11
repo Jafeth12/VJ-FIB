@@ -422,3 +422,8 @@ void TileMap::destroyBrickTile(const glm::ivec2 &tileCoord) {
     map[tileCoord.y * mapSize.x + tileCoord.x] = 0;
     remesh();
 }
+
+void TileMap::placeTile(const glm::ivec2 &tileCoord, int tileType) {
+    map[tileCoord.y * mapSize.x + tileCoord.x] = tileType;
+    remesh();
+}

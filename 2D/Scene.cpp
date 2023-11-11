@@ -33,7 +33,9 @@ Scene::~Scene()
     if (flagSprite != NULL)
         delete flagSprite;
 
-    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) delete interactiveBlocks[i];
+    for (unsigned i = 0; i < bricks.size(); ++i) delete bricks[i];
+    for (unsigned i = 0; i < interrogations.size(); ++i) delete interrogations[i];
+    // for (unsigned i = 0; i < interactiveBlocks.size(); ++i) delete interactiveBlocks[i];
 
     for (auto &text : texts) {
         delete text.second;
@@ -64,21 +66,26 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
         TileMap::MapColor color = map->getMapColor();
 
         auto interactiveBlocksPos = map->getInteractiveBlocks();
-        interactiveBlocks.resize(interactiveBlocksPos.size());
-        for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
+        // bricks.resize(interactiveBlocksPos.size());
+        // interrogations.resize(interactiveBlocksPos.size());
+        for (unsigned i = 0; i < interactiveBlocksPos.size(); ++i) {
             if (interactiveBlocksPos[i].type == BRICK) {
-                interactiveBlocks[i] = new Brick(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color);
+                bricks.push_back(new Brick(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color));
+                // interactiveBlocks[i] = new Brick(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color);
             }
             else if (interactiveBlocksPos[i].type == INTERROGATION) {
                 switch (interactiveBlocksPos[i].object) {
                 case COIN:
-                    interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::COIN);
+                    interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::COIN));
+                    // interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::COIN);
                     break;
                 case MUSHROOM:
-                    interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::MUSHROOM);
+                    interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::MUSHROOM));
+                    // interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::MUSHROOM);
                     break;
                 case STAR:
-                    interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::STAR);
+                    interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::STAR));
+                    // interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::STAR);
                     break;
                 default:
                     break;
@@ -112,7 +119,9 @@ void Scene::update(float deltaTime, Player *player)
     }
 
     for (unsigned i = 0; i < coins.size(); ++i) coins[i].update(deltaTime);
-    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) interactiveBlocks[i]->update(deltaTime);
+    for (unsigned i = 0; i < bricks.size(); ++i) bricks[i]->update(deltaTime);
+    for (unsigned i = 0; i < interrogations.size(); ++i) interrogations[i]->update(deltaTime);
+    // for (unsigned i = 0; i < interactiveBlocks.size(); ++i) interactiveBlocks[i]->update(deltaTime);
 
     // Check player under the map
     if (player->getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
@@ -289,13 +298,29 @@ void Scene::update(float deltaTime, Player *player)
     }
 
     // Player - interactiveBlocks
-    for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
-        if (player->collidesWith(*interactiveBlocks[i])) {
-            if (interactiveBlocks[i]->canActivate() && player->isBig()) {
-                interactiveBlocks[i]->activate();
+    for (unsigned i = 0; i < bricks.size(); ++i) {
+        if (player->collidesWith(*bricks[i])) {
+            if (bricks[i]->canActivate() && player->isBig()) {
+                bricks[i]->activate();
             }
         }
     }
+
+    for (unsigned i = 0; i < interrogations.size(); ++i) {
+        if (player->collidesWith(*interrogations[i])) {
+            if (interrogations[i]->canActivate() && player->isBig()) {
+                interrogations[i]->activate();
+            }
+        }
+    }
+
+    // for (unsigned i = 0; i < interactiveBlocks.size(); ++i) {
+    //     if (player->collidesWith(*interactiveBlocks[i])) {
+    //         if (interactiveBlocks[i]->canActivate() && player->isBig()) {
+    //             interactiveBlocks[i]->activate();
+    //         }
+    //     }
+    // }
 
 }
 
@@ -341,9 +366,18 @@ void Scene::render() {
 
     for (unsigned i = 0; i < coins.size(); ++i) coins[i].render();
 
-    for (unsigned i = 0; i < interactiveBlocks.size(); ++i)
-        if (interactiveBlocks[i]->shouldRender())
-            interactiveBlocks[i]->render();
+    for (unsigned i = 0; i < bricks.size(); ++i) {
+        if (bricks[i]->shouldRender())
+            bricks[i]->render();
+    }
+    for (unsigned i = 0; i < interrogations.size(); ++i) {
+        if (interrogations[i]->shouldRender())
+            interrogations[i]->render();
+    }
+
+    // for (unsigned i = 0; i < interactiveBlocks.size(); ++i)
+    //     if (interactiveBlocks[i]->shouldRender())
+    //         interactiveBlocks[i]->render();
     for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].render();
     for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].render();
 

@@ -10,6 +10,9 @@ class Interrogation : public InteractiveBlock
         enum class BlockContent { NONE, COIN, MUSHROOM, STAR };
 
         Interrogation(glm::ivec2 tileMapDispl, TileMap *map, glm::vec2 pos, ShaderProgram &shaderProgram, Texture* texture, TileMap::MapColor color, BlockContent content);
+
+        void render() override;
+        void activate() override;
         ~Interrogation() override;
 
     private:

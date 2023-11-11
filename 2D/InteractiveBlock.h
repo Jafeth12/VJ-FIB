@@ -12,14 +12,13 @@ class InteractiveBlock
         virtual ~InteractiveBlock();
 
         virtual void update(float deltaTime);
-        void render();
+        virtual void render();
 
         glm::ivec2 getTile() const { return pos / map->getTileSize(); }
         glm::ivec2 getPos() const { return pos; }
         glm::ivec2 getSize() const { return glm::ivec2(32); }
 
-        void activate() { state = BlockState::OFF; map->destroyBrickTile(getTile()); }
-
+        virtual void activate();
 
         bool canActivate() const { return state == BlockState::STATIC; }
         bool shouldRender() const { return state != BlockState::OFF; }

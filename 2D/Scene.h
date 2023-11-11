@@ -7,6 +7,7 @@
 #include <vector>
 #include "Brick.h"
 #include "Camera.h"
+#include "Interrogation.h"
 #include "Koopa.h"
 #include "ShaderProgram.h"
 #include "TileMap.h"
@@ -64,7 +65,9 @@ protected:
     std::vector<Goomba> goombas;
     std::vector<Koopa> koopas;
 
-    std::vector<InteractiveBlock*> interactiveBlocks;
+    // std::vector<InteractiveBlock*> interactiveBlocks;
+    std::vector<Brick*> bricks;
+    std::vector<Interrogation*> interrogations;
 
     std::vector<Coin> coins;
 

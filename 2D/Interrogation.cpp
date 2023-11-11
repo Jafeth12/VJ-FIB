@@ -25,3 +25,12 @@ Interrogation::Interrogation(glm::ivec2 tileMapDispl, TileMap *map, glm::vec2 po
 }
 
 Interrogation::~Interrogation() { }
+
+void Interrogation::activate() {
+    state = BlockState::OFF;
+    map->placeTile(getTile(), (int)'4'-'0');
+}
+
+void Interrogation::render() {
+    InteractiveBlock::render();
+}

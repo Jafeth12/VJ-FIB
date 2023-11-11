@@ -23,6 +23,11 @@ InteractiveBlock::InteractiveBlock(glm::ivec2 tileMapDispl, TileMap *map, glm::v
     setPosition(pos);
 }
 
+void InteractiveBlock::activate() { 
+    state = BlockState::OFF; 
+    map->destroyBrickTile(getTile());
+}
+
 InteractiveBlock::~InteractiveBlock() {
     delete sprite;
 }
