@@ -55,6 +55,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
     autoRenderAllText = true;
     isOver = false;
     isFinishing = false;
+    isOverworld = true;
 
 	currentTime = 0.0f;
     lastSecondTime = 0.0f;
@@ -62,6 +63,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
     if (levelFilename[0] != ' ') {
         // Cargar el mapa de tiles
         map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
+        if (map->getMapColor() == TileMap::MapColor::UNDERWORLD) isOverworld = false;
         initEnemies(shaderProgram);
         TileMap::MapColor color = map->getMapColor();
 
@@ -351,6 +353,8 @@ void Scene::setForeground(std::string levelFilename) {
 }
 
 void Scene::render() {
+    if (!isOverworld) glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = camera->getViewMatrix();
     glm::mat4 projection = camera->getProjectionMatrix();
@@ -418,6 +422,9 @@ TileMap* Scene::getMap() {
 }
 
 void Scene::resetFlagPosition() {
+    if (background == NULL) return;
+    if (flagSprite == NULL) return;
+
     glm::ivec2 poleHeadPos = background->getPoleHeadPos();
     if (poleHeadPos.x != -1)
         flagSprite->setPosition(glm::vec2(poleHeadPos.x - 16, poleHeadPos.y + 48));
