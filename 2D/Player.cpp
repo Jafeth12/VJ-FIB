@@ -422,13 +422,13 @@ bool Player::collidesWith(const Coin &coin) const {
     return false;
 }
 
-bool Player::collidesWith(const Mushroom &mushroom) const {
-    glm::ivec2 mushroomSize = mushroom.getSize();
-    glm::ivec2 mushroomPos = mushroom.getPos();
-    glm::ivec2 mushroomCenter = mushroomPos + mushroomSize/2;
+bool Player::collidesWith(const Powerup &powerup) const {
+    glm::ivec2 powerupSize = powerup.getSize();
+    glm::ivec2 powerupPos = powerup.getPos();
+    glm::ivec2 powerupCenter = powerupPos + powerupSize/2;
     glm::ivec2 playerCenter = posPlayer + getSize()/2;
-    glm::ivec2 dist = glm::abs(mushroomCenter - playerCenter);
-    glm::ivec2 minDist = (getSize() + mushroomSize)/2;
+    glm::ivec2 dist = glm::abs(powerupCenter - playerCenter);
+    glm::ivec2 minDist = (getSize() + powerupSize)/2;
     if (dist.x < minDist.x && dist.y < minDist.y) {
         return true;
     }
@@ -844,7 +844,7 @@ void Player::makeBig() {
 }
 
 void Player::makeStar() {
-    if (statePlayer == State::BIG)
+    if (statePlayer == State::BIG || statePlayer == State::BIG_STAR)
         setState(State::BIG_STAR);
     else 
         setState(State::SMALL_STAR);

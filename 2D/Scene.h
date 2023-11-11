@@ -11,6 +11,7 @@
 #include "Koopa.h"
 #include "Mushroom.h"
 #include "ShaderProgram.h"
+#include "Star.h"
 #include "TileMap.h"
 #include "Player.h"
 #include "Text.h"
@@ -70,6 +71,7 @@ protected:
     std::vector<Brick*> bricks;
     std::vector<Interrogation*> interrogations;
     std::vector<Mushroom*> mushrooms;
+    std::vector<Star*> stars;
 
     std::vector<Coin*> coins;
 

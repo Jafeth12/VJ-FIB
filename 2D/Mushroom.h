@@ -11,7 +11,6 @@ public:
     ~Mushroom();
 
     void init(glm::ivec2 tileMapPos, ShaderProgram &shaderProgram, TileMap *map, bool overworld);
-    void update(float deltaTime) override;
 
 private:
 

@@ -22,13 +22,3 @@ void Mushroom::init(glm::ivec2 tileMapPos, ShaderProgram &shaderProgram, TileMap
     sprite->setPosition(pos);
 }
 
-void Mushroom::update(float deltaTime) {
-    Powerup::update(deltaTime);
-    setPosition(pos);
-}
-
-//
-// void Mushroom::render() {
-//     Powerup::render();
-// }
-

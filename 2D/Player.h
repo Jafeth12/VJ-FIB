@@ -41,7 +41,7 @@ public:
     bool collidesWith(const Enemy &enemy) const;
     bool collidesWith(const InteractiveBlock &block) const;
     bool collidesWith(const Coin &coin) const;
-    bool collidesWith(const Mushroom &coin) const;
+    bool collidesWith(const Powerup &powerup) const;
 
     /**
      * @brief Retorna el ángulo entre la recta

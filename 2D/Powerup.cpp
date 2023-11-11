@@ -1,6 +1,10 @@
 #include "Powerup.h"
 
-Powerup::Powerup() {}
+Powerup::Powerup() {
+    sprite = NULL;
+    map = NULL;
+    shaderProgram = NULL;
+}
 
 Powerup::~Powerup() {
     if (sprite != NULL)
@@ -29,7 +33,10 @@ void Powerup::update(float deltatime) {
     updateVelocity(deltatime);
     updatePosition(deltatime);
 
+    if (sprite == NULL) return;
+
     sprite->update(deltatime);
+    setPosition(pos);
 }
 
 void Powerup::render() {

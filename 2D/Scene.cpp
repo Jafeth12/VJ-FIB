@@ -98,6 +98,7 @@ void Scene::update(float deltaTime, Player *player)
     // Check player under the map
     if (player->getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
         player->fallDie();
+        SoundEngine::instance().playDie();
         return;
     }
 
@@ -244,7 +245,12 @@ void Scene::update(float deltaTime, Player *player)
                 Game::instance().addScore(SCORE_STOMP);
             }
             else {
-                player->takeDamage();
+                if (player->isStar()) {
+                    goombas[i].dieLateral();
+                    SoundEngine::instance().playKick();
+                } else {
+                    player->takeDamage();
+                }
             }
         }
 
@@ -266,7 +272,12 @@ void Scene::update(float deltaTime, Player *player)
                     Game::instance().addScore(SCORE_STOMP);
                 }
                 else {
-                    player->takeDamage();
+                    if (player->isStar()) {
+                        koopas[i].dieLateral();
+                        SoundEngine::instance().playKick();
+                    } else {
+                        player->takeDamage();
+                    }
                 }
             }
         }
@@ -307,7 +318,12 @@ void Scene::update(float deltaTime, Player *player)
                         }
                         break;
                     case Interrogation::BlockContent::STAR:
-                        // TODO
+                        for (unsigned i = 0; i < stars.size(); ++i) {
+                            if (stars[i]->getPos() == glm::ivec2(pos.x, pos.y - map->getTileSize())) {
+                                stars[i]->activate();
+                                SoundEngine::instance().playPowerup();
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -331,6 +347,17 @@ void Scene::update(float deltaTime, Player *player)
         if (player->collidesWith(*mushrooms[i]) && mushrooms[i]->canBeConsumed()) {
             mushrooms[i]->consume();
             player->makeBig();
+            SoundEngine::instance().playGrow();
+            Game::instance().addScore(SCORE_POWERUP);
+        }
+    }
+
+    for (unsigned i = 0; i < stars.size(); ++i) {
+        stars[i]->update(deltaTime);
+
+        if (player->collidesWith(*stars[i]) && stars[i]->canBeConsumed()) {
+            stars[i]->consume();
+            player->makeStar();
             SoundEngine::instance().playGrow();
             Game::instance().addScore(SCORE_POWERUP);
         }
@@ -394,6 +421,11 @@ void Scene::render() {
     for (unsigned i = 0; i < mushrooms.size(); ++i) {
         if (mushrooms[i]->canBeConsumed())
             mushrooms[i]->render();
+    }
+
+    for (unsigned i = 0; i < stars.size(); ++i) {
+        if (stars[i]->canBeConsumed())
+            stars[i]->render();
     }
 
     for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].render();
@@ -475,6 +507,7 @@ void Scene::initInteractiveBlocks() {
                 break;
             case STAR:
                 interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, pos, *texProgram, map->getTexture(), map->getMapColor(), Interrogation::BlockContent::STAR));
+                stars.push_back(new Star(glm::ivec2(pos.x, pos.y - 1), *texProgram, map, isOverworld));
                 break;
             default:
                 break;
