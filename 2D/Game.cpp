@@ -82,7 +82,6 @@ bool Game::update(float deltaTime)
                 SoundEngine::instance().playMainTheme();
             } else {
                 SoundEngine::instance().stopAllSounds();
-                // player->setPosition(glm::vec2(loadingScene.getInitPlayerTiles().x * newTileMap->getTileSize(), loadingScene.getInitPlayerTiles().y * newTileMap->getTileSize()));
                 camera.setPosition(glm::vec2(0, 0));
             }
 
@@ -130,6 +129,7 @@ bool Game::update(float deltaTime)
                     menu.setTopScore(totalScore);
                     totalScore = 0;
                     lives = 3;
+                    loadingScene.setLives(lives);
                 }
             }
 
