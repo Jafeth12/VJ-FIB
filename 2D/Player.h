@@ -36,6 +36,8 @@ public:
     bool isBig() const { return statePlayer == State::BIG || statePlayer == State::BIG_STAR; }
     bool isStar() const { return statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR; };
 
+    bool isInvincible() const { return statePlayer == State::SMALL_STAR || statePlayer == State::BIG_STAR || statePlayer == State::JUST_TOOK_DAMAGE; }
+
     bool collidesWith(const Enemy &enemy) const;
     bool collidesWith(const InteractiveBlock &block) const;
     bool collidesWith(const Coin &coin) const;

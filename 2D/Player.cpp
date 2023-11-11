@@ -801,6 +801,8 @@ void Player::stepOnEnemy() {
 }
 
 void Player::takeDamage() {
+    if (isInvincible()) return;
+
     if (statePlayer == State::BIG) {
         setState(State::JUST_TOOK_DAMAGE);
         SoundEngine::instance().playPowerdown();
