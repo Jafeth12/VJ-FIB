@@ -64,42 +64,9 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
         // Cargar el mapa de tiles
         map = TileMap::createTileMap(levelFilename, glm::vec2(minCoords.x, minCoords.y), *texProgram);
         if (map->getMapColor() == TileMap::MapColor::UNDERWORLD) isOverworld = false;
-        initEnemies(shaderProgram);
-        TileMap::MapColor color = map->getMapColor();
-
-        auto interactiveBlocksPos = map->getInteractiveBlocks();
-        // bricks.resize(interactiveBlocksPos.size());
-        // interrogations.resize(interactiveBlocksPos.size());
-        for (unsigned i = 0; i < interactiveBlocksPos.size(); ++i) {
-            if (interactiveBlocksPos[i].type == BRICK) {
-                bricks.push_back(new Brick(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color));
-                // interactiveBlocks[i] = new Brick(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color);
-            }
-            else if (interactiveBlocksPos[i].type == INTERROGATION) {
-                switch (interactiveBlocksPos[i].object) {
-                case COIN:
-                    interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::COIN));
-                    // interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::COIN);
-                    break;
-                case MUSHROOM:
-                    interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::MUSHROOM));
-                    // interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::MUSHROOM);
-                    break;
-                case STAR:
-                    interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::STAR));
-                    // interactiveBlocks[i] = new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, shaderProgram, map->getTexture(), color, Interrogation::BlockContent::STAR);
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
-
-        auto coinsPos = map->getCoins();
-        for (unsigned i = 0; i < coinsPos.size(); ++i) {
-            coins.push_back(new Coin(shaderProgram, coinsPos[i].pos, map));
-        }
-
+        initEnemies();
+        initInteractiveBlocks();
+        initCoins();
     }
 
 }
@@ -109,19 +76,6 @@ void Scene::update(float deltaTime, Player *player)
     currentTime += deltaTime;
     player->update(deltaTime);
 
-    // if a second has passed, decrement time left
-    if (currentTime - lastSecondTime > 1.0f) {
-        lastSecondTime = currentTime;
-        hud->decrementTimeLeft();
-    }
-
-    if (hud->isTimeLeftZero()) {
-        // hay que hacer que player se peke priemro
-        player->makeSmall();
-        player->takeDamage();
-        return;
-    }
-
     if (player->isDead() || player->isDying()) {
         static float timeAtDeath = currentTime;
         if (timeAtDeath == 0) timeAtDeath = currentTime;
@@ -129,7 +83,7 @@ void Scene::update(float deltaTime, Player *player)
 
         if (currentTime - timeAtDeath > timeToWait) {
             isOver = true;
-            initEnemies(*texProgram);
+            initEnemies();
             timeAtDeath = 0;
         }
 
@@ -196,6 +150,19 @@ void Scene::update(float deltaTime, Player *player)
     }
 
     if (!isFinishing) camera->setXPosition(playerPos.x - initPlayerTiles.x * map->getTileSize());
+
+    // if a second has passed, decrement time left
+    if (currentTime - lastSecondTime > 1.0f) {
+        lastSecondTime = currentTime;
+        hud->decrementTimeLeft();
+    }
+
+    if (hud->isTimeLeftZero()) {
+        // hay que hacer que player se peke priemro
+        player->makeSmall();
+        player->takeDamage();
+        return;
+    }
 
     // === Conditionally update enemies ===
     // Goombas
@@ -324,6 +291,7 @@ void Scene::update(float deltaTime, Player *player)
     for (unsigned i = 0; i < coins.size(); ++i) {
         if (player->collidesWith(*coins[i]) && coins[i]->canTake()) {
             coins[i]->take();
+            hud->addCoin();
             SoundEngine::instance().playCoin();
             Game::instance().addScore(SCORE_COIN);
         }
@@ -440,7 +408,7 @@ void Scene::resetFlagPosition() {
         flagSprite->setPosition(glm::vec2(poleHeadPos.x - 16, poleHeadPos.y + 48));
 }
 
-void Scene::initEnemies(ShaderProgram &program) {
+void Scene::initEnemies() {
     goombas.clear();
     koopas.clear();
 
@@ -448,17 +416,63 @@ void Scene::initEnemies(ShaderProgram &program) {
     auto goombasPos = map->getGoombas();
     goombas.resize(goombasPos.size());
     for (unsigned i = 0; i < goombasPos.size(); ++i)
-        goombas[i].init(glm::ivec2(0, 16), program, map, color, (Enemy::Dir)goombasPos[i].dir, goombasPos[i].initPos);
+        goombas[i].init(glm::ivec2(0, 16), *texProgram, map, color, (Enemy::Dir)goombasPos[i].dir, goombasPos[i].initPos);
 
     auto koopasPos = map->getKoopas();
     koopas.resize(koopasPos.size());
     for (unsigned i = 0; i < koopas.size(); ++i)
-        koopas[i].init(glm::ivec2(0, 16), program, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
+        koopas[i].init(glm::ivec2(0, 16), *texProgram, map, color, (Enemy::Dir)koopasPos[i].dir, koopasPos[i].initPos);
+}
+
+void Scene::initInteractiveBlocks() {
+    auto interactiveBlocksPos = map->getInteractiveBlocks();
+    for (unsigned i = 0; i < interactiveBlocksPos.size(); ++i) {
+        if (interactiveBlocksPos[i].type == BRICK) {
+            bricks.push_back(new Brick(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, *texProgram, map->getTexture(), map->getMapColor()));
+        }
+        else if (interactiveBlocksPos[i].type == INTERROGATION) {
+            switch (interactiveBlocksPos[i].object) {
+            case COIN:
+                interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, *texProgram, map->getTexture(), map->getMapColor(), Interrogation::BlockContent::COIN));
+                break;
+            case MUSHROOM:
+                interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, *texProgram, map->getTexture(), map->getMapColor(), Interrogation::BlockContent::MUSHROOM));
+                break;
+            case STAR:
+                interrogations.push_back(new Interrogation(glm::ivec2(0, 16), map, interactiveBlocksPos[i].pos, *texProgram, map->getTexture(), map->getMapColor(), Interrogation::BlockContent::STAR));
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+
+void Scene::initCoins() {
+    auto coinsPos = map->getCoins();
+    coins.resize(coinsPos.size());
+    for (unsigned i = 0; i < coinsPos.size(); ++i) {
+        coins[i] = new Coin(*texProgram, coinsPos[i].pos, map);
+    }
 }
 
 void Scene::reset() {
     isOver = false;
     isFinishing = false;
-    initEnemies(*texProgram);
     resetFlagPosition();
+
+    map->remesh();
+
+    for (unsigned i = 0; i < bricks.size(); ++i) delete bricks[i];
+    for (unsigned i = 0; i < interrogations.size(); ++i) delete interrogations[i];
+    for (unsigned i = 0; i < coins.size(); ++i) delete coins[i];
+
+    bricks.clear();
+    interrogations.clear();
+    coins.clear();
+
+    initEnemies();
+    initInteractiveBlocks();
+    initCoins();
+
 }

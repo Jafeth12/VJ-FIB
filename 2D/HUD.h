@@ -22,6 +22,7 @@ public:
 
     void setScore(int score);
     void setCoins(int coins);
+    void addCoin();
 
     void setWorldNumber(int worldNumber);
 

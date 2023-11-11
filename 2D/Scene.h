@@ -90,7 +90,9 @@ protected:
 
 private:
     void resetFlagPosition();
-    void initEnemies(ShaderProgram &program);
+    void initEnemies();
+    void initInteractiveBlocks();
+    void initCoins();
 };
 
 

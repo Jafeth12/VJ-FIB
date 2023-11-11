@@ -20,7 +20,11 @@ void HUD::init(ShaderProgram &shaderProgram) {
 
 void HUD::setCoins(int coins) {
     this->coins = coins;
-    texts["coins"]->updateText("0x" + zeroFill(coins, 2));
+    texts["coins"]->updateText("Cx" + zeroFill(coins, 2));
+}
+
+void HUD::addCoin() {
+    setCoins(coins + 1);
 }
 
 void HUD::setScore(int score) {

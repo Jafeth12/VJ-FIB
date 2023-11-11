@@ -83,11 +83,12 @@ public:
     std::vector<IntBlockPosition> getInteractiveBlocks() const { return interactiveBlocks; }
     std::vector<CoinPosition> getCoins() const { return coins; }
 
+    void remesh();
+
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
     void deleteBuffers();
-    void remesh();
 
 private:
 	GLuint vao;
