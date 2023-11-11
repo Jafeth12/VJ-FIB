@@ -4,6 +4,7 @@
 #include "Scene.h"
 
 #define LOADING_SCREEN_TIME 1.5f
+#define INIT_PLAYER_TILES glm::ivec2(6, 9)
 
 class LoadingScene : public Scene {
 public:
@@ -24,8 +25,6 @@ public:
     void reset();
 
 private:
-    constexpr static glm::ivec2 INIT_PLAYER_TILES = glm::ivec2(6, 9);
-
     Sprite *marioSprite;
     Texture marioSpritesheet;
 
