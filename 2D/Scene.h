@@ -88,6 +88,7 @@ protected:
 	float currentTime;
     float lastSecondTime;
     float timeAtFinishingState;
+    float lastDeathTime;
     int worldNumber;
 
     bool isOver;

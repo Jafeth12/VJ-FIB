@@ -61,6 +61,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 	currentTime = 0.0f;
     lastSecondTime = 0.0f;
     timeAtFinishingState = 0.0f;
+    lastDeathTime = 0.0f;
     scroll = 0.f;
 
     if (levelFilename[0] != ' ') {
@@ -84,14 +85,13 @@ void Scene::update(float deltaTime, Player *player)
     for (unsigned i = 0; i < interrogations.size(); ++i) interrogations[i]->update(deltaTime);
 
     if (player->isDead() || player->isDying()) {
-        static float timeAtDeath = currentTime;
-        if (timeAtDeath == 0) timeAtDeath = currentTime;
+        if (lastDeathTime == 0) lastDeathTime = currentTime;
         float timeToWait = 3.0f;
 
-        if (currentTime - timeAtDeath > timeToWait) {
+        if (currentTime - lastDeathTime > timeToWait) {
             isOver = true;
             initEnemies();
-            timeAtDeath = 0;
+            lastDeathTime = 0;
         }
 
         return;

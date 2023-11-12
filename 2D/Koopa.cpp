@@ -1,6 +1,7 @@
 #include "Koopa.h"
 #include "Constants.h"
 #include "TileMap.h"
+#include <iostream>
 
 #define ANIM_SPEED 8
 #define KOOPA_SPEED 100.f
@@ -10,6 +11,7 @@
 Texture *Koopa::s_koopaTexture = nullptr;
 
 void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, TileMap::MapColor color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
+    initialDir = initialDirection;
     dir = initialDirection;
     tileMapDispl = tileMapPos;
     map = tileMap;
@@ -115,6 +117,8 @@ void Koopa::reset() {
     dir = initialDir;
     setPosition(initialPos);
     currentState = State::WALK;
+    bKicked = false;
+    timeSinceKick = 0.f;
     timeSinceShell = 0.f;
 }
 
