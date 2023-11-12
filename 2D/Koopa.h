@@ -48,7 +48,7 @@ class Koopa : public Enemy {
         State currentState;
         float timeSinceShell;
 
-        bool bKicked = false;
+        bool bKicked;
         float timeSinceKick;
 };
 

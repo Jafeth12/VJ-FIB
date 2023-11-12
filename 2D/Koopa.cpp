@@ -15,6 +15,8 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     map = tileMap;
     bActive = false;
     timeSinceShell = 0.f;
+    timeSinceKick = 0.f;
+    bKicked = false;
 
     if (s_koopaTexture == nullptr) {
         s_koopaTexture = new Texture();
