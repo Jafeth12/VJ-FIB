@@ -56,6 +56,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
     isOver = false;
     isFinishing = false;
     isOverworld = true;
+    flagPoleIsDown = false;
 
 	currentTime = 0.0f;
     lastSecondTime = 0.0f;
@@ -142,26 +143,38 @@ void Scene::update(float deltaTime, Player *player)
             }
 
             bool collision = map->onGround(newPos, glm::ivec2(32, 32));
-            if (!collision) {
+            if (!flagPoleIsDown && collision) flagPoleIsDown = true;
+            if (!flagPoleIsDown) {
                 flagSprite->setPosition(newPos);
+            } else {
+
+                if (hud->getTimeLeft() > 0) {
+                    Game::instance().addScore(10);
+                    hud->decrementTimeLeft();
+                }
+
+                if (!hud->isTimeLeftZero() && hud->getTimeLeft()%3 == 0) SoundEngine::instance().playBeep();
+
+                if (finishingState == Player::FinishingState::ON_CASTLE) {
+                    Game::instance().stopRenderingPlayer();
+                    
+                    if (hud->getTimeLeft() <= 0) {
+                        if (timeAtFinishingState == 0) timeAtFinishingState = currentTime;
+
+                        if (currentTime - timeAtFinishingState > timeToWait) {
+                            timeAtFinishingState = currentTime;
+                            isOver = true;
+                            isFinishing = false;
+                            player->setIsFinishing(false);
+                            resetFlagPosition();
+                        }
+
+                        return;         
+                    }
+                }
             }
         }
 
-        if (finishingState == Player::FinishingState::ON_CASTLE) {
-                Game::instance().stopRenderingPlayer();
-
-                if (timeAtFinishingState == 0) timeAtFinishingState = currentTime;
-
-                if (currentTime - timeAtFinishingState > timeToWait) {
-                    timeAtFinishingState = currentTime;
-                    isOver = true;
-                    isFinishing = false;
-                    player->setIsFinishing(false);
-                    resetFlagPosition();
-                }
-
-                return;         
-        }
 
         isFinishing = true;
     }
@@ -564,6 +577,7 @@ void Scene::reset() {
     isOver = false;
     isFinishing = false;
     scroll = 0;
+    flagPoleIsDown = false;
     hud->setTimeLeft(400);
 
     resetFlagPosition();

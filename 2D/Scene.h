@@ -94,6 +94,7 @@ protected:
     bool isFinishing;
 
     bool isOverworld;
+    bool flagPoleIsDown;
 
     float scroll;
 
