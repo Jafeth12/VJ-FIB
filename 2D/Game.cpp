@@ -28,8 +28,7 @@ void Game::init()
 
     hud.init(shaderProgram);
 
-	menu.init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_0_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y));
-    menu.setBackground("levels/background01.txt");
+	menu.init(shaderProgram, camera, hud, "levels/menu.txt", SCENE_0_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y));
 
     loadingScene.init(shaderProgram, camera, hud, glm::ivec2(SCREEN_X, SCREEN_Y));
     loadingScene.setLives(lives);
