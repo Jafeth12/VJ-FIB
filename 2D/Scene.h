@@ -51,6 +51,8 @@ public:
 
     glm::ivec2 getInitPlayerTiles();
 
+    bool isFinishingScene() { return isFinishing; }
+
 protected:
 
 	ShaderProgram *texProgram;
@@ -85,6 +87,7 @@ protected:
 
 	float currentTime;
     float lastSecondTime;
+    float timeAtFinishingState;
     int worldNumber;
 
     bool isOver;

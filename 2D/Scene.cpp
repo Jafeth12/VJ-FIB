@@ -59,6 +59,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 
 	currentTime = 0.0f;
     lastSecondTime = 0.0f;
+    timeAtFinishingState = 0.0f;
     scroll = 0.f;
 
     if (levelFilename[0] != ' ') {
@@ -108,32 +109,51 @@ void Scene::update(float deltaTime, Player *player)
 
     if (player->isOnFinishingState() && !isOver) {
         float timeToWait = 5.0f;
+        Player::FinishingState finishingState = player->getFinishingState();
 
         if (flagSprite != NULL) {
             glm::vec2 flagPos = flagSprite->getPosition();
             glm::vec2 newPos = glm::vec2(flagPos.x, flagPos.y + 4);
 
+            if (finishingState == Player::FinishingState::POLE && !isFinishing) {
+                glm::vec2 mapSize = map->getMapSize();
+
+                int playerY_tile  = playerPos.y / map->getTileSize();
+                int flagY_tile = flagPos.y / map->getTileSize();
+
+                int diff = playerY_tile - flagY_tile;
+
+                bool playerIsOnTopOfFlag = playerY_tile == flagY_tile;
+                bool playerIsOnBottom = playerY_tile >= mapSize.y - 3;
+
+                int score = 0;
+
+                // if is on top of flag, 5000 points, if is on bottom, 400. linear interpolation between them, only multiples of 100
+                if (playerIsOnTopOfFlag) {
+                    score = SCORE_FLAG_TOP;
+                } else if (playerIsOnBottom) {
+                    score = SCORE_FLAG_BOTTOM;
+                } else {
+                    score = (int)(SCORE_FLAG_TOP - (SCORE_FLAG_TOP - SCORE_FLAG_BOTTOM) * (float)diff / (mapSize.y - 3));
+                    score = score - score % 100;
+                }
+
+                cout << endl <<  "score: " << score << endl;
+            }
+
             bool collision = map->onGround(newPos, glm::ivec2(32, 32));
             if (!collision) {
                 flagSprite->setPosition(newPos);
             }
-
         }
 
-        Player::FinishingState finishingState = player->getFinishingState();
-
-        switch (finishingState) {
-            case Player::FinishingState::POLE:
-                break;
-            case Player::FinishingState::WALKING_TO_CASTLE:
-                break;
-            case Player::FinishingState::ON_CASTLE:
+        if (finishingState == Player::FinishingState::ON_CASTLE) {
                 Game::instance().stopRenderingPlayer();
 
-                static float timeAtFinishingState = currentTime;
                 if (timeAtFinishingState == 0) timeAtFinishingState = currentTime;
 
                 if (currentTime - timeAtFinishingState > timeToWait) {
+                    timeAtFinishingState = currentTime;
                     isOver = true;
                     isFinishing = false;
                     player->setIsFinishing(false);
@@ -221,6 +241,7 @@ void Scene::update(float deltaTime, Player *player)
                 if (koopas[j].isMovingShell()) {
                     goombas[i].dieLateral();
                     SoundEngine::instance().playKick();
+                    Game::instance().addScore(SCORE_STOMP);
                 } else {
                     goombas[i].invertDirection();
                     koopas[j].invertDirection();
@@ -235,6 +256,7 @@ void Scene::update(float deltaTime, Player *player)
                     if (koopas[i].isMovingShell()) {
                         koopas[j].dieLateral();
                         SoundEngine::instance().playKick();
+                        Game::instance().addScore(SCORE_STOMP);
                     } else {
                         koopas[i].dieLateral();
                     }
@@ -258,6 +280,7 @@ void Scene::update(float deltaTime, Player *player)
                 if (player->isStar()) {
                     goombas[i].dieLateral();
                     SoundEngine::instance().playKick();
+                    Game::instance().addScore(SCORE_STOMP);
                 } else {
                     player->takeDamage();
                 }
@@ -285,6 +308,7 @@ void Scene::update(float deltaTime, Player *player)
                     if (player->isStar()) {
                         koopas[i].dieLateral();
                         SoundEngine::instance().playKick();
+                        Game::instance().addScore(SCORE_STOMP);
                     } else {
                         player->takeDamage();
                     }

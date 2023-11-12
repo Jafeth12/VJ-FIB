@@ -95,7 +95,6 @@ bool Game::update(float deltaTime)
             hud.setScore(totalScore);
 
             if (scenes[currentSceneIndex]->hasEnded()) {
-                scenes[currentSceneIndex]->setIsOver(false);
                 startRenderingPlayer();
 
                 if (player->isDead() || player->isDying()) {
@@ -211,8 +210,18 @@ void Game::keyPressed(int key)
 }
 
 void Game::changeScene(int sceneIndex) {
+    Scene *currentScene = scenes[currentSceneIndex];
+    Scene *newScene = scenes[sceneIndex];
+
+    if (currentScene->isFinishingScene()) return;
+    if (newScene->isFinishingScene()) return;
+
     currentSceneIndex = sceneIndex;
-    Scene *newScene = scenes[currentSceneIndex];
+
+    if (player->isDead() || player->isDying()) {
+        player->makeAlive();
+    }
+
     newScene->reset();
     hud.setWorldNumber(newScene->getWorldNumber());
 

@@ -16,7 +16,7 @@
 #define PLAYER_SIZE glm::ivec2(32, 32)
 #define PLAYER_BIG_SIZE glm::ivec2(32, 64)
 #define X_WALK_SPEED 225.f
-#define X_RUN_SPEED 1.6f * X_WALK_SPEED
+#define X_RUN_SPEED 1.56f * X_WALK_SPEED
 #define X_ACC  550.f
 #define X_DRAG 750.f
 
@@ -846,6 +846,7 @@ void Player::takeStar() {
 
 void Player::makeAlive() {
     setState(State::SMALL);
+    velPlayer = glm::vec2(0.f);
     sprite->changeAnimation(getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::SMALL));
 }
 
