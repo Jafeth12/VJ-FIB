@@ -13,7 +13,6 @@ class Interrogation : public InteractiveBlock
 
         void render() override;
         void activate() override;
-        ~Interrogation() override;
 
         BlockContent getObjectInside() const { return content; };
 

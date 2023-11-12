@@ -16,7 +16,7 @@
 #define PLAYER_SIZE glm::ivec2(32, 32)
 #define PLAYER_BIG_SIZE glm::ivec2(32, 64)
 #define X_WALK_SPEED 225.f
-#define X_RUN_SPEED 1.6f * X_WALK_SPEED
+#define X_RUN_SPEED 1.56f * X_WALK_SPEED
 #define X_ACC  550.f
 #define X_DRAG 750.f
 
@@ -678,6 +678,7 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed, float deltaTim
 glm::vec2 Player::getAcceleration()
 {
     glm::vec2 acc = glm::vec2(0.f);
+    bool onAir = yState != FLOOR;
 
     // Figure out Y acceleration
     //
@@ -688,13 +689,13 @@ glm::vec2 Player::getAcceleration()
             if (velPlayer.x > -X_RUN_SPEED) acc.x = -X_ACC;
             else if (velPlayer.x < -X_RUN_SPEED) acc.x = X_DRAG;
 
-            if (velPlayer.x > 0.f) acc.x += -X_DRAG;
+            if (!onAir && velPlayer.x > 0.f) acc.x += -X_DRAG;
             break;
         case WALK_LEFT:
             if (velPlayer.x > -X_WALK_SPEED) acc.x = -X_ACC;
             else if (velPlayer.x < -X_WALK_SPEED) acc.x = X_DRAG;
 
-            if (velPlayer.x > 0.f) acc.x += -X_DRAG;
+            if (!onAir && velPlayer.x > 0.f) acc.x += -X_DRAG;
             break;
 
         case NONE:
@@ -706,13 +707,13 @@ glm::vec2 Player::getAcceleration()
             if (velPlayer.x < X_WALK_SPEED) acc.x = X_ACC;
             else if (velPlayer.x > -X_WALK_SPEED) acc.x = -X_DRAG;
 
-            if (velPlayer.x < 0.f) acc.x += X_DRAG;
+            if (!onAir && velPlayer.x < 0.f) acc.x += X_DRAG;
             break;
         case RUN_RIGHT:
             if (velPlayer.x < X_RUN_SPEED) acc.x = X_ACC;
             else if (velPlayer.x > -X_RUN_SPEED) acc.x = -X_DRAG;
 
-            if (velPlayer.x < 0.f) acc.x += X_DRAG;
+            if (!onAir && velPlayer.x < 0.f) acc.x += X_DRAG;
             break;
     }
 
@@ -845,6 +846,7 @@ void Player::takeStar() {
 
 void Player::makeAlive() {
     setState(State::SMALL);
+    velPlayer = glm::vec2(0.f);
     sprite->changeAnimation(getAnimId(VerticalAnim::STAND, LateralAnim::RIGHT, AnimSize::SMALL));
 }
 

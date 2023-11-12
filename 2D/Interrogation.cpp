@@ -1,6 +1,8 @@
 #include "Interrogation.h"
 #include "TileMap.h"
 
+#include <iostream>
+
 Interrogation::Interrogation(glm::ivec2 tileMapDispl, TileMap *map, glm::vec2 pos, ShaderProgram &shaderProgram, Texture* texture, TileMap::MapColor color, BlockContent content) :
     InteractiveBlock(tileMapDispl, map, pos, shaderProgram, texture, color)
 {
@@ -23,8 +25,6 @@ Interrogation::Interrogation(glm::ivec2 tileMapDispl, TileMap *map, glm::vec2 po
 
     sprite->changeAnimation(0);
 }
-
-Interrogation::~Interrogation() { }
 
 void Interrogation::activate() {
     state = BlockState::OFF;

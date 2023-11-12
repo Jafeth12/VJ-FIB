@@ -24,6 +24,7 @@ void SoundEngine::init() {
     grow = engine->addSoundSourceFromFile("sounds/grows.wav");
     powerup = engine->addSoundSourceFromFile("sounds/powerup.wav");
     powerdown = engine->addSoundSourceFromFile("sounds/pipe_powerdown.wav");
+    beep = engine->addSoundSourceFromFile("sounds/beep.wav");
 }
 
 SoundEngine::~SoundEngine() {
@@ -119,5 +120,10 @@ void SoundEngine::playPowerup() {
 
 void SoundEngine::playPowerdown() {
     engine->play2D(powerdown, false);
+    isPlayingSound = true;
+}
+
+void SoundEngine::playBeep() {
+    engine->play2D(beep, false);
     isPlayingSound = true;
 }

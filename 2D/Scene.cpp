@@ -56,9 +56,11 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
     isOver = false;
     isFinishing = false;
     isOverworld = true;
+    flagPoleIsDown = false;
 
 	currentTime = 0.0f;
     lastSecondTime = 0.0f;
+    timeAtFinishingState = 0.0f;
     scroll = 0.f;
 
     if (levelFilename[0] != ' ') {
@@ -77,6 +79,10 @@ void Scene::update(float deltaTime, Player *player)
     currentTime += deltaTime;
     player->update(deltaTime, scroll);
 
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i].update(deltaTime);
+    for (unsigned i = 0; i < bricks.size(); ++i) bricks[i]->update(deltaTime);
+    for (unsigned i = 0; i < interrogations.size(); ++i) interrogations[i]->update(deltaTime);
+
     if (player->isDead() || player->isDying()) {
         static float timeAtDeath = currentTime;
         if (timeAtDeath == 0) timeAtDeath = currentTime;
@@ -90,10 +96,6 @@ void Scene::update(float deltaTime, Player *player)
 
         return;
     }
-
-    for (unsigned i = 0; i < coins.size(); ++i) coins[i]->update(deltaTime);
-    for (unsigned i = 0; i < bricks.size(); ++i) bricks[i]->update(deltaTime);
-    for (unsigned i = 0; i < interrogations.size(); ++i) interrogations[i]->update(deltaTime);
     // for (unsigned i = 0; i < interactiveBlocks.size(); ++i) interactiveBlocks[i]->update(deltaTime);
 
     // Check player under the map
@@ -108,40 +110,71 @@ void Scene::update(float deltaTime, Player *player)
 
     if (player->isOnFinishingState() && !isOver) {
         float timeToWait = 5.0f;
+        Player::FinishingState finishingState = player->getFinishingState();
 
         if (flagSprite != NULL) {
             glm::vec2 flagPos = flagSprite->getPosition();
             glm::vec2 newPos = glm::vec2(flagPos.x, flagPos.y + 4);
 
-            bool collision = map->onGround(newPos, glm::ivec2(32, 32));
-            if (!collision) {
-                flagSprite->setPosition(newPos);
-            }
+            if (finishingState == Player::FinishingState::POLE && !isFinishing) {
+                glm::vec2 mapSize = map->getMapSize();
 
-        }
+                int playerY_tile  = playerPos.y / map->getTileSize();
+                int flagY_tile = flagPos.y / map->getTileSize();
 
-        Player::FinishingState finishingState = player->getFinishingState();
+                int diff = playerY_tile - flagY_tile;
 
-        switch (finishingState) {
-            case Player::FinishingState::POLE:
-                break;
-            case Player::FinishingState::WALKING_TO_CASTLE:
-                break;
-            case Player::FinishingState::ON_CASTLE:
-                Game::instance().stopRenderingPlayer();
+                bool playerIsOnTopOfFlag = playerY_tile == flagY_tile;
+                bool playerIsOnBottom = playerY_tile >= mapSize.y - 3;
 
-                static float timeAtFinishingState = currentTime;
-                if (timeAtFinishingState == 0) timeAtFinishingState = currentTime;
+                int score = 0;
 
-                if (currentTime - timeAtFinishingState > timeToWait) {
-                    isOver = true;
-                    isFinishing = false;
-                    player->setIsFinishing(false);
-                    resetFlagPosition();
+                // if is on top of flag, 5000 points, if is on bottom, 400. linear interpolation between them, only multiples of 100
+                if (playerIsOnTopOfFlag) {
+                    score = SCORE_FLAG_TOP;
+                } else if (playerIsOnBottom) {
+                    score = SCORE_FLAG_BOTTOM;
+                } else {
+                    score = (int)(SCORE_FLAG_TOP - (SCORE_FLAG_TOP - SCORE_FLAG_BOTTOM) * (float)diff / (mapSize.y - 3));
+                    score = score - score % 100;
                 }
 
-                return;         
+                cout << endl <<  "score: " << score << endl;
+            }
+
+            bool collision = map->onGround(newPos, glm::ivec2(32, 32));
+            if (!flagPoleIsDown && collision) flagPoleIsDown = true;
+            if (!flagPoleIsDown) {
+                flagSprite->setPosition(newPos);
+            } else {
+
+                if (hud->getTimeLeft() > 0) {
+                    Game::instance().addScore(10);
+                    hud->decrementTimeLeft();
+                }
+
+                if (!hud->isTimeLeftZero() && hud->getTimeLeft()%3 == 0) SoundEngine::instance().playBeep();
+
+                if (finishingState == Player::FinishingState::ON_CASTLE) {
+                    Game::instance().stopRenderingPlayer();
+                    
+                    if (hud->getTimeLeft() <= 0) {
+                        if (timeAtFinishingState == 0) timeAtFinishingState = currentTime;
+
+                        if (currentTime - timeAtFinishingState > timeToWait) {
+                            timeAtFinishingState = currentTime;
+                            isOver = true;
+                            isFinishing = false;
+                            player->setIsFinishing(false);
+                            resetFlagPosition();
+                        }
+
+                        return;         
+                    }
+                }
+            }
         }
+
 
         isFinishing = true;
     }
@@ -221,6 +254,7 @@ void Scene::update(float deltaTime, Player *player)
                 if (koopas[j].isMovingShell()) {
                     goombas[i].dieLateral();
                     SoundEngine::instance().playKick();
+                    Game::instance().addScore(SCORE_STOMP);
                 } else {
                     goombas[i].invertDirection();
                     koopas[j].invertDirection();
@@ -235,6 +269,7 @@ void Scene::update(float deltaTime, Player *player)
                     if (koopas[i].isMovingShell()) {
                         koopas[j].dieLateral();
                         SoundEngine::instance().playKick();
+                        Game::instance().addScore(SCORE_STOMP);
                     } else {
                         koopas[i].dieLateral();
                     }
@@ -258,6 +293,7 @@ void Scene::update(float deltaTime, Player *player)
                 if (player->isStar()) {
                     goombas[i].dieLateral();
                     SoundEngine::instance().playKick();
+                    Game::instance().addScore(SCORE_STOMP);
                 } else {
                     player->takeDamage();
                 }
@@ -285,6 +321,7 @@ void Scene::update(float deltaTime, Player *player)
                     if (player->isStar()) {
                         koopas[i].dieLateral();
                         SoundEngine::instance().playKick();
+                        Game::instance().addScore(SCORE_STOMP);
                     } else {
                         player->takeDamage();
                     }
@@ -345,8 +382,8 @@ void Scene::update(float deltaTime, Player *player)
     }
 
     for (unsigned i = 0; i < coins.size(); ++i) {
-        if (player->collidesWith(*coins[i]) && coins[i]->canTake()) {
-            coins[i]->take();
+        if (player->collidesWith(coins[i]) && coins[i].canTake()) {
+            coins[i].take();
             hud->addCoin();
             SoundEngine::instance().playCoin();
             Game::instance().addScore(SCORE_COIN);
@@ -419,7 +456,7 @@ void Scene::render() {
     if (foreground != NULL) foreground->render();
     if (flagSprite != NULL) flagSprite->render();
 
-    for (unsigned i = 0; i < coins.size(); ++i) coins[i]->render();
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i].render();
 
     for (unsigned i = 0; i < bricks.size(); ++i) {
         if (bricks[i]->shouldRender())
@@ -529,10 +566,11 @@ void Scene::initInteractiveBlocks() {
 }
 
 void Scene::initCoins() {
+    coins.clear();
     auto coinsPos = map->getCoins();
     coins.resize(coinsPos.size());
     for (unsigned i = 0; i < coinsPos.size(); ++i) {
-        coins[i] = new Coin(*texProgram, coinsPos[i].pos, map);
+        coins[i].init(*texProgram, coinsPos[i].pos, map);
     }
 }
 
@@ -540,17 +578,23 @@ void Scene::reset() {
     isOver = false;
     isFinishing = false;
     scroll = 0;
+    flagPoleIsDown = false;
+    hud->setTimeLeft(400);
+
     resetFlagPosition();
 
     map->remesh();
 
     for (unsigned i = 0; i < bricks.size(); ++i) delete bricks[i];
     for (unsigned i = 0; i < interrogations.size(); ++i) delete interrogations[i];
-    for (unsigned i = 0; i < coins.size(); ++i) delete coins[i];
+    for (unsigned i = 0; i < mushrooms.size(); ++i) delete mushrooms[i];
+    for (unsigned i = 0; i < stars.size(); ++i) delete stars[i];
 
     bricks.clear();
     interrogations.clear();
     coins.clear();
+    mushrooms.clear();
+    stars.clear();
 
     initEnemies();
     initInteractiveBlocks();

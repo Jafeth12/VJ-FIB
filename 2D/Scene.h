@@ -51,6 +51,8 @@ public:
 
     glm::ivec2 getInitPlayerTiles();
 
+    bool isFinishingScene() { return isFinishing; }
+
 protected:
 
 	ShaderProgram *texProgram;
@@ -73,7 +75,7 @@ protected:
     std::vector<Mushroom*> mushrooms;
     std::vector<Star*> stars;
 
-    std::vector<Coin*> coins;
+    std::vector<Coin> coins;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;
@@ -85,12 +87,14 @@ protected:
 
 	float currentTime;
     float lastSecondTime;
+    float timeAtFinishingState;
     int worldNumber;
 
     bool isOver;
     bool isFinishing;
 
     bool isOverworld;
+    bool flagPoleIsDown;
 
     float scroll;
 

@@ -9,6 +9,8 @@
 class Enemy {
 
     public:
+        ~Enemy();
+
         typedef int enum_t;
         enum class Dir : enum_t { LEFT=-1, RIGHT=1, NONE=0 };
 

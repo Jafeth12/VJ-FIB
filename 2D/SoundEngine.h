@@ -40,6 +40,7 @@ public:
     void playGrow();
     void playPowerup();
     void playPowerdown();
+    void playBeep();
 
     bool isMainThemePlaying() { return !mainTheme->getIsPaused(); }
 
@@ -62,6 +63,7 @@ private:
     irrklang::ISoundSource *hurry_up;
     irrklang::ISoundSource *powerup;
     irrklang::ISoundSource *powerdown;
+    irrklang::ISoundSource *beep;
 
     bool isPlayingSound;
 

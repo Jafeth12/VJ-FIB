@@ -21,6 +21,9 @@
 #define SCORE_STOMP 100
 #define SCORE_COIN 100
 #define SCORE_POWERUP 1000
+#define SCORE_FLAG_TOP 5000
+#define SCORE_FLAG_BOTTOM 400
+
 #define SCREEN_X 0
 #define SCREEN_Y 16
 

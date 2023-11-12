@@ -3,7 +3,7 @@
 #include "Game.h"
 
 #define SCENE_0_INIT_PLAYER_TILES glm::ivec2(3, 13)
-#define SCENE_1_INIT_PLAYER_TILES glm::ivec2(3, 13)
+#define SCENE_1_INIT_PLAYER_TILES glm::ivec2(3, 3)
 
 #define LIVES 3
 
@@ -28,8 +28,7 @@ void Game::init()
 
     hud.init(shaderProgram);
 
-	menu.init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_0_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y));
-    menu.setBackground("levels/background01.txt");
+	menu.init(shaderProgram, camera, hud, "levels/menu.txt", SCENE_0_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y));
 
     loadingScene.init(shaderProgram, camera, hud, glm::ivec2(SCREEN_X, SCREEN_Y));
     loadingScene.setLives(lives);
@@ -95,7 +94,6 @@ bool Game::update(float deltaTime)
             hud.setScore(totalScore);
 
             if (scenes[currentSceneIndex]->hasEnded()) {
-                scenes[currentSceneIndex]->setIsOver(false);
                 startRenderingPlayer();
 
                 if (player->isDead() || player->isDying()) {
@@ -211,8 +209,18 @@ void Game::keyPressed(int key)
 }
 
 void Game::changeScene(int sceneIndex) {
+    Scene *currentScene = scenes[currentSceneIndex];
+    Scene *newScene = scenes[sceneIndex];
+
+    if (currentScene->isFinishingScene()) return;
+    if (newScene->isFinishingScene()) return;
+
     currentSceneIndex = sceneIndex;
-    Scene *newScene = scenes[currentSceneIndex];
+
+    if (player->isDead() || player->isDying()) {
+        player->makeAlive();
+    }
+
     newScene->reset();
     hud.setWorldNumber(newScene->getWorldNumber());
 
