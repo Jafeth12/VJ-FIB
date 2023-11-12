@@ -15,6 +15,7 @@ void Game::init()
     currentSceneIndex = 0;
     isRenderingPlayer = true;
 	bPlay = true;
+    paused = false;
     wireframe = false;
     showsLoadingScene = true;
 	glClearColor(0.45, 0.45f, 1.0f, 1.0f);
@@ -58,6 +59,8 @@ void Game::init()
 bool Game::update(float deltaTime)
 {
 
+    if (paused) return bPlay;
+
     TileMap *newTileMap = scenes[currentSceneIndex]->getMap();
     TileMap *newBackgroundMap = scenes[currentSceneIndex]->getBackgroundMap();
 
@@ -81,7 +84,7 @@ bool Game::update(float deltaTime)
                 glm::ivec2 initPlayerTiles = scenes[currentSceneIndex]->getInitPlayerTiles();
                 player->setPosition(glm::vec2(initPlayerTiles.x * newTileMap->getTileSize(), initPlayerTiles.y * newTileMap->getTileSize()));
                 player->setTileMap(newTileMap);
-                SoundEngine::instance().playMainTheme();
+                scenes[currentSceneIndex]->playTheme();
             } else {
                 SoundEngine::instance().stopAllSounds();
                 camera.setPosition(glm::vec2(0, 0));
@@ -203,6 +206,18 @@ void Game::keyPressed(int key)
         camera.setPosition(glm::vec2(0, 0));
     } else if (key == 'l') {
         showsLoadingScene = !showsLoadingScene;
+    } else if (key == 'p') {
+        paused = !paused;
+
+
+        if (paused) {
+            scenes[currentSceneIndex]->pauseTheme();
+        } else {
+            scenes[currentSceneIndex]->resumeTheme();
+        }
+
+        SoundEngine::instance().playPause();
+
     }
 
 	keys[key] = true;
@@ -241,7 +256,7 @@ void Game::changeScene(int sceneIndex) {
         player->setBackgroundMap(newBackgroundMap);
 
         SoundEngine::instance().stopAllSounds();
-        SoundEngine::instance().playMainTheme();
+        scenes[currentSceneIndex]->playTheme();
     }
 }
 

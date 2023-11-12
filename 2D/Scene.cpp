@@ -194,7 +194,7 @@ void Scene::update(float deltaTime, Player *player)
         lastSecondTime = currentTime;
         hud->decrementTimeLeft();
         if (hud->getTimeLeft() == 100) {
-            SoundEngine::instance().stopMainTheme();
+            stopTheme();
             SoundEngine::instance().playHurryUp();
         }
     }
@@ -595,3 +595,36 @@ void Scene::reset() {
 
     map->remesh();
 }
+
+void Scene::playTheme() {
+    if (isOverworld) {
+        SoundEngine::instance().playMainTheme();
+    } else {
+        SoundEngine::instance().playUnderworldTheme();
+    }
+}
+
+void Scene::stopTheme() {
+    if (isOverworld) {
+        SoundEngine::instance().stopMainTheme();
+    } else {
+        SoundEngine::instance().stopUnderworldTheme();
+    }
+}
+
+void Scene::pauseTheme() {
+    if (isOverworld) {
+        SoundEngine::instance().pauseMainTheme();
+    } else {
+        SoundEngine::instance().pauseUnderworldTheme();
+    }
+}
+
+void Scene::resumeTheme() {
+    if (isOverworld) {
+        SoundEngine::instance().resumeMainTheme();
+    } else {
+        SoundEngine::instance().resumeUnderworldTheme();
+    }
+}
+

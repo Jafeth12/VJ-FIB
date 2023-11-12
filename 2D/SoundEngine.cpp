@@ -9,6 +9,8 @@ void SoundEngine::init() {
 
     mainTheme = engine->play2D("sounds/main_theme.wav", true, true, true);
     mainTheme->setIsPaused(true);
+    underworldTheme = engine->play2D("sounds/underground.wav", true, true, true);
+    underworldTheme->setIsPaused(true);
     jump = engine->addSoundSourceFromFile("sounds/jump.wav");
     die = engine->addSoundSourceFromFile("sounds/die.wav");
     coin = engine->addSoundSourceFromFile("sounds/coin.wav");
@@ -25,6 +27,7 @@ void SoundEngine::init() {
     powerup = engine->addSoundSourceFromFile("sounds/powerup.wav");
     powerdown = engine->addSoundSourceFromFile("sounds/pipe_powerdown.wav");
     beep = engine->addSoundSourceFromFile("sounds/beep.wav");
+    pause = engine->addSoundSourceFromFile("sounds/pause.wav");
 }
 
 SoundEngine::~SoundEngine() {
@@ -46,6 +49,34 @@ void SoundEngine::playMainTheme(float playbackSpeed) {
 void SoundEngine::stopMainTheme() {
     mainTheme->setIsPaused(true);
     isPlayingSound = false;
+}
+
+void SoundEngine::playUnderworldTheme() {
+    underworldTheme = engine->play2D("sounds/underground.wav", true, false, true);
+    isPlayingSound = true;
+}
+
+void SoundEngine::stopUnderworldTheme() {
+    underworldTheme->setIsPaused(true);
+    isPlayingSound = false;
+}
+
+void SoundEngine::pauseUnderworldTheme() {
+    underworldTheme->setIsPaused(true);
+    isPlayingSound = false;
+}
+
+void SoundEngine::resumeUnderworldTheme() {
+    underworldTheme->setIsPaused(false);
+}
+
+void SoundEngine::pauseMainTheme() {
+    mainTheme->setIsPaused(true);
+    isPlayingSound = false;
+}
+
+void SoundEngine::resumeMainTheme() {
+    mainTheme->setIsPaused(false);
 }
 
 void SoundEngine::playHurryUp() {
@@ -125,5 +156,10 @@ void SoundEngine::playPowerdown() {
 
 void SoundEngine::playBeep() {
     engine->play2D(beep, false);
+    isPlayingSound = true;
+}
+
+void SoundEngine::playPause() {
+    engine->play2D(pause, false);
     isPlayingSound = true;
 }

@@ -79,6 +79,7 @@ public:
 
 private:
     bool wireframe;
+    bool paused;
 	bool bPlay;                       // Continue to play game?
 	Scene sceneold;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 

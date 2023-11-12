@@ -45,6 +45,12 @@ public:
     bool hasEnded();
     void setIsOver(bool isOver);
 
+    void playTheme();
+    void stopTheme();
+
+    void pauseTheme();
+    void resumeTheme();
+
     void reset();
 
     int getWorldNumber();

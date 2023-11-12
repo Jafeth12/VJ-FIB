@@ -25,6 +25,16 @@ public:
 
     void playMainTheme(float playbackSpeed = 1);
     void stopMainTheme();
+
+    void playUnderworldTheme();
+    void stopUnderworldTheme();
+
+    void pauseMainTheme();
+    void resumeMainTheme();
+
+    void pauseUnderworldTheme();
+    void resumeUnderworldTheme();
+
     void playJump();
     void playJumpBig();
     void playStageClear();
@@ -41,13 +51,13 @@ public:
     void playPowerup();
     void playPowerdown();
     void playBeep();
-
-    bool isMainThemePlaying() { return !mainTheme->getIsPaused(); }
+    void playPause();
 
 private:
     irrklang::ISoundEngine *engine;
 
     irrklang::ISound *mainTheme;
+    irrklang::ISound *underworldTheme;
     irrklang::ISoundSource *jump;
     irrklang::ISoundSource *die;
     irrklang::ISoundSource *coin;
@@ -63,6 +73,7 @@ private:
     irrklang::ISoundSource *hurry_up;
     irrklang::ISoundSource *powerup;
     irrklang::ISoundSource *powerdown;
+    irrklang::ISoundSource *pause;
     irrklang::ISoundSource *beep;
 
     bool isPlayingSound;
