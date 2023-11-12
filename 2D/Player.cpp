@@ -678,6 +678,7 @@ void Player::updateAnimation(bool leftPressed, bool rightPressed, float deltaTim
 glm::vec2 Player::getAcceleration()
 {
     glm::vec2 acc = glm::vec2(0.f);
+    bool onAir = yState != FLOOR;
 
     // Figure out Y acceleration
     //
@@ -688,13 +689,13 @@ glm::vec2 Player::getAcceleration()
             if (velPlayer.x > -X_RUN_SPEED) acc.x = -X_ACC;
             else if (velPlayer.x < -X_RUN_SPEED) acc.x = X_DRAG;
 
-            if (velPlayer.x > 0.f) acc.x += -X_DRAG;
+            if (!onAir && velPlayer.x > 0.f) acc.x += -X_DRAG;
             break;
         case WALK_LEFT:
             if (velPlayer.x > -X_WALK_SPEED) acc.x = -X_ACC;
             else if (velPlayer.x < -X_WALK_SPEED) acc.x = X_DRAG;
 
-            if (velPlayer.x > 0.f) acc.x += -X_DRAG;
+            if (!onAir && velPlayer.x > 0.f) acc.x += -X_DRAG;
             break;
 
         case NONE:
@@ -706,13 +707,13 @@ glm::vec2 Player::getAcceleration()
             if (velPlayer.x < X_WALK_SPEED) acc.x = X_ACC;
             else if (velPlayer.x > -X_WALK_SPEED) acc.x = -X_DRAG;
 
-            if (velPlayer.x < 0.f) acc.x += X_DRAG;
+            if (!onAir && velPlayer.x < 0.f) acc.x += X_DRAG;
             break;
         case RUN_RIGHT:
             if (velPlayer.x < X_RUN_SPEED) acc.x = X_ACC;
             else if (velPlayer.x > -X_RUN_SPEED) acc.x = -X_DRAG;
 
-            if (velPlayer.x < 0.f) acc.x += X_DRAG;
+            if (!onAir && velPlayer.x < 0.f) acc.x += X_DRAG;
             break;
     }
 

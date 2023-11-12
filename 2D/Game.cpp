@@ -3,7 +3,7 @@
 #include "Game.h"
 
 #define SCENE_0_INIT_PLAYER_TILES glm::ivec2(3, 13)
-#define SCENE_1_INIT_PLAYER_TILES glm::ivec2(3, 13)
+#define SCENE_1_INIT_PLAYER_TILES glm::ivec2(3, 3)
 
 #define LIVES 3
 
