@@ -41,8 +41,8 @@ void Game::init()
     scenes[currentSceneIndex]->setBackground("levels/background01.txt");
 
 	// scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
-	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level01.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
-    scenes[currentSceneIndex+1]->setBackground("levels/background01.txt");
+	scenes[currentSceneIndex+1]->init(shaderProgram, camera, hud, "levels/level02.txt", SCENE_1_INIT_PLAYER_TILES, glm::ivec2(SCREEN_X, SCREEN_Y), 2);
+    scenes[currentSceneIndex+1]->setBackground("levels/background02.txt");
 
     TileMap *map = scenes[currentSceneIndex]->getMap();
     TileMap *backgroundMap = scenes[currentSceneIndex]->getBackgroundMap();

@@ -1,23 +1,40 @@
 TILEMAP
-72 16 							-- Size of tile map in tiles
+212 16 							-- Size of tile map in tiles
 32 32 							-- Tile size & block size
 images/tiles.png 	-- Tilesheet
 20 8 								-- Number of tiles in tilesheet
 U
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                                    00
-00                                                            :       00
-00                    2                                               00
-00                                                                    00
-00                                                                    00
-00              =   2=2=2                                     44444   00
-00                                    @A                              00
-00                                    UV                              00
-00                                    UV             334433           00
-111111111111111111111111111111111000111111111111111111111111111111111111
-111111111111111111111111111111111000111111111111111111111111111111111111
-0
+[                                                                                                                                                                                                                   
+[                                                                                                                                                                                                                   
+[                                                                                                                                                                                                                   
+[     2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222                                                                            
+[                                                     22  222222 22                                                                                                                                                 
+[                                                     22  222222 22                                                                                                                           ]                     
+[                                        ,,,,       22        22  2    22                                                                                                                    ]]                     
+[                                                   22        22  2    22          ,,,,,,                                                                                                   ]]]                     
+[                                      2 2222 /     22        22  2    22                                                                                                                  ]]]]                     
+[                            2         2,2  2,2     22    ,,,,22  2,.  22          222222                                                                                                 ]]]]]                     
+[         .----        ] ]             222  222     2222  222222  222  22  2222    222222                  BC                         ]]                                                 ]]]]]]                     
+[                    ] ] ] ]   ]                      22                                             BC    VW           [[           ]]]   22                             22222222      ]]]]]]]                     
+[                  ] ] ] ] ]   ] ]                    22                                             VW    VW    BC     [[          ]]]]                   22   [[[[[[                 ]]]]]]]]                     
+[                ] ] ] ] ] ]   ] ]                                                                   VW    VW    VW     [[         ]]]]]                        [[[[[[                ]]]]]]]]]        E            
+YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY   YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY  YY  YYYYYYYYYYYY        YYYYYYYY        YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY   YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY  YY  YYYYYYYYYYYY        YYYYYYYY        YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+17
+G 15 13 L
+G 17 12 L
+G 30 13 R
+K 45 12 L
+K 59 12 L
+G 61 13 L
+G 63 13 L
+G 72 5 L
+G 76 9 L
+G 98 13 L
+G 100 13 L
+G 133 9 L
+G 135 9 L
+K 151 12 L
+G 175 10 L
+G 176 10 L
+G 177 10 L
