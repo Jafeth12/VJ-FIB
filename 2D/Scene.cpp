@@ -78,6 +78,10 @@ void Scene::update(float deltaTime, Player *player)
     currentTime += deltaTime;
     player->update(deltaTime, scroll);
 
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i]->update(deltaTime);
+    for (unsigned i = 0; i < bricks.size(); ++i) bricks[i]->update(deltaTime);
+    for (unsigned i = 0; i < interrogations.size(); ++i) interrogations[i]->update(deltaTime);
+
     if (player->isDead() || player->isDying()) {
         static float timeAtDeath = currentTime;
         if (timeAtDeath == 0) timeAtDeath = currentTime;
@@ -91,10 +95,6 @@ void Scene::update(float deltaTime, Player *player)
 
         return;
     }
-
-    for (unsigned i = 0; i < coins.size(); ++i) coins[i]->update(deltaTime);
-    for (unsigned i = 0; i < bricks.size(); ++i) bricks[i]->update(deltaTime);
-    for (unsigned i = 0; i < interrogations.size(); ++i) interrogations[i]->update(deltaTime);
     // for (unsigned i = 0; i < interactiveBlocks.size(); ++i) interactiveBlocks[i]->update(deltaTime);
 
     // Check player under the map
