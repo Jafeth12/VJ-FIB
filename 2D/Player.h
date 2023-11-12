@@ -63,6 +63,7 @@ public:
     void makeSmall();
     void makeBig();
     void makeStar();
+    void resetVelocity() { velPlayer = glm::vec2(0); }
 
     int getCurrentStarFrame();
     void moveTo(const glm::vec2 &pos);

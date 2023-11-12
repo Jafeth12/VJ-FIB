@@ -222,6 +222,7 @@ void Game::changeScene(int sceneIndex) {
     }
 
     newScene->reset();
+    player->resetVelocity();
     hud.setWorldNumber(newScene->getWorldNumber());
 
     if (showsLoadingScene) {

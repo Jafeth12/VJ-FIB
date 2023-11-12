@@ -855,7 +855,8 @@ void Player::makeSmall() {
 }
 
 void Player::makeBig() {
-    setState(State::BIG);
+    if (statePlayer == State::SMALL_STAR) setState(State::BIG_STAR);
+    else setState(State::BIG);
 }
 
 void Player::makeStar() {

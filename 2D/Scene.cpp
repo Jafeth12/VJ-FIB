@@ -578,6 +578,9 @@ void Scene::reset() {
     isOver = false;
     isFinishing = false;
     scroll = 0;
+    timeAtFinishingState = 0;
+    lastDeathTime = 0;
+    lastSecondTime = 0;
     flagPoleIsDown = false;
     hud->setTimeLeft(400);
 
