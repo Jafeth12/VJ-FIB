@@ -67,7 +67,9 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Til
     else
         sprite->changeAnimation(walkR);
 
-    setPosition(pos * map->getTileSize());
+    initialPos = pos * map->getTileSize();
+
+    setPosition(initialPos);
 }
 
 
@@ -102,6 +104,13 @@ void Koopa::update(float deltaTime, const glm::ivec2 &playerPos) {
 
 }
 
+void Koopa::reset() {
+    Enemy::reset();
+    dir = initialDir;
+    setPosition(initialPos);
+    currentState = State::WALK;
+    timeSinceShell = 0.f;
+}
 
 void Koopa::updateVelocity(float deltaTime) {
     vel.y += GRAVITY_ACC * deltaTime;

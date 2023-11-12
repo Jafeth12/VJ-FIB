@@ -24,6 +24,8 @@ class Koopa : public Enemy {
         void dieVertical() override;
         void dieFall() override { currentState = State::DEAD; dir = Dir::NONE; Enemy::dieFall(); };
 
+        void reset() override;
+
         bool isDead() const override { return currentState == State::DEAD; };
         bool isDying() const override { return currentState == State::INVERTED; };
         bool isShell() const { return currentState == State::SHELL; };

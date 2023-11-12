@@ -17,6 +17,8 @@ class Goomba : public Enemy {
         void dieVertical() override { currentState = State::CRUSHED; dir = Dir::NONE; Enemy::dieVertical(); };
         void dieFall() override { currentState = State::DEAD; dir = Dir::NONE; Enemy::dieFall(); };
 
+        void reset() override;
+
         bool isDead() const override { return currentState == State::DEAD; };
         bool isDying() const override { return currentState == State::FLIPPED || currentState == State::CRUSHED; };
 

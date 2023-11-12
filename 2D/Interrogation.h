@@ -11,7 +11,6 @@ class Interrogation : public InteractiveBlock
 
         Interrogation(glm::ivec2 tileMapDispl, TileMap *map, glm::vec2 pos, ShaderProgram &shaderProgram, Texture* texture, TileMap::MapColor color, BlockContent content);
 
-        void render() override;
         void activate() override;
 
         BlockContent getObjectInside() const { return content; };

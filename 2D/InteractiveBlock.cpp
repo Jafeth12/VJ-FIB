@@ -28,6 +28,11 @@ void InteractiveBlock::activate() {
     map->destroyBrickTile(getTile());
 }
 
+void InteractiveBlock::reset() {
+    state = BlockState::STATIC;
+    map->placeTileNoRemesh(getTile(), 'l'-'0');
+}
+
 InteractiveBlock::~InteractiveBlock() {
     delete sprite;
 }

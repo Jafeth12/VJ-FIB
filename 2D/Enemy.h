@@ -26,6 +26,7 @@ class Enemy {
 
         void invertDirection() { dir = (Dir)(-(enum_t)dir); };
         void activate() { bActive = true; };
+        virtual void reset();
 
         virtual void dieLateral() { vel.y = 240.f; };
         virtual void dieVertical() { vel.y = 0.f; };
@@ -42,8 +43,9 @@ class Enemy {
         Sprite *sprite;
         TileMap *map;
 
-        glm::ivec2 tileMapDispl,
-                   pos;
+        glm::ivec2 initialPos;
+        glm::ivec2 tileMapDispl, pos;
+        Dir initialDir;
         Dir dir;
         glm::vec2 vel;
 

@@ -18,13 +18,13 @@ void Powerup::init(glm::ivec2 tileMapPos, ShaderProgram &shaderProgram, TileMap 
     tileMapPos.y *= map->getTileSize();
 
     pos = tileMapPos;
+    initialPos = pos;
 
     dir = Dir::RIGHT;
     vel = glm::vec2(0, 0);
 
     consumed = false;
     active = false;
-
 }
 
 void Powerup::update(float deltatime) {
@@ -47,6 +47,14 @@ void Powerup::render() {
 
 void Powerup::activate() {
     active = true;
+}
+
+void Powerup::reset() {
+    active = false;
+    consumed = false;
+    dir = Dir::RIGHT;
+    vel = glm::vec2(0, 0);
+    setPosition(initialPos);
 }
 
 void Powerup::setPosition(const glm::vec2 &pos) {

@@ -20,15 +20,14 @@ class InteractiveBlock
 
         virtual void activate();
 
+        virtual void reset();
+
         bool canActivate() const { return state == BlockState::STATIC; }
         bool shouldRender() const { return state != BlockState::OFF; }
-
-
     protected:
         enum class BlockState { STATIC, JUMPING, OFF };
 
         void setPosition(glm::vec2 &pos);
-
 
         TileMap *map;
         glm::ivec2  tileMapDispl,

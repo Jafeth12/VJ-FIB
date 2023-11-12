@@ -31,6 +31,3 @@ void Interrogation::activate() {
     map->placeTile(getTile(), (int)'4'-'0');
 }
 
-void Interrogation::render() {
-    InteractiveBlock::render();
-}

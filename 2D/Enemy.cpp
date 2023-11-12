@@ -15,6 +15,11 @@ void Enemy::setPosition(const glm::vec2 &pos) {
     sprite->setPosition(glm::vec2(float(tileMapDispl.x + pos.x), float(tileMapDispl.y + pos.y)));
 }
 
+void Enemy::reset() {
+    bActive = false;
+    vel = glm::vec2(0, 0);
+}
+
 bool Enemy::collidesWith(const Enemy &other) const {
     glm::ivec2 otherPos = other.getPosition();
     glm::ivec2 otherSize = other.getSize();
