@@ -79,7 +79,7 @@ void Scene::update(float deltaTime, Player *player)
     currentTime += deltaTime;
     player->update(deltaTime, scroll);
 
-    for (unsigned i = 0; i < coins.size(); ++i) coins[i]->update(deltaTime);
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i].update(deltaTime);
     for (unsigned i = 0; i < bricks.size(); ++i) bricks[i]->update(deltaTime);
     for (unsigned i = 0; i < interrogations.size(); ++i) interrogations[i]->update(deltaTime);
 
@@ -382,8 +382,8 @@ void Scene::update(float deltaTime, Player *player)
     }
 
     for (unsigned i = 0; i < coins.size(); ++i) {
-        if (player->collidesWith(*coins[i]) && coins[i]->canTake()) {
-            coins[i]->take();
+        if (player->collidesWith(coins[i]) && coins[i].canTake()) {
+            coins[i].take();
             hud->addCoin();
             SoundEngine::instance().playCoin();
             Game::instance().addScore(SCORE_COIN);
@@ -456,7 +456,7 @@ void Scene::render() {
     if (foreground != NULL) foreground->render();
     if (flagSprite != NULL) flagSprite->render();
 
-    for (unsigned i = 0; i < coins.size(); ++i) coins[i]->render();
+    for (unsigned i = 0; i < coins.size(); ++i) coins[i].render();
 
     for (unsigned i = 0; i < bricks.size(); ++i) {
         if (bricks[i]->shouldRender())
@@ -566,10 +566,11 @@ void Scene::initInteractiveBlocks() {
 }
 
 void Scene::initCoins() {
+    coins.clear();
     auto coinsPos = map->getCoins();
     coins.resize(coinsPos.size());
     for (unsigned i = 0; i < coinsPos.size(); ++i) {
-        coins[i] = new Coin(*texProgram, coinsPos[i].pos, map);
+        coins[i].init(*texProgram, coinsPos[i].pos, map);
     }
 }
 
@@ -586,11 +587,14 @@ void Scene::reset() {
 
     for (unsigned i = 0; i < bricks.size(); ++i) delete bricks[i];
     for (unsigned i = 0; i < interrogations.size(); ++i) delete interrogations[i];
-    for (unsigned i = 0; i < coins.size(); ++i) delete coins[i];
+    for (unsigned i = 0; i < mushrooms.size(); ++i) delete mushrooms[i];
+    for (unsigned i = 0; i < stars.size(); ++i) delete stars[i];
 
     bricks.clear();
     interrogations.clear();
     coins.clear();
+    mushrooms.clear();
+    stars.clear();
 
     initEnemies();
     initInteractiveBlocks();

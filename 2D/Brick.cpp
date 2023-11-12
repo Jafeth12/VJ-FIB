@@ -20,5 +20,3 @@ Brick::Brick(glm::ivec2 tileMapDispl, TileMap *map, glm::vec2 pos, ShaderProgram
     sprite->changeAnimation(0);
 }
 
-Brick::~Brick() { }
-

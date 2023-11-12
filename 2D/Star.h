@@ -8,7 +8,6 @@ class Star : public Powerup {
 public:
     Star();
     Star(glm::ivec2 tileMapPos, ShaderProgram &shaderProgram, TileMap *map, bool overworld);
-    ~Star();
 
     void init(glm::ivec2 tileMapPos, ShaderProgram &shaderProgram, TileMap *map, bool overworld);
 

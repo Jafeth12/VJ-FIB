@@ -75,7 +75,7 @@ protected:
     std::vector<Mushroom*> mushrooms;
     std::vector<Star*> stars;
 
-    std::vector<Coin*> coins;
+    std::vector<Coin> coins;
 
     glm::ivec2 initPlayerTiles;
     glm::ivec2 minCoords;

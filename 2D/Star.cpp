@@ -3,13 +3,7 @@
 
 #define STAR_SIZE_IN_SPRITESHEET 16.f
 
-Star::Star() : Powerup() {
-
-}
-
-Star::~Star() {
-
-}
+Star::Star() : Powerup() {}
 
 Star::Star(glm::ivec2 tileMapPos, ShaderProgram &shaderProgram, TileMap *map, bool overworld) {
     init(tileMapPos, shaderProgram, map, overworld);

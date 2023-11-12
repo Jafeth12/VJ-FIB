@@ -4,7 +4,6 @@
 #define MUSH_SIZE_IN_SPRITESHEET 16.f
 
 Mushroom::Mushroom() {}
-Mushroom::~Mushroom() {}
 
 Mushroom::Mushroom(glm::ivec2 tileMapPos, ShaderProgram &shaderProgram, TileMap *map, bool overworld) {
     init(tileMapPos, shaderProgram, map, overworld);

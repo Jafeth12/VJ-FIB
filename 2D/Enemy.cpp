@@ -5,6 +5,11 @@ void Enemy::render() {
         sprite->render();
 }
 
+Enemy::~Enemy() {
+    if (sprite != nullptr)
+        delete sprite;
+}
+
 void Enemy::setPosition(const glm::vec2 &pos) {
     this->pos = pos;
     sprite->setPosition(glm::vec2(float(tileMapDispl.x + pos.x), float(tileMapDispl.y + pos.y)));
