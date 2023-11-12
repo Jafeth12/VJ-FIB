@@ -99,7 +99,7 @@ bool TileMap::loadLevel(const string &levelFile)
         return false;
     }
 	
-	map = new int[mapSize.x * mapSize.y];
+	map = new char[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
@@ -430,4 +430,8 @@ void TileMap::destroyBrickTile(const glm::ivec2 &tileCoord) {
 void TileMap::placeTile(const glm::ivec2 &tileCoord, int tileType) {
     map[tileCoord.y * mapSize.x + tileCoord.x] = tileType;
     remesh();
+}
+
+void TileMap::placeTileNoRemesh(const glm::ivec2 &tileCoord, int tileType) {
+    map[tileCoord.y * mapSize.x + tileCoord.x] = tileType;
 }

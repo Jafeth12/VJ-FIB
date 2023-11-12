@@ -11,6 +11,7 @@ Texture *Goomba::s_goombaTexture = nullptr;
 
 void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, TileMap *tileMap, TileMap::MapColor color, Enemy::Dir initialDirection, const glm::ivec2 &pos) {
     dir = initialDirection;
+    initialDir = initialDirection;
     tileMapDispl = tileMapPos;
     map = tileMap;
     bActive = false;
@@ -55,7 +56,9 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Ti
     // Set default animation
     sprite->changeAnimation(walkId);
 
-    setPosition(pos * map->getTileSize());
+    initialPos = pos * map->getTileSize();
+
+    setPosition(initialPos);
 }
 
 void Goomba::update(float deltaTime) {
@@ -75,6 +78,13 @@ void Goomba::update(float deltaTime) {
     }
 }
 
+void Goomba::reset() {
+    Enemy::reset();
+    dir = initialDir;
+    setPosition(initialPos);
+    currentState = State::WALK;
+    timeSinceCrushed = 0.f;
+}
 
 void Goomba::updateVelocity(float deltaTime) {
     if (currentState == State::CRUSHED)

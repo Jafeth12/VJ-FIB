@@ -583,21 +583,12 @@ void Scene::reset() {
 
     resetFlagPosition();
 
+    for (unsigned i = 0; i < bricks.size(); ++i) bricks[i]->reset();
+    for (unsigned i = 0; i < interrogations.size(); ++i) interrogations[i]->reset();
+    for (unsigned i = 0; i < mushrooms.size(); ++i) mushrooms[i]->reset();
+    for (unsigned i = 0; i < stars.size(); ++i) stars[i]->reset();
+    for (unsigned i = 0; i < goombas.size(); ++i) goombas[i].reset();
+    for (unsigned i = 0; i < koopas.size(); ++i) koopas[i].reset();
+
     map->remesh();
-
-    for (unsigned i = 0; i < bricks.size(); ++i) delete bricks[i];
-    for (unsigned i = 0; i < interrogations.size(); ++i) delete interrogations[i];
-    for (unsigned i = 0; i < mushrooms.size(); ++i) delete mushrooms[i];
-    for (unsigned i = 0; i < stars.size(); ++i) delete stars[i];
-
-    bricks.clear();
-    interrogations.clear();
-    coins.clear();
-    mushrooms.clear();
-    stars.clear();
-
-    initEnemies();
-    initInteractiveBlocks();
-    initCoins();
-
 }

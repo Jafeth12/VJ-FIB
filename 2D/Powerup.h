@@ -25,6 +25,7 @@ public:
     void invertDirection() { dir = (Dir)(-(char)dir); };
 
     void activate();
+    virtual void reset();
 
     glm::ivec2 getSize() const { return POWERUP_SIZE; };
     glm::ivec2 getPos() const;
@@ -44,6 +45,7 @@ protected:
 
     ShaderProgram *shaderProgram;
 
+    glm::ivec2 initialPos;
     glm::ivec2 pos;
     glm::vec2 vel;
     Dir dir;
