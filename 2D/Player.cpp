@@ -16,9 +16,9 @@
 #define PLAYER_SIZE glm::ivec2(32, 32)
 #define PLAYER_BIG_SIZE glm::ivec2(32, 64)
 #define X_WALK_SPEED 225.f
-#define X_RUN_SPEED 2.f * X_WALK_SPEED
+#define X_RUN_SPEED 1.6f * X_WALK_SPEED
 #define X_ACC  550.f
-#define X_DRAG 700.f
+#define X_DRAG 750.f
 
 
 
@@ -678,14 +678,21 @@ glm::vec2 Player::getAcceleration()
     glm::vec2 acc = glm::vec2(0.f);
 
     // Figure out Y acceleration
+    //
+            // if ((velPlayer.x < 0 && onlyR) || (velPlayer.x > 0 && onlyL))
+            //     verticalAnim = VerticalAnim::BRAKE;
     switch (xState) {
         case RUN_LEFT:
             if (velPlayer.x > -X_RUN_SPEED) acc.x = -X_ACC;
             else if (velPlayer.x < -X_RUN_SPEED) acc.x = X_DRAG;
+
+            if (velPlayer.x > 0.f) acc.x += -X_DRAG;
             break;
         case WALK_LEFT:
             if (velPlayer.x > -X_WALK_SPEED) acc.x = -X_ACC;
             else if (velPlayer.x < -X_WALK_SPEED) acc.x = X_DRAG;
+
+            if (velPlayer.x > 0.f) acc.x += -X_DRAG;
             break;
 
         case NONE:
@@ -696,10 +703,14 @@ glm::vec2 Player::getAcceleration()
         case WALK_RIGHT:
             if (velPlayer.x < X_WALK_SPEED) acc.x = X_ACC;
             else if (velPlayer.x > -X_WALK_SPEED) acc.x = -X_DRAG;
+
+            if (velPlayer.x < 0.f) acc.x += X_DRAG;
             break;
         case RUN_RIGHT:
             if (velPlayer.x < X_RUN_SPEED) acc.x = X_ACC;
             else if (velPlayer.x > -X_RUN_SPEED) acc.x = -X_DRAG;
+
+            if (velPlayer.x < 0.f) acc.x += X_DRAG;
             break;
     }
 
