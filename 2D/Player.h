@@ -21,7 +21,7 @@ class Player
 
 public:
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
-	void update(float deltaTime);
+	void update(float deltaTime, float scroll);
 	void render();
 
 	void setTileMap(TileMap *tileMap);
@@ -99,7 +99,7 @@ private:
     enum PlayerXState { RUN_LEFT, WALK_LEFT, NONE, WALK_RIGHT, RUN_RIGHT };
 
     void updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime);
-    void updatePosition(float deltaTime);
+    void updatePosition(float deltaTime, float scroll);
 
     void updatePlayerState(float deltaTime);
     bool updateYState(bool upPressed);

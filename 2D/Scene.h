@@ -92,6 +92,8 @@ protected:
 
     bool isOverworld;
 
+    float scroll;
+
 private:
     void resetFlagPosition();
     void initEnemies();

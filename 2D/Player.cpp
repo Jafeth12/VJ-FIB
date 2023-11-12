@@ -249,7 +249,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 }
 
-void Player::update(float deltaTime)
+void Player::update(float deltaTime, float scroll)
 {
     // Animations and stuff
     if (yState != DOWNWARDS)
@@ -259,7 +259,7 @@ void Player::update(float deltaTime)
 
     if (backgroundMap != NULL) headOnFinishingTile = backgroundMap->headOnFinishingTile(posPlayer, PLAYER_SIZE);
 
-    if (!isFinishing && headOnFinishingTile) {
+    if (!isFinishing && headOnFinishingTile && statePlayer != State::DYING && statePlayer != State::DEAD) {
         isFinishing = true;
         finishingState = FinishingState::POLE;
         SoundEngine::instance().stopAllSounds();
@@ -326,7 +326,7 @@ void Player::update(float deltaTime)
 
     // Act upon state and the vars
     updateVelocity(acc, shouldJump, deltaTime);
-    updatePosition(deltaTime);
+    updatePosition(deltaTime, scroll);
 
 	// Set the new position of the player
     setPosition(posPlayer);
@@ -503,7 +503,7 @@ void Player::updateVelocity(glm::vec2 acc, bool shouldJump, float deltaTime)
     }
 }
 
-void Player::updatePosition(float deltaTime)
+void Player::updatePosition(float deltaTime, float scroll)
 {
     // Calculate teoretical next position
     glm::ivec2 next_pos;
@@ -522,8 +522,10 @@ void Player::updatePosition(float deltaTime)
 
     if (collisionsx) velPlayer.x = 0.0f;
     if (collisionsy) velPlayer.y = 0.0f;
+
+    bool sepasa = next_pos.x < 0 || next_pos.x < scroll;
     // Apply the new position
-    posPlayer = next_pos;
+    if (!sepasa) posPlayer = next_pos;
 }
 
 bool Player::updateYState(bool upPressed)

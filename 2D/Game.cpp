@@ -67,6 +67,7 @@ bool Game::update(float deltaTime)
             SoundEngine::instance().stopAllSounds();
             player->setPosition(glm::vec2(menu.getInitPlayerTiles().x * newTileMap->getTileSize(), menu.getInitPlayerTiles().y * newTileMap->getTileSize()));
             camera.setPosition(glm::vec2(0, 0));
+            hud.setWorldNumber(1);
             menu.update(deltaTime);
             if (menu.getMenuState() == MainMenu::MenuState::PLAY) {
                 currentState = GAME_PLAY;

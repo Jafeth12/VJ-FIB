@@ -59,6 +59,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 
 	currentTime = 0.0f;
     lastSecondTime = 0.0f;
+    scroll = 0.f;
 
     if (levelFilename[0] != ' ') {
         // Cargar el mapa de tiles
@@ -74,7 +75,7 @@ void Scene::init(ShaderProgram &shaderProgram, Camera &camera, HUD &hud, std::st
 void Scene::update(float deltaTime, Player *player)
 {
     currentTime += deltaTime;
-    player->update(deltaTime);
+    player->update(deltaTime, scroll);
 
     if (player->isDead() || player->isDying()) {
         static float timeAtDeath = currentTime;
@@ -98,6 +99,7 @@ void Scene::update(float deltaTime, Player *player)
     // Check player under the map
     if (player->getPosition().y > (map->getMapSize().y - 2) * map->getTileSize()) {
         player->fallDie();
+        SoundEngine::instance().stopAllSounds();
         SoundEngine::instance().playDie();
         return;
     }
@@ -144,7 +146,15 @@ void Scene::update(float deltaTime, Player *player)
         isFinishing = true;
     }
 
-    if (!isFinishing) camera->setXPosition(playerPos.x - initPlayerTiles.x * map->getTileSize());
+    if (isFinishing) {
+        if (player->getFinishingState() == Player::FinishingState::POLE) camera->setXPosition(playerPos.x - initPlayerTiles.x * map->getTileSize());
+    } else {
+        int x = playerPos.x;
+        if (x >= scroll + (float)SCREEN_WIDTH/2.35) {
+            scroll += abs(x - (scroll + (float)SCREEN_WIDTH/2.35));
+            camera->setXPosition(scroll);
+        }
+    }
 
     // if a quarter of a second has passed, decrement time left
     if (currentTime - lastSecondTime > 0.4f) {
@@ -308,6 +318,8 @@ void Scene::update(float deltaTime, Player *player)
 
                 switch (content) {
                     case Interrogation::BlockContent::COIN:
+                            SoundEngine::instance().playCoin();
+                            Game::instance().addScore(SCORE_COIN);
                         break;
                     case Interrogation::BlockContent::MUSHROOM:
                         for (unsigned i = 0; i < mushrooms.size(); ++i) {
@@ -527,6 +539,7 @@ void Scene::initCoins() {
 void Scene::reset() {
     isOver = false;
     isFinishing = false;
+    scroll = 0;
     resetFlagPosition();
 
     map->remesh();
