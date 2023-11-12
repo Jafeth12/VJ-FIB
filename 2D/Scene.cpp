@@ -540,6 +540,8 @@ void Scene::reset() {
     isOver = false;
     isFinishing = false;
     scroll = 0;
+    hud->setTimeLeft(400);
+
     resetFlagPosition();
 
     map->remesh();
