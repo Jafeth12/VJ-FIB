@@ -3,7 +3,7 @@
 #include "TileMap.h"
 
 #define ANIM_SPEED 8
-#define KOOPA_SPEED 120.f
+#define KOOPA_SPEED 100.f
 #define SHELL_SPEED 240.f
 #define KOOPA_SHELL_TIME 5.f
 

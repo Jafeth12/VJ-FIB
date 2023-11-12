@@ -4,7 +4,7 @@
 
 #define ANIM_SPEED 8
 #define GOOMBA_SIZE_IN_SPRITESHEET 32.f
-#define GOOMBA_SPEED 120.f
+#define GOOMBA_SPEED 100.f
 #define GOOMA_CRUSHED_TIME 0.5f
 
 Texture *Goomba::s_goombaTexture = nullptr;
