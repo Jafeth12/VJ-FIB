@@ -100,6 +100,10 @@ void Koopa::update(float deltaTime, const glm::ivec2 &playerPos) {
         timeSinceShell = 0.f;
     }
 
+    if (bKicked) {
+        timeSinceKick += deltaTime;
+    }
+
 }
 
 
@@ -138,6 +142,7 @@ void Koopa::updatePosition(float deltaTime) {
 void Koopa::kick(Dir dir) {
     if (currentState == State::SHELL) {
         this->dir = dir;
+        bKicked = true;
     }
 }
 

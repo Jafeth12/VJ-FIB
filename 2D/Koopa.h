@@ -27,7 +27,7 @@ class Koopa : public Enemy {
         bool isDead() const override { return currentState == State::DEAD; };
         bool isDying() const override { return currentState == State::INVERTED; };
         bool isShell() const { return currentState == State::SHELL; };
-        bool isMovingShell() const { return currentState == State::SHELL && vel.x != 0.f; };
+        bool isMovingShell() const { return currentState == State::SHELL && bKicked && timeSinceKick >= 0.5f; };
 
         Dir kickDirection(Player &p) const;
 
@@ -47,6 +47,9 @@ class Koopa : public Enemy {
         // Attributes
         State currentState;
         float timeSinceShell;
+
+        bool bKicked = false;
+        float timeSinceKick;
 };
 
 #endif
