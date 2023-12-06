@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://d2h5lpkd1b7ff"]
+[gd_scene load_steps=57 format=3 uid="uid://d2h5lpkd1b7ff"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_l5rtp"]
 [ext_resource type="Texture2D" uid="uid://boqo6wfu1f426" path="res://art/PlayerCyborg-a.png" id="2_vbfnd"]
@@ -80,6 +80,34 @@ region = Rect2(320, 320, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_bkwcx"]
 atlas = ExtResource("2_vbfnd")
 region = Rect2(384, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d6xg4"]
+atlas = ExtResource("2_vbfnd")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uix0c"]
+atlas = ExtResource("2_vbfnd")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0oj30"]
+atlas = ExtResource("2_vbfnd")
+region = Rect2(192, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_62sai"]
+atlas = ExtResource("2_vbfnd")
+region = Rect2(256, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p7dpp"]
+atlas = ExtResource("2_vbfnd")
+region = Rect2(320, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_03uh2"]
+atlas = ExtResource("2_vbfnd")
+region = Rect2(384, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wxb8y"]
+atlas = ExtResource("2_vbfnd")
+region = Rect2(448, 128, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mfjxl"]
 atlas = ExtResource("2_vbfnd")
@@ -256,6 +284,32 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_d6xg4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uix0c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0oj30")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_62sai")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p7dpp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_03uh2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wxb8y")
+}],
+"loop": true,
+"name": &"dodge",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_mfjxl")
 }, {
 "duration": 1.0,
@@ -360,7 +414,8 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0.449255, 0)
 lod_bias = 0.001
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_72fuo")
-animation = &"idle"
+animation = &"dodge"
+frame_progress = 0.014505
 
 [node name="camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 6)
