@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 
 @export var SPEED = PI/8 # 1 lap = 16 secs.
-const JUMP_VELOCITY = 10	
+const JUMP_VELOCITY = 10
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 # var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -38,3 +38,6 @@ func _physics_process(delta):
 	velocity.x = (next_position.x - get_position().x)/delta
 	velocity.z = (next_position.z - get_position().z)/delta
 	move_and_slide()
+
+func _process(delta):
+	look_at(Vector3(0, get_position().y, 0))
