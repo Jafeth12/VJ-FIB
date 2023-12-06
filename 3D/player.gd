@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-enum ANIMATION_STATES { IDLE, WALK, JUMP }
+enum ANIMATION_STATES { IDLE, WALK, JUMP, CROUCH }
 enum FACING { LEFT, RIGHT }
 
 @export var SPEED = PI/8 # 1 lap = 16 secs.
@@ -50,7 +50,8 @@ func _physics_process(delta):
 		facing = FACING.LEFT
 
 	# Update alpha
-	alpha += circular_dir * SPEED * delta
+	if !is_crouching():
+		alpha += circular_dir * SPEED * delta
 	var next_xz = get_next_xz()
 	velocity.x = (next_xz.x - get_position().x)/delta
 	velocity.z = (next_xz.y - get_position().z)/delta
@@ -65,18 +66,21 @@ func _physics_process(delta):
 
 func update_anim_state():
 	var current_anim = $sprite.animation
-
 	# prox_estado:
 	match anim_state:
 		ANIMATION_STATES.IDLE:
 			if velocity.y != 0:
 				anim_state = ANIMATION_STATES.JUMP
+			elif Input.is_action_pressed("crouch"):
+				anim_state = ANIMATION_STATES.CROUCH
 			elif velocity.length() > 0:
 				anim_state = ANIMATION_STATES.WALK
 
 		ANIMATION_STATES.WALK:
 			if velocity.y != 0:
 				anim_state = ANIMATION_STATES.JUMP
+			elif Input.is_action_pressed("crouch"):
+				anim_state = ANIMATION_STATES.CROUCH
 			elif velocity.length() == 0:
 				anim_state = ANIMATION_STATES.IDLE
 
@@ -86,6 +90,15 @@ func update_anim_state():
 					anim_state = ANIMATION_STATES.WALK
 				elif velocity.length() == 0:
 					anim_state = ANIMATION_STATES.IDLE
+
+		ANIMATION_STATES.CROUCH:
+			if velocity.y != 0:
+				anim_state = ANIMATION_STATES.JUMP
+			elif !Input.is_action_pressed("crouch"):
+				if velocity.length() == 0:
+					anim_state = ANIMATION_STATES.IDLE
+				elif velocity.length() > 0:
+					anim_state = ANIMATION_STATES.WALK
 
 	# logica_salida:
 	match anim_state:
@@ -101,6 +114,10 @@ func update_anim_state():
 			if current_anim != "jump":
 				$sprite.play("jump")
 
+		ANIMATION_STATES.CROUCH:
+			if current_anim != "crouch":
+				$sprite.play("crouch")
+
 func update_facing():
 	if facing == FACING.RIGHT:
 		$sprite.set_scale(Vector3(-our_scale, our_scale, our_scale))
@@ -113,3 +130,6 @@ func get_next_xz():
 func set_alpha_by_position(pos):
 	alpha = asin(pos.x/player_radius)
 	# alpha = acos(pos.z/player_radius) # same shit
+
+func is_crouching():
+	return Input.is_action_pressed("crouch") && is_on_floor()
