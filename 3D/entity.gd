@@ -8,7 +8,7 @@ const JUMP_VELOCITY = 10
 # var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 const gravity = 10 # TODO: abstraer esto
 const player_radius = 18 # TODO: abtraer esto
-var alpha = 0
+@export var alpha = 0
 
 
 func _physics_process(delta):
@@ -34,10 +34,18 @@ func _physics_process(delta):
 
 	# Update alpha
 	alpha += circular_dir * SPEED * delta
-	var next_position = Vector3(player_radius*sin(alpha), velocity.y*delta+get_position().y, player_radius*cos(alpha))
-	velocity.x = (next_position.x - get_position().x)/delta
-	velocity.z = (next_position.z - get_position().z)/delta
-	move_and_slide()
+	var next_xz = get_next_xz()
+	velocity.x = (next_xz.x - get_position().x)/delta
+	velocity.z = (next_xz.y - get_position().z)/delta
+	if move_and_slide():
+		set_alpha_by_position(get_position())
 
 func _process(delta):
 	look_at(Vector3(0, get_position().y, 0))
+
+func get_next_xz():
+	return Vector2(player_radius*sin(alpha), player_radius*cos(alpha))
+
+func set_alpha_by_position(pos):
+	alpha = asin(pos.x/player_radius)
+	# alpha = acos(pos.z/player_radius) # same shit
