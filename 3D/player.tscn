@@ -1,8 +1,9 @@
-[gd_scene load_steps=48 format=3 uid="uid://d2h5lpkd1b7ff"]
+[gd_scene load_steps=50 format=3 uid="uid://d2h5lpkd1b7ff"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_l5rtp"]
-[ext_resource type="PackedScene" uid="uid://dokf3j2lqi14t" path="res://entity.tscn" id="2_fpybq"]
 [ext_resource type="Texture2D" uid="uid://boqo6wfu1f426" path="res://art/PlayerCyborg-a.png" id="2_vbfnd"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1e10u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2fqki"]
 atlas = ExtResource("2_vbfnd")
@@ -96,17 +97,29 @@ region = Rect2(128, 0, 64, 64)
 atlas = ExtResource("2_vbfnd")
 region = Rect2(192, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_cgmhu"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_6gdfq"]
 atlas = ExtResource("2_vbfnd")
-region = Rect2(448, 320, 64, 64)
+region = Rect2(0, 192, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_lyqku"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_hcypx"]
 atlas = ExtResource("2_vbfnd")
-region = Rect2(512, 320, 64, 64)
+region = Rect2(64, 192, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_d8rds"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_t7cbd"]
 atlas = ExtResource("2_vbfnd")
-region = Rect2(576, 320, 64, 64)
+region = Rect2(128, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k4pa8"]
+atlas = ExtResource("2_vbfnd")
+region = Rect2(192, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w6kmn"]
+atlas = ExtResource("2_vbfnd")
+region = Rect2(256, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mr3ki"]
+atlas = ExtResource("2_vbfnd")
+region = Rect2(320, 192, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y6kjd"]
 atlas = ExtResource("2_vbfnd")
@@ -259,18 +272,27 @@ animations = [{
 "speed": 8.0
 }, {
 "frames": [{
-"duration": 4.0,
-"texture": SubResource("AtlasTexture_cgmhu")
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_6gdfq")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_lyqku")
+"texture": SubResource("AtlasTexture_hcypx")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_d8rds")
+"texture": SubResource("AtlasTexture_t7cbd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k4pa8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w6kmn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mr3ki")
 }],
-"loop": true,
+"loop": false,
 "name": &"jump",
-"speed": 5.0
+"speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -326,23 +348,19 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_1e10u"]
-
-[node name="player" type="Node3D"]
+[node name="player" type="CharacterBody3D"]
 script = ExtResource("1_l5rtp")
 
-[node name="generic-entity" parent="." instance=ExtResource("2_fpybq")]
-
-[node name="animation" type="AnimatedSprite3D" parent="generic-entity"]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0.449255, 0)
-texture_filter = 0
-sprite_frames = SubResource("SpriteFrames_72fuo")
-animation = &"walk"
-frame_progress = 0.468077
-
-[node name="collision" type="CollisionShape3D" parent="generic-entity"]
+[node name="collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("BoxShape3D_1e10u")
 
-[node name="camera" type="Camera3D" parent="generic-entity"]
+[node name="sprite" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0.449255, 0)
+lod_bias = 0.001
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_72fuo")
+animation = &"idle"
+
+[node name="camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45, 8)

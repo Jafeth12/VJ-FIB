@@ -1,5 +1,6 @@
 extends CharacterBody3D
 
+enum ANIMATION_STATES { IDLE, WALK, JUMP }
 
 @export var SPEED = PI/8 # 1 lap = 16 secs.
 const JUMP_VELOCITY = 10
@@ -10,6 +11,16 @@ const gravity = 10 # TODO: abstraer esto
 const player_radius = 18 # TODO: abtraer esto
 @export var alpha = 0
 
+var anim_state = ANIMATION_STATES.IDLE
+
+func _process(delta):
+	if anim_state == ANIMATION_STATES.IDLE:
+		$AnimationPlayer.play("Idle")
+	elif anim_state == ANIMATION_STATES.WALK:
+		$AnimationPlayer.play("Walk")
+	elif anim_state == ANIMATION_STATES.JUMP:
+		$AnimationPlayer.play("Jump")
+	look_at(Vector3(0, get_position().y, 0))
 
 func _physics_process(delta):
 	# Add the gravity.
@@ -39,9 +50,6 @@ func _physics_process(delta):
 	velocity.z = (next_xz.y - get_position().z)/delta
 	if move_and_slide():
 		set_alpha_by_position(get_position())
-
-func _process(delta):
-	look_at(Vector3(0, get_position().y, 0))
 
 func get_next_xz():
 	return Vector2(player_radius*sin(alpha), player_radius*cos(alpha))

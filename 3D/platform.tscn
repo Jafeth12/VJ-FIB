@@ -4,7 +4,7 @@
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_8r35x"]
 top_radius = 20.0
-bottom_radius = 5.0
+bottom_radius = 19.0
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_k3lfb"]
 radius = 20.0
@@ -29,7 +29,7 @@ mesh = SubResource("CylinderMesh_8r35x")
 shape = SubResource("CylinderShape3D_k3lfb")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59469, 18.6388)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.595, 18.5)
 
 [node name="cube_mesh" type="MeshInstance3D" parent="StaticBody3D"]
 mesh = SubResource("BoxMesh_pj8i0")
