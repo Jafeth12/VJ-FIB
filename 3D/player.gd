@@ -22,6 +22,7 @@ var facing = FACING.RIGHT
 func _ready():
 	$sprite.set_scale(Vector3(our_scale, our_scale, our_scale))
 	$sprite.play("idle")
+	$sprite.connect("animation_finished", on_animation_finished)
 
 func _process(delta):
 	if should_die():
@@ -117,16 +118,6 @@ func update_anim_state():
 				elif velocity.length() > 0:
 					anim_state = ANIMATION_STATES.WALK
 
-		ANIMATION_STATES.DODGE:
-			if false: #FIXME
-				if velocity.y != 0:
-					anim_state = ANIMATION_STATES.JUMP
-				elif Input.is_action_pressed("crouch"):
-					anim_state = ANIMATION_STATES.CROUCH
-				elif velocity.length() > 0:
-					anim_state = ANIMATION_STATES.WALK
-				
-
 	# logica_salida:
 	match anim_state:
 		ANIMATION_STATES.IDLE:
@@ -162,7 +153,7 @@ func update_facing():
 func get_next_xz():
 	return Vector2(player_radius*sin(alpha), player_radius*cos(alpha))
 
-func get_position_alpha(pos):
+func get_position_alpha(_pos):
 	return old_alpha
 	# alpha = asin(pos.x/player_radius)
 	# alpha = acos(pos.z/player_radius)
@@ -178,3 +169,10 @@ func die():
 
 func is_dead():
 	return anim_state == ANIMATION_STATES.DIE
+
+func on_animation_finished():
+	match anim_state:
+		ANIMATION_STATES.DODGE:
+			anim_state = ANIMATION_STATES.IDLE
+		
+
