@@ -19,12 +19,12 @@ var old_alpha = 0
 var anim_state = ANIMATION_STATES.IDLE
 var facing = FACING.RIGHT
 
-func _ready():
+func _ready() -> void:
 	$sprite.set_scale(Vector3(our_scale, our_scale, our_scale))
 	$sprite.play("idle")
 	$sprite.connect("animation_finished", on_animation_finished)
 
-func _process(delta):
+func _process(delta: float) -> void:
 	if should_die():
 		die()
 	if !is_dead():
@@ -32,7 +32,7 @@ func _process(delta):
 	look_at(Vector3(0, get_position().y, 0))
 	update_anim_state()
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	if is_dead():
 		return
 	# Add the gravity.
@@ -45,11 +45,11 @@ func _physics_process(delta):
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
-	var right_pressed = Input.is_action_pressed("move_right")
-	var left_pressed = Input.is_action_pressed("move_left")
+	var right_pressed: bool = Input.is_action_pressed("move_right")
+	var left_pressed: bool = Input.is_action_pressed("move_left")
 
 	# Get direction of movement
-	var circular_dir = 0;
+	var circular_dir: int = 0;
 	if right_pressed && !left_pressed:
 		circular_dir = 1
 		facing = FACING.RIGHT
@@ -59,12 +59,13 @@ func _physics_process(delta):
 
 	# Update alpha
 	if !is_crouching():
-		alpha = alpha + circular_dir * SPEED * delta
+		var speed: float = DODGE_SPEED if is_dodging() else SPEED
+		alpha += circular_dir * speed * delta
 	var next_xz = get_next_xz()
 	velocity.x = (next_xz.x - get_position().x)/delta
 	velocity.z = (next_xz.y - get_position().z)/delta
 
-	var length = velocity.length()
+	var length: float = velocity.length()
 	if length < 0.005:
 		velocity = Vector3(0, 0, 0)
 
@@ -75,11 +76,11 @@ func _physics_process(delta):
 	old_alpha = alpha
 
 func update_anim_state():
-	var current_anim = $sprite.animation
+	var current_anim: StringName = $sprite.animation
 	# prox_estado:
 	match anim_state:
 		ANIMATION_STATES.IDLE:
-			if Input.is_action_pressed("dodge"):
+			if Input.is_action_just_pressed("dodge"):
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
 				anim_state = ANIMATION_STATES.JUMP
@@ -89,7 +90,7 @@ func update_anim_state():
 				anim_state = ANIMATION_STATES.WALK
 
 		ANIMATION_STATES.WALK:
-			if Input.is_action_pressed("dodge"):
+			if Input.is_action_just_pressed("dodge"):
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
 				anim_state = ANIMATION_STATES.JUMP
@@ -99,7 +100,7 @@ func update_anim_state():
 				anim_state = ANIMATION_STATES.IDLE
 
 		ANIMATION_STATES.JUMP:
-			if Input.is_action_pressed("dodge"):
+			if Input.is_action_just_pressed("dodge"):
 				anim_state = ANIMATION_STATES.DODGE
 			elif is_on_floor():
 				if velocity.length() > 0:
@@ -108,7 +109,7 @@ func update_anim_state():
 					anim_state = ANIMATION_STATES.IDLE
 
 		ANIMATION_STATES.CROUCH:
-			if Input.is_action_pressed("dodge"):
+			if Input.is_action_just_pressed("dodge"):
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
 				anim_state = ANIMATION_STATES.JUMP
@@ -144,35 +145,36 @@ func update_anim_state():
 			if current_anim != "dodge":
 				$sprite.play("dodge")
 
-func update_facing():
+func update_facing() -> void:
 	if facing == FACING.RIGHT:
 		$sprite.set_scale(Vector3(-our_scale, our_scale, our_scale))
 	elif facing == FACING.LEFT:
 		$sprite.set_scale(Vector3(our_scale, our_scale, our_scale))
 
-func get_next_xz():
+func get_next_xz() -> Vector2:
 	return Vector2(player_radius*sin(alpha), player_radius*cos(alpha))
 
-func get_position_alpha(_pos):
+func get_position_alpha(_pos: Vector3) -> float:
 	return old_alpha
 	# alpha = asin(pos.x/player_radius)
 	# alpha = acos(pos.z/player_radius)
 
-func is_crouching():
+func is_crouching() -> bool:
 	return Input.is_action_pressed("crouch") && is_on_floor()
 
-func should_die():
+func should_die() -> bool:
 	return Input.is_action_pressed("dbg_die")
 
-func die():
+func die() -> void:
 	anim_state = ANIMATION_STATES.DIE
 
-func is_dead():
+func is_dead() -> bool:
 	return anim_state == ANIMATION_STATES.DIE
 
-func on_animation_finished():
+func is_dodging() -> bool:
+	return anim_state == ANIMATION_STATES.DODGE
+
+func on_animation_finished() -> void:
 	match anim_state:
 		ANIMATION_STATES.DODGE:
 			anim_state = ANIMATION_STATES.IDLE
-		
-
