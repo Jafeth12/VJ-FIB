@@ -1,0 +1,73 @@
+[gd_scene load_steps=4 format=3 uid="uid://bc4ihp6g2sa1y"]
+
+[ext_resource type="Script" path="res://menu.gd" id="1_hf4fs"]
+[ext_resource type="PackedScene" uid="uid://dowvah8ep8i7v" path="res://background.tscn" id="1_tbil2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ipoos"]
+bg_color = Color(0.721569, 0.580392, 0.188235, 1)
+
+[node name="menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hf4fs")
+
+[node name="background" parent="." instance=ExtResource("1_tbil2")]
+layout_mode = 0
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -179.5
+offset_top = 148.0
+offset_right = 179.5
+offset_bottom = 236.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 118
+text = "LOGO HERE"
+
+[node name="options" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.6
+anchor_right = 0.6
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="play" type="Button" parent="options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/hover = SubResource("StyleBoxFlat_ipoos")
+text = "PLAY"
+
+[node name="controls" type="Button" parent="options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/hover = SubResource("StyleBoxFlat_ipoos")
+text = "CONTROLS"
+
+[node name="credits" type="Button" parent="options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/hover = SubResource("StyleBoxFlat_ipoos")
+text = "CREDITS
+"
+
+[node name="quit" type="Button" parent="options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/hover = SubResource("StyleBoxFlat_ipoos")
+text = "QUIT
+"
+
+[connection signal="button_up" from="options/play" to="." method="_on_play_button_up"]
+[connection signal="button_up" from="options/controls" to="." method="_on_controls_button_up"]
+[connection signal="button_up" from="options/credits" to="." method="_on_credits_button_up"]
+[connection signal="button_up" from="options/quit" to="." method="_on_quit_button_up"]
