@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
 enum ANIMATION_STATES { IDLE, WALK, JUMP, CROUCH, DIE, DODGE }
-enum FACING { LEFT, RIGHT }
+enum FACING { LEFT=-1, RIGHT=1 }
 
 @export var SPEED = PI/8 # 1 lap = 16 secs.
 @export var DODGE_SPEED = PI/2
@@ -60,7 +60,8 @@ func _physics_process(delta: float) -> void:
 	# Update alpha
 	if !is_crouching():
 		var speed: float = DODGE_SPEED if is_dodging() else SPEED
-		alpha += circular_dir * speed * delta
+		var real_dir: int = circular_dir if !is_dodging() else int(facing)
+		alpha += real_dir * speed * delta
 	var next_xz = get_next_xz()
 	velocity.x = (next_xz.x - get_position().x)/delta
 	velocity.z = (next_xz.y - get_position().z)/delta
