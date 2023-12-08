@@ -77,7 +77,6 @@ func _physics_process(delta: float) -> void:
 	old_alpha = alpha
 
 func update_anim_state():
-	var current_anim: StringName = $sprite.animation
 	# prox_estado:
 	match anim_state:
 		ANIMATION_STATES.IDLE:
@@ -120,28 +119,24 @@ func update_anim_state():
 				elif velocity.length() > 0:
 					anim_state = ANIMATION_STATES.WALK
 
+	var current_anim: StringName = $sprite.animation
 	# logica_salida:
 	match anim_state:
 		ANIMATION_STATES.IDLE:
 			if current_anim != "idle":
 				$sprite.play("idle")
-
 		ANIMATION_STATES.WALK:
 			if current_anim != "walk":
 				$sprite.play("walk")
-
 		ANIMATION_STATES.JUMP:
 			if current_anim != "jump":
 				$sprite.play("jump")
-
 		ANIMATION_STATES.CROUCH:
 			if current_anim != "crouch":
 				$sprite.play("crouch")
-
 		ANIMATION_STATES.DIE:
 			if current_anim != "die":
 				$sprite.play("die")
-		
 		ANIMATION_STATES.DODGE:
 			if current_anim != "dodge":
 				$sprite.play("dodge")
@@ -179,3 +174,4 @@ func on_animation_finished() -> void:
 	match anim_state:
 		ANIMATION_STATES.DODGE:
 			anim_state = ANIMATION_STATES.IDLE
+			$sprite.play("idle")
