@@ -19,8 +19,6 @@ var player_radius = radius_exterior # TODO: abtraer esto
 @export var alpha = 0
 var old_alpha = 0
 
-@export var our_scale = 3
-
 var anim_state = ANIMATION_STATES.IDLE
 var facing = FACING.RIGHT
 var curr_ring = RING.EXTERIOR
@@ -28,7 +26,7 @@ var curr_ring = RING.EXTERIOR
 var changing_ring : bool = false
 
 func _ready() -> void:
-	$sprite.set_scale(Vector3(our_scale, our_scale, our_scale))
+	$sprite.set_scale($sprite.scale)
 	$sprite.play("idle")
 	$sprite.connect("animation_finished", on_animation_finished)
 
@@ -158,10 +156,7 @@ func update_anim_state():
 				$sprite.play("dodge")
 
 func update_facing() -> void:
-	if facing == FACING.RIGHT:
-		$sprite.set_scale(Vector3(-our_scale, our_scale, our_scale))
-	elif facing == FACING.LEFT:
-		$sprite.set_scale(Vector3(our_scale, our_scale, our_scale))
+	$sprite.set_flip_h(facing==FACING.RIGHT)
 
 func get_next_xz() -> Vector2:
 	return Vector2(player_radius*sin(alpha), player_radius*cos(alpha))
