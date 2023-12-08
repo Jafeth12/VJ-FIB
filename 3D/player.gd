@@ -2,15 +2,20 @@ extends CharacterBody3D
 
 enum ANIMATION_STATES { IDLE, WALK, JUMP, CROUCH, DIE, DODGE }
 enum FACING { LEFT=-1, RIGHT=1 }
+enum RING { EXTERIOR, INTERIOR }
 
 @export var SPEED = PI/8 # 1 lap = 16 secs.
 @export var DODGE_SPEED = PI/2
+@export var RING_SWITCH_SPEED = 0.125
 const JUMP_VELOCITY = 7
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 # var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 const gravity = 15 # TODO: abstraer esto
-const player_radius = 18 # TODO: abtraer esto
+const radius_exterior = 18
+const radius_interior = 15
+
+var player_radius = radius_exterior # TODO: abtraer esto
 @export var alpha = 0
 var old_alpha = 0
 
@@ -18,6 +23,9 @@ var old_alpha = 0
 
 var anim_state = ANIMATION_STATES.IDLE
 var facing = FACING.RIGHT
+var curr_ring = RING.EXTERIOR
+
+var changing_ring : bool = false
 
 func _ready() -> void:
 	$sprite.set_scale(Vector3(our_scale, our_scale, our_scale))
@@ -29,8 +37,13 @@ func _process(delta: float) -> void:
 		die()
 	if !is_dead():
 		update_facing()
+	handle_input()
 	look_at(Vector3(0, get_position().y, 0))
 	update_anim_state()
+
+func handle_input() -> void:
+	if Input.is_action_just_pressed("dbg_switch_ring"):
+		change_ring_state()
 
 func _physics_process(delta: float) -> void:
 	if is_dead():
@@ -38,6 +51,9 @@ func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
+
+	if changing_ring:
+		switch_ring()
 
 	# Handle jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor():
@@ -169,6 +185,40 @@ func is_dead() -> bool:
 
 func is_dodging() -> bool:
 	return anim_state == ANIMATION_STATES.DODGE
+
+func change_ring_state() -> void:
+	if changing_ring:
+		return
+
+	changing_ring = true
+	if curr_ring == RING.EXTERIOR:
+		curr_ring = RING.INTERIOR
+	else:
+		curr_ring = RING.EXTERIOR
+
+func switch_ring() -> void:
+	if curr_ring == RING.EXTERIOR:
+
+		# Target ring is exterior, if were in the first frame of the change, jump.
+		# This way its only done once. Otherwise, itll keep adding y velocity eternally.
+		if player_radius == radius_interior && is_on_floor():
+			velocity.y = JUMP_VELOCITY
+		elif player_radius == radius_exterior:
+			# If the target ring is the exterior one and were already there, stop the thing.
+			changing_ring = false
+
+		if changing_ring:
+			# Gradually change the player_radius to get a smooth transition.
+			# As seen above, we stop adding as soon as we reach the target radius.
+			player_radius += RING_SWITCH_SPEED
+	else:
+		if player_radius == radius_exterior and is_on_floor():
+			velocity.y = JUMP_VELOCITY
+		elif player_radius == radius_interior:
+			changing_ring = false
+
+		if changing_ring:
+			player_radius -= RING_SWITCH_SPEED
 
 func on_animation_finished() -> void:
 	match anim_state:
