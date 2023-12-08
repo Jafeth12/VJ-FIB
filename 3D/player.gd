@@ -24,6 +24,7 @@ var player_radius = radius_exterior # TODO: abtraer esto
 
 # Jump parameters
 const JUMP_VELOCITY = 7
+const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.5
 
 # Físicas comúnes
 # var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -215,7 +216,7 @@ func switch_ring() -> void:
 		# Target ring is exterior, if were in the first frame of the change, jump.
 		# This way its only done once. Otherwise, itll keep adding y velocity eternally.
 		if player_radius == radius_interior && is_on_floor():
-			velocity.y = JUMP_VELOCITY
+			velocity.y = RING_SWITCH_JUMP_VELOCITY
 		elif player_radius == radius_exterior:
 			# If the target ring is the exterior one and were already there, stop the thing.
 			changing_ring = false
@@ -226,7 +227,7 @@ func switch_ring() -> void:
 			player_radius += RING_SWITCH_SPEED
 	else:
 		if player_radius == radius_exterior and is_on_floor():
-			velocity.y = JUMP_VELOCITY
+			velocity.y = RING_SWITCH_JUMP_VELOCITY
 		elif player_radius == radius_interior:
 			changing_ring = false
 
