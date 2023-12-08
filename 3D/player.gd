@@ -1,35 +1,46 @@
 extends CharacterBody3D
 
+# Enumerations
 enum ANIMATION_STATES { IDLE, WALK, JUMP, CROUCH, DIE, DODGE }
 enum FACING { LEFT=-1, RIGHT=1 }
 enum RING { EXTERIOR, INTERIOR }
 
+# Máquinas de estados
+var anim_state = ANIMATION_STATES.IDLE
+var facing = FACING.RIGHT
+var curr_ring = RING.EXTERIOR
+var changing_ring : bool = false
+
+# Velocidades angulares del jugador
 @export var SPEED = PI/8 # 1 lap = 16 secs.
 @export var DODGE_SPEED = PI/2
-@export var RING_SWITCH_SPEED = 0.125
-const JUMP_VELOCITY = 7
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-# var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-const gravity = 15 # TODO: abstraer esto
+# Radios de anillos y velocidad de cambio
+@export var RING_SWITCH_SPEED = 0.125
 const radius_exterior = 18
 const radius_interior = 15
 
 var player_radius = radius_exterior # TODO: abtraer esto
+
+# Jump parameters
+const JUMP_VELOCITY = 7
+
+# Físicas comúnes
+# var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+const gravity = 15 # TODO: abstraer esto
+
+# Movimiento circular y alpha
 @export var alpha = 0
 var old_alpha = 0
 
-var anim_state = ANIMATION_STATES.IDLE
-var facing = FACING.RIGHT
-var curr_ring = RING.EXTERIOR
-
-var changing_ring : bool = false
-
+# Reimplementaciones de funciones de CharacterBody3D
 func _ready() -> void:
 	$sprite.set_scale($sprite.scale)
 	$sprite.play("idle")
 	$sprite.connect("animation_finished", on_animation_finished)
 
+# Gestionar la lógica que no tiene que ver con la física del jugador
+# p.e.: Vida y muerte, cambio de anillo, animaciones, etc.
 func _process(delta: float) -> void:
 	if should_die():
 		die()
@@ -39,10 +50,8 @@ func _process(delta: float) -> void:
 	look_at(Vector3(0, get_position().y, 0))
 	update_anim_state()
 
-func handle_input() -> void:
-	if Input.is_action_just_pressed("dbg_switch_ring"):
-		change_ring_state()
-
+# Gestionar todo aquello relacionado con el movimiento del jugador.
+# p.e.: Movimiento angular, saltos, colisiones, etc.
 func _physics_process(delta: float) -> void:
 	if is_dead():
 		return
@@ -90,6 +99,8 @@ func _physics_process(delta: float) -> void:
 		alpha = get_position_alpha(get_position())
 	old_alpha = alpha
 
+# Actualizar la máquina de estados de las animacoines.
+# Se activa la animación si hace falta (lógica de salida)
 func update_anim_state():
 	# prox_estado:
 	match anim_state:
@@ -155,32 +166,11 @@ func update_anim_state():
 			if current_anim != "dodge":
 				$sprite.play("dodge")
 
+# Actualizar máquina de estados de dirección
 func update_facing() -> void:
 	$sprite.set_flip_h(facing==FACING.RIGHT)
 
-func get_next_xz() -> Vector2:
-	return Vector2(player_radius*sin(alpha), player_radius*cos(alpha))
-
-func get_position_alpha(_pos: Vector3) -> float:
-	return old_alpha
-	# alpha = asin(pos.x/player_radius)
-	# alpha = acos(pos.z/player_radius)
-
-func is_crouching() -> bool:
-	return Input.is_action_pressed("crouch") && is_on_floor()
-
-func should_die() -> bool:
-	return Input.is_action_pressed("dbg_die")
-
-func die() -> void:
-	anim_state = ANIMATION_STATES.DIE
-
-func is_dead() -> bool:
-	return anim_state == ANIMATION_STATES.DIE
-
-func is_dodging() -> bool:
-	return anim_state == ANIMATION_STATES.DODGE
-
+# Actualiza la máquina de estados del cambio de anillo
 func change_ring_state() -> void:
 	if changing_ring:
 		return
@@ -190,6 +180,34 @@ func change_ring_state() -> void:
 		curr_ring = RING.INTERIOR
 	else:
 		curr_ring = RING.EXTERIOR
+
+# Devuelve las coordenadas xz en base al ángulo alpha actual del jugador
+func get_next_xz() -> Vector2:
+	return Vector2(player_radius*sin(alpha), player_radius*cos(alpha))
+
+# Devuelve el ángulo alpha en base a la posición del jugador
+func get_position_alpha(_pos: Vector3) -> float:
+	return old_alpha
+	# alpha = asin(pos.x/player_radius)
+	# alpha = acos(pos.z/player_radius)
+
+# ======== Consultoras ========
+func is_crouching() -> bool:
+	return Input.is_action_pressed("crouch") && is_on_floor()
+func should_die() -> bool:
+	return Input.is_action_pressed("dbg_die")
+func is_dead() -> bool:
+	return anim_state == ANIMATION_STATES.DIE
+func is_dodging() -> bool:
+	return anim_state == ANIMATION_STATES.DODGE
+
+func handle_input() -> void:
+	if Input.is_action_just_pressed("dbg_switch_ring"):
+		change_ring_state()
+
+# ======== Actuadoras ========
+func die() -> void:
+	anim_state = ANIMATION_STATES.DIE
 
 func switch_ring() -> void:
 	if curr_ring == RING.EXTERIOR:
@@ -215,6 +233,7 @@ func switch_ring() -> void:
 		if changing_ring:
 			player_radius -= RING_SWITCH_SPEED
 
+# ======== Callbacks ========
 func on_animation_finished() -> void:
 	match anim_state:
 		ANIMATION_STATES.DODGE:
