@@ -28,6 +28,8 @@ const radius_interior = 15
 var player_radius = radius_exterior # TODO: abtraer esto
 
 # Jump parameters
+const INIT_JUMPS_LEFT = 2
+var jumps_left: int = INIT_JUMPS_LEFT # Cuenta el numero de saltos que puede dar el jugador
 const JUMP_VELOCITY = 7
 const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.5
 
@@ -39,7 +41,9 @@ const gravity = 15 # TODO: abstraer esto
 @export var alpha = 0
 var old_alpha = 0
 
-# Reimplementaciones de funciones de CharacterBody3D
+# ======== Reimplementaciones de funciones de CharacterBody3D ========
+
+# 
 func _ready() -> void:
 	$sprite.set_scale($sprite.scale)
 	$sprite.play("idle")
@@ -72,7 +76,13 @@ func _physics_process(delta: float) -> void:
 		switch_level()
 
 	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if is_on_floor():
+		jumps_left = INIT_JUMPS_LEFT
+	if !is_on_floor() && jumps_left == INIT_JUMPS_LEFT:
+		jumps_left = 1
+
+	if Input.is_action_just_pressed("jump") and jumps_left > 0:
+		jumps_left -= 1
 		velocity.y = JUMP_VELOCITY
 
 	# Get the input direction and handle the movement/deceleration.
@@ -128,6 +138,8 @@ func _physics_process(delta: float) -> void:
 		alpha = old_alpha
 		alpha = get_position_alpha(get_position())
 	old_alpha = alpha
+
+# ======== Update maquinas de estados ========
 
 # Actualizar la máquina de estados de las animacoines.
 # Se activa la animación si hace falta (lógica de salida)
@@ -186,6 +198,9 @@ func update_anim_state():
 		ANIMATION_STATES.JUMP:
 			if current_anim != "jump":
 				$sprite.play("jump")
+			if Input.is_action_just_pressed("jump")&& jumps_left != 0:
+				$sprite.play("idle") # Pequeño hack para que la animación de jump vuelva a empezar
+				$sprite.play("jump")
 		ANIMATION_STATES.CROUCH:
 			if current_anim != "crouch":
 				$sprite.play("crouch")
@@ -218,6 +233,7 @@ func change_level_state() -> void:
 		LEVEL.MIDDLE:
 			target_level = LEVEL.UPPER
 
+# ======== Getters ========
 # Devuelve las coordenadas xz en base al ángulo alpha actual del jugador
 func get_next_xz() -> Vector2:
 	return Vector2(player_radius*sin(alpha), player_radius*cos(alpha))
@@ -231,10 +247,13 @@ func get_position_alpha(_pos: Vector3) -> float:
 # ======== Consultoras ========
 func is_crouching() -> bool:
 	return Input.is_action_pressed("crouch") && is_on_floor()
+
 func should_die() -> bool:
 	return Input.is_action_pressed("dbg_die")
+
 func is_dead() -> bool:
 	return anim_state == ANIMATION_STATES.DIE
+
 func is_dodging() -> bool:
 	return anim_state == ANIMATION_STATES.DODGE
 
