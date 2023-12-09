@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://cyowg8g5vnbuf"]
+
+[ext_resource type="Texture2D" uid="uid://cyj4qwhdn887i" path="res://art/mock_enemy.png" id="1_4erg0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gyj4u"]
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.522354, 0)
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(0.21, 0, 0, 0, 0.21, 0, 0, 0, 0.21, 0, 0, 0)
+texture = ExtResource("1_4erg0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_gyj4u")
