@@ -169,6 +169,9 @@ func update_anim_state():
 		ANIMATION_STATES.JUMP:
 			if current_anim != "jump":
 				$sprite.play("jump")
+			if Input.is_action_just_pressed("jump")&& jumps_left != 0:
+				$sprite.play("idle") # Pequeño hack para que la animación de jump vuelva a empezar
+				$sprite.play("jump")
 		ANIMATION_STATES.CROUCH:
 			if current_anim != "crouch":
 				$sprite.play("crouch")
