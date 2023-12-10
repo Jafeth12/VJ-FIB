@@ -2,7 +2,9 @@ class_name GenericEnemy extends CharacterBody3D
 
 # Estado del enemigo
 enum EnemyState { WAIT, WANDER, ATTACK, DEAD }
+enum EnemyDirection { LEFT = -1, RIGHT = 1}
 var enemy_state: EnemyState = EnemyState.WAIT
+var enemy_dir: EnemyDirection  = EnemyDirection.LEFT
 
 # Movimiento circular
 @export var INIT_ALPHA: float = 0

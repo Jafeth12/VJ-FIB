@@ -6,10 +6,9 @@ func _ready():
 	$sprite.connect("animation_finished", on_animation_finished)
 
 func get_new_alpha(current_alpha: float, delta: float) -> float:
-	var dir = 1
 	match enemy_state:
 		EnemyState.WANDER:
-			return current_alpha + dir * SPEED * delta
+			return current_alpha + enemy_dir * SPEED * delta
 	return alpha
 
 func update_animation() -> void:
@@ -28,7 +27,10 @@ func update_animation() -> void:
 				$sprite.play("die")
 
 func should_attack() -> bool:
-	return Input.is_action_just_pressed("god_mode")
+	return Input.is_action_just_pressed("dbg_enemies_attack")
+
+func should_die() -> bool:
+	return Input.is_action_just_pressed("dbg_enemies_die")
 
 func is_attack_finished() -> bool:
 	var ae_copy: bool = attack_ended

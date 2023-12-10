@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cyowg8g5vnbuf"]
+[gd_scene load_steps=33 format=3 uid="uid://cyowg8g5vnbuf"]
 
 [ext_resource type="Script" path="res://crawler.gd" id="1_46rf8"]
 [ext_resource type="Texture2D" uid="uid://is7kesgrn04" path="res://art/Crawler.png" id="2_hmv2l"]
@@ -36,6 +36,22 @@ region = Rect2(288, 96, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_3o612"]
 atlas = ExtResource("2_hmv2l")
 region = Rect2(336, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fgj6b"]
+atlas = ExtResource("2_hmv2l")
+region = Rect2(0, 144, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3o6mo"]
+atlas = ExtResource("2_hmv2l")
+region = Rect2(48, 144, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nlgl2"]
+atlas = ExtResource("2_hmv2l")
+region = Rect2(96, 144, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xolex"]
+atlas = ExtResource("2_hmv2l")
+region = Rect2(144, 144, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sv86t"]
 atlas = ExtResource("2_hmv2l")
@@ -134,6 +150,23 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_fgj6b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3o6mo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nlgl2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xolex")
+}],
+"loop": false,
+"name": &"die",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_sv86t")
 }, {
 "duration": 1.0,
@@ -203,4 +236,4 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 billboard = 2
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_jmyu3")
-animation = &"attack"
+animation = &"die"
