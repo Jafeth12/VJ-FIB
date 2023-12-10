@@ -2,15 +2,20 @@ class_name Crawler extends GenericEnemy
 
 var attack_ended: bool = false
 
+@export var INIT_ALPHA = 0
+
+const SPEED: float = PI/8
+
 func _ready():
-	$sprite.connect("animation_finished", on_animation_finished)
+	entity_alpha = INIT_ALPHA
+	$sprite.connect("animation_finished", crawler_on_animation_finished)
 
 # OVERRIDE de ENTITY
-func entity_get_new_alpha(current_alpha: float, delta: float) -> float:
+func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delta: float) -> float:
 	match enemy_state:
 		EnemyState.WANDER:
-			return current_alpha + enemy_dir * SPEED * delta
-	return alpha
+			return current_alpha + direction * SPEED * delta
+	return current_alpha
 
 # OVERRIDE de ENEMY
 func enemy_update_animation() -> void:
@@ -42,7 +47,7 @@ func enemy_is_attack_finished() -> bool:
 	attack_ended = false
 	return ae_copy
 
-func on_animation_finished() -> void:
+func crawler_on_animation_finished() -> void:
 	match $sprite.animation:
 		"attack":
 			attack_ended = true
