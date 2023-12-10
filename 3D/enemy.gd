@@ -2,7 +2,7 @@ class_name GenericEnemy extends CharacterBody3D
 
 # Estado del enemigo
 enum EnemyState { WAIT, WANDER, ATTACK, DEAD }
-var state: EnemyState = EnemyState.WAIT
+var enemy_state: EnemyState = EnemyState.WAIT
 
 # Movimiento circular
 @export var INIT_ALPHA: float = 0
@@ -18,14 +18,10 @@ const SPEED = PI/10
 const gravity = 10
 
 func _process(_delta):
-
-	var cam_pos = get_viewport().get_camera_3d().global_position
-	look_at(cam_pos)
-
 	next_state()
 	act_uppon_state()
 	update_animation()
-	if state == EnemyState.WAIT:
+	if enemy_state == EnemyState.WAIT:
 		return
 
 func _physics_process(delta):
@@ -37,7 +33,7 @@ func _physics_process(delta):
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	
 	# Calculate new position, based on alpha
-	alpha = get_new_alpha(delta)
+	alpha = get_new_alpha(alpha, delta)
 	var next_xz = get_next_xz(alpha)
 
 	# Calculate velocity to get to the new position
@@ -57,8 +53,8 @@ func _physics_process(delta):
 
 # Funciones reimplementables segun el enemigo
 func next_state():
-	var prx_state: EnemyState = state
-	match state:
+	var prx_state: EnemyState = enemy_state
+	match enemy_state:
 		EnemyState.WAIT:
 			if should_activate():
 				prx_state = EnemyState.WANDER
@@ -76,11 +72,11 @@ func next_state():
 				prx_state = EnemyState.WANDER
 			else:
 				prx_state = EnemyState.ATTACK
-	state = prx_state
+	enemy_state = prx_state
 
 
-func get_new_alpha(delta: float) -> float:
-	return alpha
+func get_new_alpha(current_alpha: float, delta: float) -> float:
+	return current_alpha
 
 # Funciones a reimplementar en cada enemigo
 func act_uppon_state() -> void:

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cyj4qwhdn887i"
-path.s3tc="res://.godot/imported/mock_enemy.png-c3561204dc33558f3f2f61703c1a54eb.s3tc.ctex"
+uid="uid://is7kesgrn04"
+path.s3tc="res://.godot/imported/Crawler.png-bd2df2fcab29d1310aa23e2c2388d774.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://art/mock_enemy.png"
-dest_files=["res://.godot/imported/mock_enemy.png-c3561204dc33558f3f2f61703c1a54eb.s3tc.ctex"]
+source_file="res://art/Crawler.png"
+dest_files=["res://.godot/imported/Crawler.png-bd2df2fcab29d1310aa23e2c2388d774.s3tc.ctex"]
 
 [params]
 
