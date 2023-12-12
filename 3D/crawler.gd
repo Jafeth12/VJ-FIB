@@ -6,6 +6,7 @@ var player_in_area: bool = false
 @export var INIT_ALPHA = 0
 
 const SPEED: float = PI/8
+const ATTACK_SPEED: float = PI/4
 
 func _ready():
 	entity_alpha = INIT_ALPHA
@@ -18,6 +19,9 @@ func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delt
 	match enemy_state:
 		EnemyState.WANDER:
 			return current_alpha + direction * SPEED * delta
+		EnemyState.ATTACK:
+			if $sprite.frame > 4:
+				return current_alpha + direction * ATTACK_SPEED * delta
 	return current_alpha
 
 # OVERRIDE de ENEMY
