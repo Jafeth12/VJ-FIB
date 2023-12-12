@@ -1,7 +1,9 @@
-[gd_scene load_steps=33 format=3 uid="uid://cyowg8g5vnbuf"]
+[gd_scene load_steps=34 format=3 uid="uid://cyowg8g5vnbuf"]
 
 [ext_resource type="Script" path="res://crawler.gd" id="1_46rf8"]
 [ext_resource type="Texture2D" uid="uid://is7kesgrn04" path="res://art/Crawler.png" id="2_hmv2l"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_injn6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gyj4u"]
 
@@ -227,6 +229,12 @@ animations = [{
 [node name="crawler" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.522354, 0)
 script = ExtResource("1_46rf8")
+
+[node name="activation_area" type="Area3D" parent="."]
+
+[node name="activation_collision" type="CollisionShape3D" parent="activation_area"]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 1, 0)
+shape = SubResource("BoxShape3D_injn6")
 
 [node name="collision" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_gyj4u")
