@@ -23,6 +23,7 @@ func _physics_process(delta):
 		velocity.y = entity_get_jump_velocity()
 
 	# Calculate new position, based on alpha
+	entity_direction = entity_get_new_direction(entity_direction)
 	entity_alpha = entity_get_new_alpha(entity_alpha, entity_direction, delta)
 	var next_xz = entity_get_xz(entity_alpha)
 
@@ -68,3 +69,8 @@ func entity_get_jump_velocity() -> float:
 # actual, la dirección, y el delta
 func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delta: float) -> float:
 	return current_alpha
+
+# VIRTUAL. TO BE OVERRIDEN
+# Retorna la siguiente dirección
+func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirection:
+	return EntityDirection.LEFT

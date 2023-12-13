@@ -5,14 +5,44 @@ var player_in_area: bool = false
 
 @export var INIT_ALPHA = 0
 
-const SPEED: float = PI/8
+const SPEED: float = PI/10
 const ATTACK_SPEED: float = PI/4
+
+var player_node = null
 
 func _ready():
 	entity_alpha = INIT_ALPHA
 	$sprite.connect("animation_finished", crawler_on_animation_finished)
 	$activation_area.connect("area_entered", crawler_area_entered)
 	$activation_area.connect("area_exited", crawler_area_exited)
+	player_node = get_node("/root/main/level1/Player")
+
+func modf(a: float, d: float) -> float:
+	var sign: int = 1 if a > 0 else -1
+	a = abs(a)
+	while a >= d:
+		a -= d
+	return sign*a
+
+# OVERRIDE de ENTITY
+func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirection:
+	var prx_dir: EntityDirection = current_direction
+	match enemy_state:
+		EnemyState.WANDER:
+			if player_in_area:
+				var angular_separation: float = modf(abs(modf(player_node.alpha, 2*PI) - modf(entity_alpha, 2*PI)), 2*PI)
+				print(angular_separation)
+				if angular_separation < PI:
+					# angle1 is to the left of angle2
+					prx_dir = EntityDirection.LEFT
+				else:
+					#angle1 is to the right of angle2
+					prx_dir = EntityDirection.RIGHT
+			if is_on_wall():
+				prx_dir = -current_direction
+
+	$sprite.set_flip_h(current_direction==EntityDirection.RIGHT)
+	return prx_dir
 
 # OVERRIDE de ENTITY
 func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delta: float) -> float:
@@ -20,7 +50,7 @@ func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delt
 		EnemyState.WANDER:
 			return current_alpha + direction * SPEED * delta
 		EnemyState.ATTACK:
-			if $sprite.frame > 4:
+			if $sprite.frame > 3:
 				return current_alpha + direction * ATTACK_SPEED * delta
 	return current_alpha
 
