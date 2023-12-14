@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=3 uid="uid://d2h5lpkd1b7ff"]
+[gd_scene load_steps=59 format=3 uid="uid://d2h5lpkd1b7ff"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_l5rtp"]
 [ext_resource type="Texture2D" uid="uid://boqo6wfu1f426" path="res://art/PlayerCyborg-a.png" id="2_vbfnd"]
@@ -409,6 +409,8 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_btvwn"]
+
 [node name="player" type="CharacterBody3D"]
 script = ExtResource("1_l5rtp")
 
@@ -421,8 +423,15 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0.449255, 0)
 lod_bias = 0.001
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_72fuo")
-animation = &"die"
+animation = &"idle"
+frame_progress = 0.962131
 
 [node name="camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45, 8)
 current = true
+
+[node name="player_area" type="Area3D" parent="."]
+
+[node name="player_area_collision" type="CollisionShape3D" parent="player_area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_btvwn")
