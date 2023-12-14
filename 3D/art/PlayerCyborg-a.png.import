@@ -3,19 +3,20 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://boqo6wfu1f426"
-path="res://.godot/imported/PlayerCyborg-a.png-d63f852e04eb50091d988b2ceddbc7bc.ctex"
+path.s3tc="res://.godot/imported/PlayerCyborg-a.png-d63f852e04eb50091d988b2ceddbc7bc.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://art/PlayerCyborg-a.png"
-dest_files=["res://.godot/imported/PlayerCyborg-a.png-d63f852e04eb50091d988b2ceddbc7bc.ctex"]
+dest_files=["res://.godot/imported/PlayerCyborg-a.png-d63f852e04eb50091d988b2ceddbc7bc.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
