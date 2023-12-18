@@ -92,7 +92,9 @@ func crawler_on_animation_finished() -> void:
 			attack_ended = true
 
 func crawler_area_entered(area: Area3D):
+	print("entró")
 	player_in_area = true
 
 func crawler_area_exited(area: Area3D):
+	print("salió")
 	player_in_area = false
