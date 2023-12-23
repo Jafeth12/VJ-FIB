@@ -38,43 +38,49 @@ const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.5
 func _ready() -> void:
 	$sprite.set_scale($sprite.scale)
 	$sprite.play("idle")
-	$sprite.connect("animation_finished", on_animation_finished)
+	$sprite.connect("animation_finished", player_on_animation_finished)
 
 # Gestionar la lógica que no tiene que ver con la física del jugador
 # p.e.: Vida y muerte, cambio de anillo, animaciones, etc.
-func _process(delta: float) -> void:
-	if should_die():
-		die()
-	if !is_dead():
-		update_facing()
-	handle_input()
+func _process(_delta: float) -> void:
+	if player_should_die():
+		player_die()
+	if !player_is_dead():
+		player_update_facing()
+	player_handle_input()
 	look_at(Vector3(0, get_position().y, 0))
-	update_anim_state()
+	player_update_anim_state()
 
 # Gestionar todo aquello relacionado con el movimiento del jugador.
 # p.e.: Movimiento angular, saltos, colisiones, etc.
 func _physics_process(delta: float) -> void:
-	if is_dead():
+	# Check if player is dead. Return inmediately now
+	if player_is_dead():
 		return
+
 	# Add the gravity.
-	if not is_on_floor():
+	if !is_on_floor():
 		velocity.y -= gravity * delta
 
+	# Changing ring
 	if changing_ring:
-		switch_ring()
+		player_switch_ring()
 
+	# Changing level
 	if curr_level != target_level:
-		switch_level()
+		player_switch_level()
 
 	# Handle jump.
 	if is_on_floor():
 		jumps_left = INIT_JUMPS_LEFT
+
 	if !is_on_floor() && jumps_left == INIT_JUMPS_LEFT:
 		jumps_left = 1
 
-	if Input.is_action_just_pressed("jump") and jumps_left > 0:
-		jumps_left -= 1
-		velocity.y = JUMP_VELOCITY
+	if entity_should_jump():
+		player_jump()
+
+	# super(delta)
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -103,20 +109,20 @@ func _physics_process(delta: float) -> void:
 		if (entity_alpha >= -0.05 && entity_alpha <= 0.05 ) || (next_alpha > 0 && entity_alpha < 0) or (next_alpha < 0 and entity_alpha > 0):
 			entity_alpha = 0
 			resetting_alpha = false
-			change_level_state()
+			player_change_level_state()
 		else:
 			entity_alpha = next_alpha
 	else:
-		if !is_crouching():
-			var speed: float = DODGE_SPEED if is_dodging() else SPEED
-			var real_dir: int = circular_dir if !is_dodging() else int(facing)
+		if !player_is_crouching():
+			var speed: float = DODGE_SPEED if player_is_dodging() else SPEED
+			var real_dir: int = circular_dir if !player_is_dodging() else int(facing)
 			entity_alpha += real_dir * speed * delta
 			if entity_alpha > 2*PI:
 				entity_alpha -= 2*PI
 			elif entity_alpha < -2*PI:
 				entity_alpha += 2*PI
 
-	var next_xz = get_next_xz()
+	var next_xz = entity_get_xz(entity_alpha)
 	velocity.x = (next_xz.x - get_position().x)/delta
 	velocity.z = (next_xz.y - get_position().z)/delta
 
@@ -127,14 +133,14 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if is_on_wall():
 		entity_alpha = old_alpha
-		entity_alpha = get_position_alpha(get_position())
+		entity_alpha = entity_get_position_alpha(get_position())
 	old_alpha = entity_alpha
 
 # ======== Update maquinas de estados ========
 
 # Actualizar la máquina de estados de las animacoines.
 # Se activa la animación si hace falta (lógica de salida)
-func update_anim_state():
+func player_update_anim_state():
 	# prox_estado:
 	match anim_state:
 		ANIMATION_STATES.IDLE:
@@ -203,11 +209,11 @@ func update_anim_state():
 				$sprite.play("dodge")
 
 # Actualizar máquina de estados de dirección
-func update_facing() -> void:
+func player_update_facing() -> void:
 	$sprite.set_flip_h(facing==FACING.RIGHT)
 
 # Actualiza la máquina de estados del cambio de anillo
-func change_ring_state() -> void:
+func player_change_ring_state() -> void:
 	if changing_ring:
 		return
 
@@ -217,53 +223,43 @@ func change_ring_state() -> void:
 	else:
 		curr_ring = RING.EXTERIOR
 
-func change_level_state() -> void:
+func player_change_level_state() -> void:
 	match curr_level:
 		LEVEL.LOWER:
 			target_level = LEVEL.MIDDLE
 		LEVEL.MIDDLE:
 			target_level = LEVEL.UPPER
 
-# ======== Getters ========
-# Devuelve las coordenadas xz en base al ángulo entity_alpha actual del jugador
-func get_next_xz() -> Vector2:
-	return Vector2(player_radius*sin(entity_alpha), player_radius*cos(entity_alpha))
-
-# Devuelve el ángulo entity_alpha en base a la posición del jugador
-func get_position_alpha(_pos: Vector3) -> float:
-	return old_alpha
-	# entity_alpha = asin(pos.x/player_radius)
-	# entity_alpha = acos(pos.z/player_radius)
 
 # ======== Consultoras ========
-func is_crouching() -> bool:
+func player_is_crouching() -> bool:
 	return Input.is_action_pressed("crouch") && is_on_floor()
 
-func should_die() -> bool:
+func player_should_die() -> bool:
 	return Input.is_action_pressed("dbg_die")
 
-func is_dead() -> bool:
+func player_is_dead() -> bool:
 	return anim_state == ANIMATION_STATES.DIE
 
-func is_dodging() -> bool:
+func player_is_dodging() -> bool:
 	return anim_state == ANIMATION_STATES.DODGE
 
-func handle_input() -> void:
+func player_handle_input() -> void:
 	if Input.is_action_just_pressed("dbg_switch_ring"):
-		change_ring_state()
+		player_change_ring_state()
 	if Input.is_action_just_pressed("dbg_next_level"):
 		if resetting_alpha:
 			return
 
 		resetting_alpha = true
 	if Input.is_action_just_pressed("dbg_reset_position"):
-		reset_position()
+		player_reset_position()
 
 # ======== Actuadoras ========
-func die() -> void:
+func player_die() -> void:
 	anim_state = ANIMATION_STATES.DIE
 
-func switch_ring() -> void:
+func player_switch_ring() -> void:
 	if curr_ring == RING.EXTERIOR:
 
 		# Target ring is exterior, if were in the first frame of the change, jump.
@@ -287,7 +283,7 @@ func switch_ring() -> void:
 		if changing_ring:
 			player_radius -= RING_SWITCH_SPEED
 
-func switch_level() -> void:
+func player_switch_level() -> void:
 	if curr_level == target_level:
 		return
 
@@ -300,8 +296,8 @@ func switch_level() -> void:
 		$collision.disabled = false
 		curr_level = target_level
 
-func reset_position() -> void:
-	if is_dead():
+func player_reset_position() -> void:
+	if player_is_dead():
 		return
 	if changing_ring:
 		return
@@ -318,8 +314,18 @@ func reset_position() -> void:
 	$collision.disabled = false
 
 # ======== Callbacks ========
-func on_animation_finished() -> void:
+func player_on_animation_finished() -> void:
 	match anim_state:
 		ANIMATION_STATES.DODGE:
 			anim_state = ANIMATION_STATES.IDLE
 			$sprite.play("idle")
+
+
+func player_jump():
+	jumps_left -= 1
+	velocity.y = JUMP_VELOCITY
+
+
+# ======== Reimplementaciones de entity ========
+func entity_should_jump() -> bool:
+	return Input.is_action_just_pressed("jump") and jumps_left > 0
