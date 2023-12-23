@@ -6,6 +6,7 @@ enum FACING { LEFT=-1, RIGHT=1 }
 enum RING { EXTERIOR, INTERIOR }
 enum LEVEL { LOWER, MIDDLE, UPPER }
 var LEVEL_HEIGHTS = [ 0, 20, 30 ]
+enum WEAPON { PISTOL, RIFLE }
 
 # Máquinas de estados
 var anim_state = ANIMATION_STATES.IDLE
@@ -15,6 +16,7 @@ var changing_ring : bool = false
 var curr_level : LEVEL = LEVEL.LOWER
 var target_level : LEVEL = curr_level
 var resetting_alpha : bool = false
+var active_weapon : WEAPON = WEAPON.PISTOL
 
 # Velocidades angulares del jugador
 @export var SPEED = PI/8 # 1 lap = 16 secs.
@@ -45,9 +47,7 @@ var old_alpha = 0
 
 # 
 func _ready() -> void:
-	$sprite.set_scale($sprite.scale)
-	$sprite.play("idle")
-	$sprite.connect("animation_finished", on_animation_finished)
+	init_sprites()
 
 # Gestionar la lógica que no tiene que ver con la física del jugador
 # p.e.: Vida y muerte, cambio de anillo, animaciones, etc.
@@ -186,34 +186,36 @@ func update_anim_state():
 				elif velocity.length() > 0:
 					anim_state = ANIMATION_STATES.WALK
 
-	var current_anim: StringName = $sprite.animation
+	var current_anim: StringName = get_current_active_sprite().animation
+
 	# logica_salida:
 	match anim_state:
 		ANIMATION_STATES.IDLE:
 			if current_anim != "idle":
-				$sprite.play("idle")
+				play_animation("idle")
 		ANIMATION_STATES.WALK:
 			if current_anim != "walk":
-				$sprite.play("walk")
+				play_animation("walk")
 		ANIMATION_STATES.JUMP:
 			if current_anim != "jump":
-				$sprite.play("jump")
+				play_animation("jump")
 			if Input.is_action_just_pressed("jump")&& jumps_left != 0:
-				$sprite.play("idle") # Pequeño hack para que la animación de jump vuelva a empezar
-				$sprite.play("jump")
+				play_animation("idle") # Pequeño hack para que la animación de jump vuelva a empezar
+				play_animation("jump")
 		ANIMATION_STATES.CROUCH:
 			if current_anim != "crouch":
-				$sprite.play("crouch")
+				play_animation("crouch")
 		ANIMATION_STATES.DIE:
 			if current_anim != "die":
-				$sprite.play("die")
+				play_animation("die")
 		ANIMATION_STATES.DODGE:
 			if current_anim != "dodge":
-				$sprite.play("dodge")
+				play_animation("dodge")
 
 # Actualizar máquina de estados de dirección
 func update_facing() -> void:
-	$sprite.set_flip_h(facing==FACING.RIGHT)
+	$sprite_pistol.set_flip_h(facing==FACING.RIGHT)
+	$sprite_rifle.set_flip_h(facing==FACING.RIGHT)
 
 # Actualiza la máquina de estados del cambio de anillo
 func change_ring_state() -> void:
@@ -267,6 +269,16 @@ func handle_input() -> void:
 		resetting_alpha = true
 	if Input.is_action_just_pressed("dbg_reset_position"):
 		reset_position()
+	
+	if Input.is_action_just_pressed("dbg_switch_weapon"):
+		if active_weapon == WEAPON.PISTOL:
+			$sprite_pistol.hide()
+			$sprite_rifle.show()
+			active_weapon = WEAPON.RIFLE
+		else:
+			$sprite_pistol.show()
+			$sprite_rifle.hide()
+			active_weapon = WEAPON.PISTOL
 
 # ======== Actuadoras ========
 func die() -> void:
@@ -326,9 +338,32 @@ func reset_position() -> void:
 	player_radius = radius_exterior
 	$collision.disabled = false
 
+func play_animation(_anim: StringName) -> void:
+	$sprite_pistol.play(_anim)
+	$sprite_rifle.play(_anim)
+
 # ======== Callbacks ========
 func on_animation_finished() -> void:
 	match anim_state:
 		ANIMATION_STATES.DODGE:
 			anim_state = ANIMATION_STATES.IDLE
-			$sprite.play("idle")
+			$sprite_pistol.play("idle")
+			$sprite_rifle.play("idle")
+
+# ======== Utils ========
+func get_current_active_sprite() -> AnimatedSprite3D:
+	if active_weapon == WEAPON.PISTOL:
+		return $sprite_pistol
+	else:
+		return $sprite_rifle
+
+# ======== Initializations ========
+func init_sprites() -> void:
+	$sprite_pistol.set_scale($sprite_pistol.scale)
+	$sprite_rifle.set_scale($sprite_rifle.scale)
+	$sprite_pistol.connect("animation_finished", on_animation_finished)
+	$sprite_rifle.connect("animation_finished", on_animation_finished)
+	$sprite_rifle.hide()
+
+	$sprite_pistol.play("idle")
+
