@@ -339,8 +339,8 @@ func reset_position() -> void:
 	$collision.disabled = false
 
 func play_animation(_anim: StringName) -> void:
-	var active_sprite = get_current_active_sprite()
-	active_sprite.play(_anim)
+	$sprite_pistol.play(_anim)
+	$sprite_rifle.play(_anim)
 
 # ======== Callbacks ========
 func on_animation_finished() -> void:

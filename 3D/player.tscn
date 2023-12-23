@@ -764,7 +764,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6byhg")
 }],
-"loop": true,
+"loop": false,
 "name": &"jump",
 "speed": 15.0
 }, {
@@ -838,10 +838,10 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0.449255, 0)
 lod_bias = 0.001
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_72fuo")
-animation = &"walk"
+animation = &"jump"
 
 [node name="sprite_rifle" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0.449, 0)
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_15ouf")
-animation = &"dodge"
+animation = &"jump"
