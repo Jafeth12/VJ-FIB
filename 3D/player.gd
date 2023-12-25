@@ -36,6 +36,7 @@ const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.2
 
 func _ready() -> void:
 	player_init_sprites()
+	entity_radius = radius_exterior
 
 # Gestionar la lógica que no tiene que ver con la física del jugador
 # p.e.: Vida y muerte, cambio de anillo, animaciones, etc.
@@ -275,12 +276,12 @@ func player_reset_position() -> void:
 		return
 
 	entity_alpha = 0
+	entity_radius = radius_exterior
 	curr_ring = RING.EXTERIOR
 	curr_level = LEVEL.LOWER
 	target_level = curr_level
 	velocity = Vector3(0, 0, 0)
 	transform.origin.y = 5
-	entity_radius = radius_exterior
 	$collision.disabled = false
 
 func player_play_animation(_anim: StringName) -> void:
