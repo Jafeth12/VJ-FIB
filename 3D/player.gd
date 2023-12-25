@@ -36,7 +36,7 @@ const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.2
 
 func _ready() -> void:
 	player_init_sprites()
-	entity_radius = radius_exterior
+	player_reset_position()
 
 # Gestionar la lógica que no tiene que ver con la física del jugador
 # p.e.: Vida y muerte, cambio de anillo, animaciones, etc.
