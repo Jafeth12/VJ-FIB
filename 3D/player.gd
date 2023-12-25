@@ -3,10 +3,10 @@ class_name Player extends GenericEntity
 # Enumerations
 enum ANIMATION_STATES { IDLE, WALK, JUMP, CROUCH, DIE, DODGE }
 enum FACING { LEFT=-1, RIGHT=1 }
+enum WEAPON { PISTOL, RIFLE }
 enum RING { EXTERIOR, INTERIOR }
 enum LEVEL { LOWER, MIDDLE, UPPER }
 var LEVEL_HEIGHTS = [ 0, 20, 30 ]
-enum WEAPON { PISTOL, RIFLE }
 
 # Máquinas de estados
 var anim_state = ANIMATION_STATES.IDLE
@@ -16,6 +16,7 @@ var curr_level : LEVEL = LEVEL.LOWER
 var target_level : LEVEL = curr_level
 var resetting_alpha : bool = false
 var active_weapon : WEAPON = WEAPON.PISTOL
+var facing: FACING = FACING.LEFT
 
 # Velocidades angulares del jugador
 @export var SPEED = PI/8 # 1 lap = 16 secs.
@@ -27,10 +28,10 @@ const radius_exterior = 20
 const radius_interior = 15
 
 # Jump parameters
-const INIT_JUMPS_LEFT = 2
-var jumps_left: int = INIT_JUMPS_LEFT # Cuenta el numero de saltos que puede dar el jugador
 const JUMP_VELOCITY = 7
 const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.2
+const INIT_JUMPS_LEFT = 2
+var jumps_left: int = INIT_JUMPS_LEFT # Cuenta el numero de saltos que puede dar el jugador
 
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
@@ -150,8 +151,8 @@ func player_update_anim_state():
 
 # Actualizar máquina de estados de dirección
 func player_update_facing() -> void:
-	$sprite_pistol.set_flip_h(entity_direction==EntityDirection.RIGHT)
-	$sprite_rifle.set_flip_h(entity_direction==EntityDirection.RIGHT)
+	$sprite_pistol.set_flip_h(facing==FACING.RIGHT)
+	$sprite_rifle.set_flip_h(facing==FACING.RIGHT)
 
 # Actualiza la máquina de estados del cambio de anillo
 func player_change_ring_state() -> void:
@@ -347,10 +348,10 @@ func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delt
 	else:
 		if !player_is_crouching():
 			var speed: float = DODGE_SPEED if player_is_dodging() else SPEED
-			# var real_dir: int = direction if !player_is_dodging() else facing
+			var real_dir: int = facing if player_is_dodging() else direction
 			# only move when keys are pressed
 			if player_should_move():
-				next_alpha += direction * speed * delta
+				next_alpha += real_dir * speed * delta
 			if next_alpha > 2*PI:
 				next_alpha -= 2*PI
 			elif next_alpha < -2*PI:
@@ -365,13 +366,17 @@ func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirec
 	var left_pressed = Input.is_action_pressed("move_left")
 	# Get direction of movement
 	if resetting_alpha:
+		# No hacemos update de facing.
+		# Se queda igual si estamos en autopilot
 		if entity_alpha > 0:
 			return EntityDirection.LEFT
 		else:
 			return EntityDirection.RIGHT
 	elif right_pressed && !left_pressed:
+		facing = FACING.RIGHT
 		return EntityDirection.RIGHT
 	elif left_pressed && !right_pressed:
+		facing = FACING.LEFT
 		return EntityDirection.LEFT
 	else:
 		return current_direction
