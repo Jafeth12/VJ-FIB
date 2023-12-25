@@ -9,7 +9,6 @@ var LEVEL_HEIGHTS = [ 0, 20, 30 ]
 
 # Máquinas de estados
 var anim_state = ANIMATION_STATES.IDLE
-var facing = FACING.RIGHT
 var curr_ring = RING.EXTERIOR
 var changing_ring : bool = false
 var curr_level : LEVEL = LEVEL.LOWER
@@ -25,13 +24,11 @@ var resetting_alpha : bool = false
 const radius_exterior = 20
 const radius_interior = 15
 
-var player_radius = radius_exterior # TODO: abtraer esto
-
 # Jump parameters
 const INIT_JUMPS_LEFT = 2
 var jumps_left: int = INIT_JUMPS_LEFT # Cuenta el numero de saltos que puede dar el jugador
 const JUMP_VELOCITY = 7
-const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.5
+const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.2
 
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
@@ -39,6 +36,7 @@ func _ready() -> void:
 	$sprite.set_scale($sprite.scale)
 	$sprite.play("idle")
 	$sprite.connect("animation_finished", player_on_animation_finished)
+	entity_radius = radius_exterior
 
 # Gestionar la lógica que no tiene que ver con la física del jugador
 # p.e.: Vida y muerte, cambio de anillo, animaciones, etc.
@@ -58,10 +56,6 @@ func _physics_process(delta: float) -> void:
 	if player_is_dead():
 		return
 
-	# Add the gravity.
-	if !is_on_floor():
-		velocity.y -= gravity * delta
-
 	# Changing ring
 	if changing_ring:
 		player_switch_ring()
@@ -70,71 +64,16 @@ func _physics_process(delta: float) -> void:
 	if curr_level != target_level:
 		player_switch_level()
 
-	# Handle jump.
+	# Handle jump logic.
 	if is_on_floor():
 		jumps_left = INIT_JUMPS_LEFT
 
 	if !is_on_floor() && jumps_left == INIT_JUMPS_LEFT:
 		jumps_left = 1
 
-	if entity_should_jump():
-		player_jump()
+	super(delta)
 
-	# super(delta)
 
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var right_pressed: bool = Input.is_action_pressed("move_right")
-	var left_pressed: bool = Input.is_action_pressed("move_left")
-
-	# Get direction of movement
-	var circular_dir: int = 0;
-	if resetting_alpha:
-		if entity_alpha > 0:
-			circular_dir = -1
-		else:
-			circular_dir = 1
-	elif (right_pressed && !left_pressed):
-		circular_dir = 1
-		facing = FACING.RIGHT
-	elif left_pressed && !right_pressed:
-		circular_dir = -1
-		facing = FACING.LEFT
-
-	# Update entity_alpha
-	if resetting_alpha:
-		var speed: float = SPEED*15
-		var real_dir: int = circular_dir
-		var next_alpha: float = entity_alpha + (real_dir * speed * delta)
-		if (entity_alpha >= -0.05 && entity_alpha <= 0.05 ) || (next_alpha > 0 && entity_alpha < 0) or (next_alpha < 0 and entity_alpha > 0):
-			entity_alpha = 0
-			resetting_alpha = false
-			player_change_level_state()
-		else:
-			entity_alpha = next_alpha
-	else:
-		if !player_is_crouching():
-			var speed: float = DODGE_SPEED if player_is_dodging() else SPEED
-			var real_dir: int = circular_dir if !player_is_dodging() else int(facing)
-			entity_alpha += real_dir * speed * delta
-			if entity_alpha > 2*PI:
-				entity_alpha -= 2*PI
-			elif entity_alpha < -2*PI:
-				entity_alpha += 2*PI
-
-	var next_xz = entity_get_xz(entity_alpha)
-	velocity.x = (next_xz.x - get_position().x)/delta
-	velocity.z = (next_xz.y - get_position().z)/delta
-
-	var length: float = velocity.length()
-	if length < 0.005:
-		velocity = Vector3(0, 0, 0)
-
-	move_and_slide()
-	if is_on_wall():
-		entity_alpha = old_alpha
-		entity_alpha = entity_get_position_alpha(get_position())
-	old_alpha = entity_alpha
 
 # ======== Update maquinas de estados ========
 
@@ -210,7 +149,7 @@ func player_update_anim_state():
 
 # Actualizar máquina de estados de dirección
 func player_update_facing() -> void:
-	$sprite.set_flip_h(facing==FACING.RIGHT)
+	$sprite.set_flip_h(entity_direction==EntityDirection.RIGHT)
 
 # Actualiza la máquina de estados del cambio de anillo
 func player_change_ring_state() -> void:
@@ -223,6 +162,7 @@ func player_change_ring_state() -> void:
 	else:
 		curr_ring = RING.EXTERIOR
 
+# Actualiza el estado del anillo en el que debemos llegar
 func player_change_level_state() -> void:
 	match curr_level:
 		LEVEL.LOWER:
@@ -232,18 +172,37 @@ func player_change_level_state() -> void:
 
 
 # ======== Consultoras ========
+# Dice si el jugador está crouching
 func player_is_crouching() -> bool:
 	return Input.is_action_pressed("crouch") && is_on_floor()
 
+# Determina si el jugador debe morir
 func player_should_die() -> bool:
 	return Input.is_action_pressed("dbg_die")
 
+# Determina si el jugador ha muerto
 func player_is_dead() -> bool:
 	return anim_state == ANIMATION_STATES.DIE
 
+# Dice si el jugador está en animación "DODGE"
 func player_is_dodging() -> bool:
 	return anim_state == ANIMATION_STATES.DODGE
 
+# Devuelve si el jugador se debería mover
+func player_should_move() -> bool:
+	var move_right = Input.is_action_pressed("move_right")
+	var move_left  = Input.is_action_pressed("move_left" )
+	return (move_right != move_left) || player_is_dodging()
+
+# Devuelve la dirección de movimiento segun input
+func player_move_dir() -> EntityDirection:
+	if Input.is_action_just_pressed("move_right"):
+		return EntityDirection.RIGHT
+	elif Input.is_action_pressed("move_left"):
+		return EntityDirection.LEFT
+	return EntityDirection.NONE
+
+# Ahora por ahora, solamente funciona para input de debug
 func player_handle_input() -> void:
 	if Input.is_action_just_pressed("dbg_switch_ring"):
 		player_change_ring_state()
@@ -264,24 +223,24 @@ func player_switch_ring() -> void:
 
 		# Target ring is exterior, if were in the first frame of the change, jump.
 		# This way its only done once. Otherwise, itll keep adding y velocity eternally.
-		if player_radius == radius_interior && is_on_floor():
+		if entity_radius == radius_interior && is_on_floor():
 			velocity.y = RING_SWITCH_JUMP_VELOCITY
-		elif player_radius == radius_exterior:
+		elif entity_radius == radius_exterior:
 			# If the target ring is the exterior one and were already there, stop the thing.
 			changing_ring = false
 
 		if changing_ring:
 			# Gradually change the player_radius to get a smooth transition.
 			# As seen above, we stop adding as soon as we reach the target radius.
-			player_radius += RING_SWITCH_SPEED
+			entity_radius += RING_SWITCH_SPEED
 	else:
-		if player_radius == radius_exterior and is_on_floor():
+		if entity_radius == radius_exterior and is_on_floor():
 			velocity.y = RING_SWITCH_JUMP_VELOCITY
-		elif player_radius == radius_interior:
+		elif entity_radius == radius_interior:
 			changing_ring = false
 
 		if changing_ring:
-			player_radius -= RING_SWITCH_SPEED
+			entity_radius -= RING_SWITCH_SPEED
 
 func player_switch_level() -> void:
 	if curr_level == target_level:
@@ -310,7 +269,7 @@ func player_reset_position() -> void:
 	target_level = curr_level
 	velocity = Vector3(0, 0, 0)
 	transform.origin.y = 5
-	player_radius = radius_exterior
+	entity_radius = radius_exterior
 	$collision.disabled = false
 
 # ======== Callbacks ========
@@ -321,11 +280,63 @@ func player_on_animation_finished() -> void:
 			$sprite.play("idle")
 
 
-func player_jump():
-	jumps_left -= 1
-	velocity.y = JUMP_VELOCITY
-
-
 # ======== Reimplementaciones de entity ========
+# VIRTUAL. TO BE OVERRIDEN
+# Retorna si la entidad debe saltar
 func entity_should_jump() -> bool:
 	return Input.is_action_just_pressed("jump") and jumps_left > 0
+
+# VIRTUAL. TO BE OVERRIDEN
+# Retorna la velocidad de salto de la entidad
+# SIDE EFFECT: toca las variables que sean necesarias de lógica en la implementación
+func entity_jump() -> float:
+	jumps_left -= 1
+	return JUMP_VELOCITY
+
+# VIRTUAL. TO BE OVERRIDEN
+# Retorna el siguiente alpha, en base al alpha
+# actual, la dirección, y el delta
+func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delta: float) -> float:
+	# Update entity_alpha
+	var next_alpha = current_alpha
+	if resetting_alpha:
+		# Autopilot. Vamos a lo que vamos
+		var speed: float = SPEED*15
+		next_alpha += (direction * speed * delta)
+		if (current_alpha >= -0.05 && current_alpha <= 0.05 ) || (next_alpha > 0 && current_alpha < 0) or (next_alpha < 0 and current_alpha > 0):
+			next_alpha = 0
+			resetting_alpha = false
+			player_change_level_state()
+		# else:
+		# 	next_alpha = next_alpha
+	else:
+		if !player_is_crouching():
+			var speed: float = DODGE_SPEED if player_is_dodging() else SPEED
+			# var real_dir: int = direction if !player_is_dodging() else facing
+			# only move when keys are pressed
+			if player_should_move():
+				next_alpha += direction * speed * delta
+			if next_alpha > 2*PI:
+				next_alpha -= 2*PI
+			elif next_alpha < -2*PI:
+				next_alpha += 2*PI
+
+	return next_alpha
+
+# VIRTUAL. TO BE OVERRIDEN
+# Retorna la siguiente dirección
+func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirection:
+	var right_pressed = Input.is_action_pressed("move_right")
+	var left_pressed = Input.is_action_pressed("move_left")
+	# Get direction of movement
+	if resetting_alpha:
+		if entity_alpha > 0:
+			return EntityDirection.LEFT
+		else:
+			return EntityDirection.RIGHT
+	elif right_pressed && !left_pressed:
+		return EntityDirection.RIGHT
+	elif left_pressed && !right_pressed:
+		return EntityDirection.LEFT
+	else:
+		return current_direction

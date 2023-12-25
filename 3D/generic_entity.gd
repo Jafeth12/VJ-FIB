@@ -1,6 +1,6 @@
 class_name GenericEntity extends CharacterBody3D
 
-enum EntityDirection { LEFT = -1, RIGHT = 1 }
+enum EntityDirection { LEFT = -1, NONE = 0, RIGHT = 1 }
 
 var entity_alpha: float = 0
 var entity_direction: EntityDirection = EntityDirection.LEFT
@@ -20,7 +20,7 @@ func _physics_process(delta):
 
 	# Handle jump.
 	if entity_should_jump():
-		velocity.y = entity_get_jump_velocity()
+		velocity.y = entity_jump()
 
 	# Calculate new position, based on alpha
 	entity_direction = entity_get_new_direction(entity_direction)
@@ -46,7 +46,7 @@ func _physics_process(delta):
 
 # Retorna la posición en base al alpha
 func entity_get_xz(alpha: float) -> Vector2:
-	return Vector2(entity_radius*sin(entity_alpha), entity_radius*cos(entity_alpha))
+	return Vector2(entity_radius*sin(alpha), entity_radius*cos(alpha))
 
 # Retorna la el alpha en base a la posición
 # FIXME: esto solo es un arreglo temporal.
@@ -61,7 +61,8 @@ func entity_should_jump() -> bool:
 
 # VIRTUAL. TO BE OVERRIDEN
 # Retorna la velocidad de salto de la entidad
-func entity_get_jump_velocity() -> float:
+# SIDE EFFECTS: toca las variables que sean necesarias de lógica en la implementación
+func entity_jump() -> float:
 	return 0
 
 # VIRTUAL. TO BE OVERRIDEN
