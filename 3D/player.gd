@@ -35,7 +35,7 @@ const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.2
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
 func _ready() -> void:
-	init_sprites()
+	player_init_sprites()
 
 # Gestionar la lógica que no tiene que ver con la física del jugador
 # p.e.: Vida y muerte, cambio de anillo, animaciones, etc.
@@ -121,31 +121,31 @@ func player_update_anim_state():
 				elif velocity.length() > 0:
 					anim_state = ANIMATION_STATES.WALK
 
-	var current_anim: StringName = get_current_active_sprite().animation
+	var current_anim: StringName = player_get_current_active_sprite().animation
 
 	# logica_salida:
 	match anim_state:
 		ANIMATION_STATES.IDLE:
 			if current_anim != "idle":
-				play_animation("idle")
+				player_play_animation("idle")
 		ANIMATION_STATES.WALK:
 			if current_anim != "walk":
-				play_animation("walk")
+				player_play_animation("walk")
 		ANIMATION_STATES.JUMP:
 			if current_anim != "jump":
-				play_animation("jump")
+				player_play_animation("jump")
 			if Input.is_action_just_pressed("jump")&& jumps_left != 0:
-				play_animation("idle") # Pequeño hack para que la animación de jump vuelva a empezar
-				play_animation("jump")
+				player_play_animation("idle") # Pequeño hack para que la animación de jump vuelva a empezar
+				player_play_animation("jump")
 		ANIMATION_STATES.CROUCH:
 			if current_anim != "crouch":
-				play_animation("crouch")
+				player_play_animation("crouch")
 		ANIMATION_STATES.DIE:
 			if current_anim != "die":
-				play_animation("die")
+				player_play_animation("die")
 		ANIMATION_STATES.DODGE:
 			if current_anim != "dodge":
-				play_animation("dodge")
+				player_play_animation("dodge")
 
 # Actualizar máquina de estados de dirección
 func player_update_facing() -> void:
@@ -283,7 +283,7 @@ func player_reset_position() -> void:
 	entity_radius = radius_exterior
 	$collision.disabled = false
 
-func play_animation(_anim: StringName) -> void:
+func player_play_animation(_anim: StringName) -> void:
 	$sprite_pistol.play(_anim)
 	$sprite_rifle.play(_anim)
 
@@ -296,14 +296,14 @@ func player_on_animation_finished() -> void:
 			$sprite_rifle.play("idle")
 
 # ======== Utils ========
-func get_current_active_sprite() -> AnimatedSprite3D:
+func player_get_current_active_sprite() -> AnimatedSprite3D:
 	if active_weapon == WEAPON.PISTOL:
 		return $sprite_pistol
 	else:
 		return $sprite_rifle
 
 # ======== Initializations ========
-func init_sprites() -> void:
+func player_init_sprites() -> void:
 	$sprite_pistol.set_scale($sprite_pistol.scale)
 	$sprite_rifle.set_scale($sprite_rifle.scale)
 	$sprite_pistol.connect("animation_finished", player_on_animation_finished)
