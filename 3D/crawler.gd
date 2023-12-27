@@ -10,17 +10,16 @@ const ATTACK_SPEED: float = PI/4
 
 var player_node = null
 
-const CRAWLER_INIT_SHIELD = 80
-const CRAWLER_INIT_HEALTH = 150
-
 func _ready():
 	entity_alpha = INIT_ALPHA
-	enemy_shield = CRAWLER_INIT_SHIELD
-	enemy_health = CRAWLER_INIT_HEALTH
+	ENEMY_INIT_SHIELD = 80
+	ENEMY_INIT_HEALTH = 150
+	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
 	$sprite.connect("animation_finished", crawler_on_animation_finished)
 	$crawler_activation_area.connect("body_entered", crawler_area_entered)
 	$crawler_activation_area.connect("body_exited", crawler_area_exited)
 	player_node = get_node("/root/main/level1/Player")
+	super()
 
 func modf(a: float, d: float) -> float:
 	var sign: int = 1 if a > 0 else -1
