@@ -13,8 +13,8 @@ script = ExtResource("1_arcla")
 transform = Transform3D(-8.74228e-09, 0.2, -8.74228e-09, 0, -8.74228e-09, -0.2, -0.2, -8.74228e-09, 3.82137e-16, 0, 0, 0)
 mesh = SubResource("CapsuleMesh_4evqv")
 
-[node name="activation_area" type="Area3D" parent="."]
+[node name="bullet_activation_area" type="Area3D" parent="."]
 
-[node name="activation_collision" type="CollisionShape3D" parent="activation_area"]
+[node name="activation_collision" type="CollisionShape3D" parent="bullet_activation_area"]
 transform = Transform3D(-1.31134e-08, 0.3, -1.31134e-08, 0, -1.31134e-08, -0.3, -0.3, -1.31134e-08, 5.73206e-16, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_3j2d8")

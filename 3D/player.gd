@@ -300,10 +300,7 @@ func player_shoot() -> void:
 	var pos = get_position()
 	pos.y += 0.5
 
-	b.set_position(pos)
-	b.set_alpha(entity_alpha)
-	b.set_direction(facing)
-	b.set_radius(entity_radius)
+	b.init(pos, entity_alpha, facing, entity_radius)
 	owner.add_child(b)
 
 # ======== Callbacks ========
