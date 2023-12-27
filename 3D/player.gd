@@ -1,5 +1,8 @@
 class_name Player extends GenericEntity
 
+# scenes
+var bullet = preload("res://bullet.tscn")
+
 # Enumerations
 enum ANIMATION_STATES { IDLE, WALK, JUMP, CROUCH, DIE, DODGE }
 enum FACING { LEFT=-1, RIGHT=1 }
@@ -227,6 +230,9 @@ func player_handle_input() -> void:
 			$sprite_rifle.hide()
 			active_weapon = WEAPON.PISTOL
 
+	if Input.is_action_just_pressed("shoot"):
+		player_shoot()
+
 # ======== Actuadoras ========
 func player_die() -> void:
 	anim_state = ANIMATION_STATES.DIE
@@ -288,6 +294,17 @@ func player_reset_position() -> void:
 func player_play_animation(_anim: StringName) -> void:
 	$sprite_pistol.play(_anim)
 	$sprite_rifle.play(_anim)
+
+func player_shoot() -> void:
+	var b = bullet.instantiate()
+	var pos = get_position()
+	pos.y += 0.5
+
+	b.set_position(pos)
+	b.set_alpha(entity_alpha)
+	b.set_direction(facing)
+	b.set_radius(entity_radius)
+	owner.add_child(b)
 
 # ======== Callbacks ========
 func player_on_animation_finished() -> void:

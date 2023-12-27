@@ -30,7 +30,7 @@ func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirec
 	match enemy_state:
 		EnemyState.WANDER:
 			if player_in_area:
-				var angular_separation: float = modf(abs(player_node.alpha - entity_alpha), 2*PI)
+				var angular_separation: float = modf(abs(player_node.entity_alpha - entity_alpha), 2*PI)
 				print(angular_separation)
 				if angular_separation < PI:
 					# angle1 is to the left of angle2

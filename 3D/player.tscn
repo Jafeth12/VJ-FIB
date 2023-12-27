@@ -1,9 +1,9 @@
 [gd_scene load_steps=115 format=3 uid="uid://d2h5lpkd1b7ff"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_l5rtp"]
-[ext_resource type="Texture2D" uid="uid://rrxc8pehdjfc" path="res://art/player_weapon2.png" id="2_jqr8u"]
+[ext_resource type="Texture2D" path="res://art/player_weapon2.png" id="2_jqr8u"]
 [ext_resource type="Texture2D" uid="uid://boqo6wfu1f426" path="res://art/PlayerCyborg-a.png" id="2_vbfnd"]
-[ext_resource type="Texture2D" uid="uid://dy3xtne50uonp" path="res://art/player_weapon1.png" id="4_wx50i"]
+[ext_resource type="Texture2D" path="res://art/player_weapon1.png" id="4_wx50i"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1e10u"]
 

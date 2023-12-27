@@ -4,6 +4,7 @@ enum EntityDirection { LEFT = -1, NONE = 0, RIGHT = 1 }
 
 var entity_alpha: float = 0
 var entity_direction: EntityDirection = EntityDirection.LEFT
+var entity_has_gravity: bool = true
 @export var entity_radius: float = 18
 
 # FIXME
@@ -15,8 +16,9 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 # Loop principal de las físicas de una entidad
 func _physics_process(delta):
 	# Add the gravity.
-	if !is_on_floor():
-		velocity.y -= gravity * delta
+	if entity_has_gravity:
+		if !is_on_floor():
+			velocity.y -= gravity * delta
 
 	# Handle jump.
 	if entity_should_jump():
