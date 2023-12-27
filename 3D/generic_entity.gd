@@ -2,10 +2,10 @@ class_name GenericEntity extends CharacterBody3D
 
 enum EntityDirection { LEFT = -1, NONE = 0, RIGHT = 1 }
 
-var entity_alpha: float = 0
+@export var entity_alpha: float
 var entity_direction: EntityDirection = EntityDirection.LEFT
 var entity_has_gravity: bool = true
-@export var entity_radius: float = 18
+@export var entity_radius: float
 
 # FIXME
 var old_alpha = entity_alpha

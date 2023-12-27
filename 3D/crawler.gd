@@ -3,15 +3,12 @@ class_name Crawler extends GenericEnemy
 var attack_ended: bool = false
 var player_in_area: bool = false
 
-@export var INIT_ALPHA = 0
-
 const SPEED: float = PI/10
 const ATTACK_SPEED: float = PI/4
 
 var player_node = null
 
 func _ready():
-	entity_alpha = INIT_ALPHA
 	ENEMY_INIT_SHIELD = 80
 	ENEMY_INIT_HEALTH = 150
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
