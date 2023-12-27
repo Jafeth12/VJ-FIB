@@ -18,8 +18,8 @@ func _ready():
 	enemy_shield = CRAWLER_INIT_SHIELD
 	enemy_health = CRAWLER_INIT_HEALTH
 	$sprite.connect("animation_finished", crawler_on_animation_finished)
-	$activation_area.connect("area_entered", crawler_area_entered)
-	$activation_area.connect("area_exited", crawler_area_exited)
+	$crawler_activation_area.connect("body_entered", crawler_area_entered)
+	$crawler_activation_area.connect("body_exited", crawler_area_exited)
 	player_node = get_node("/root/main/level1/Player")
 
 func modf(a: float, d: float) -> float:
@@ -35,15 +35,15 @@ func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirec
 	match enemy_state:
 		EnemyState.WANDER:
 			if player_in_area:
-				var angular_separation: float = modf(abs(player_node.alpha - entity_alpha), 2*PI)
-				print(angular_separation)
+				var angular_separation: float = modf(abs(player_node.entity_alpha - entity_alpha), 2*PI)
+				#print(angular_separation)
 				if angular_separation < PI:
 					# angle1 is to the left of angle2
-					print("ME TIRO A LA IZQUIERDA")
+					#print("ME TIRO A LA IZQUIERDA")
 					prx_dir = EntityDirection.LEFT
 				else:
 					#angle1 is to the right of angle2
-					print("ME TIRO A LA DERECHA")
+					#print("ME TIRO A LA DERECHA")
 					prx_dir = EntityDirection.RIGHT
 			if is_on_wall():
 				prx_dir = -current_direction
@@ -92,10 +92,12 @@ func crawler_on_animation_finished() -> void:
 		"attack":
 			attack_ended = true
 
-func crawler_area_entered(area: Area3D):
-	print("entró")
+func crawler_area_entered(body: Node3D):
+	#print("entró")
+	if body is StaticBody3D:
+		return
 	player_in_area = true
 
-func crawler_area_exited(area: Area3D):
-	print("salió")
+func crawler_area_exited(body: Node3D):
+	#print("salió")
 	player_in_area = false

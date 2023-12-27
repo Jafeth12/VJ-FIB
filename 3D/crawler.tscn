@@ -234,9 +234,9 @@ viewport_path = NodePath("SubViewport")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.522354, 0)
 script = ExtResource("1_46rf8")
 
-[node name="activation_area" type="Area3D" parent="."]
+[node name="crawler_activation_area" type="Area3D" parent="."]
 
-[node name="activation_collision" type="CollisionShape3D" parent="activation_area"]
+[node name="activation_collision" type="CollisionShape3D" parent="crawler_activation_area"]
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 3.29915, 0)
 shape = SubResource("BoxShape3D_injn6")
 

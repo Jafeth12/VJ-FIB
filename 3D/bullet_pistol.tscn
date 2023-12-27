@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://bpd3xqnwxvtmm"]
+
+[ext_resource type="Script" path="res://bullet_pistol.gd" id="1_fucr5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7b6mx"]
+albedo_color = Color(0.0431373, 1, 1, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_6ekej"]
+material = SubResource("StandardMaterial3D_7b6mx")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sv58o"]
+
+[node name="bullet_pistol" type="CharacterBody3D"]
+script = ExtResource("1_fucr5")
+
+[node name="mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-09, 0.1, -4.37114e-09, 0, -4.37114e-09, -0.1, -0.1, -4.37114e-09, 1.91069e-16, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_6ekej")
+
+[node name="bullet_activation_area" type="Area3D" parent="."]
+
+[node name="activation_collision" type="CollisionShape3D" parent="bullet_activation_area"]
+transform = Transform3D(-5.24537e-09, 0.12, -5.24537e-09, 0, -5.24537e-09, -0.12, -0.12, -5.24537e-09, 2.29282e-16, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_sv58o")

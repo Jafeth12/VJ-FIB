@@ -1,5 +1,9 @@
 class_name Player extends GenericEntity
 
+# scenes
+var bullet_pistol = preload("res://bullet_pistol.tscn")
+var bullet_rifle = preload("res://bullet_rifle.tscn")
+
 # Enumerations
 enum ANIMATION_STATES { IDLE, WALK, JUMP, CROUCH, DIE, DODGE }
 enum FACING { LEFT=-1, RIGHT=1 }
@@ -153,6 +157,8 @@ func player_update_anim_state():
 		ANIMATION_STATES.DODGE:
 			if current_anim != "dodge":
 				player_play_animation("dodge")
+				if !is_on_floor():
+					velocity.y -= JUMP_VELOCITY*2
 
 # Actualizar máquina de estados de dirección
 func player_update_facing() -> void:
@@ -236,6 +242,9 @@ func player_handle_input() -> void:
 			$sprite_rifle.hide()
 			active_weapon = WEAPON.PISTOL
 
+	if Input.is_action_just_pressed("shoot"):
+		player_shoot()
+
 # ======== Actuadoras ========
 func player_die() -> void:
 	anim_state = ANIMATION_STATES.DIE
@@ -298,6 +307,30 @@ func player_reset_position() -> void:
 func player_play_animation(_anim: StringName) -> void:
 	$sprite_pistol.play(_anim)
 	$sprite_rifle.play(_anim)
+
+func player_shoot() -> void:
+	if player_is_dead():
+		return
+
+	if player_is_dodging():
+		return
+
+	if changing_ring:
+		return
+
+	var bullet = null
+
+	match active_weapon:
+		WEAPON.PISTOL:
+			bullet = bullet_pistol
+		WEAPON.RIFLE:
+			bullet = bullet_rifle
+
+	var b = bullet.instantiate()
+	var pos = get_position()
+
+	b.init(pos, entity_alpha, facing, entity_radius, player_is_crouching())
+	owner.add_child(b)
 
 
 func player_take_damage(damage: int) -> void:
