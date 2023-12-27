@@ -318,6 +318,8 @@ func player_shoot() -> void:
 	if changing_ring:
 		return
 
+	velocity.y = 0
+
 	var bullet = null
 
 	match active_weapon:
