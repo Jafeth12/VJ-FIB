@@ -1,9 +1,9 @@
-class_name Bullet extends GenericEntity
+class_name GenericBullet extends GenericEntity
 
-const BULLET_SPEED: float = PI/1.5
-const BULLLET_MAX_TRAVEL_DISTANCE: float = PI/2
+var BULLET_SPEED: float = PI/1.5
+var BULLET_MAX_TRAVEL_DISTANCE: float = PI/2
 
-var bullet_initial_alpha: float = 0
+var BULLET_INITIAL_ALPHA: float = 0
 
 # -----------------------------------------------
 
@@ -11,12 +11,12 @@ func _ready():
 	entity_has_gravity = false
 	$bullet_activation_area.connect("body_entered", bullet_body_entered)
 
-func init(pos: Vector3, alpha: float, direction: EntityDirection, radius: float):
-	bullet_initial_alpha = alpha
+func init(pos: Vector3, alpha: float, direction: EntityDirection, radius: float, _playerCrouching: bool):
+	BULLET_INITIAL_ALPHA = alpha
 	set_position(pos)
-	set_alpha(alpha)
-	set_direction(direction)
-	set_radius(radius)
+	bullet_set_alpha(alpha)
+	bullet_set_direction(direction)
+	bullet_set_radius(radius)
 
 func _process(_delta):
 	look_at(Vector3(0, get_position().y, 0))
@@ -25,16 +25,16 @@ func _physics_process(delta):
 	velocity.y = 0
 	super._physics_process(delta)
 
-	if abs(entity_alpha - bullet_initial_alpha) > BULLLET_MAX_TRAVEL_DISTANCE:
+	if abs(entity_alpha - BULLET_INITIAL_ALPHA) > BULLET_MAX_TRAVEL_DISTANCE:
 		queue_free()
 
-func set_alpha(alpha: float):
+func bullet_set_alpha(alpha: float):
 	entity_alpha = alpha
 
-func set_direction(direction: EntityDirection):
+func bullet_set_direction(direction: EntityDirection):
 	entity_direction = direction
 
-func set_radius(radius: float):
+func bullet_set_radius(radius: float):
 	entity_radius = radius
 
 # -----------------------------------------------
@@ -65,9 +65,10 @@ func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirec
 
 # ------------------------------------------------------
 
+# VIRTUAL FUNCTION -> TO BE OVERRIDEN
 func bullet_body_entered(body: Node3D) -> void:
-	print("body entered in Bullet area")
-	print(body.get_name())
+	# print("body entered in Bullet area")
+	# print(body.get_name())
 
 	if body is GenericEnemy:
 		# print("Bullet hit enemy")
