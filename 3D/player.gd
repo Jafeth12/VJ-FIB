@@ -33,6 +33,10 @@ const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.2
 const INIT_JUMPS_LEFT = 2
 var jumps_left: int = INIT_JUMPS_LEFT # Cuenta el numero de saltos que puede dar el jugador
 
+# Salud
+const INIT_HEALTH = 100
+var health = INIT_HEALTH
+
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
 func _ready() -> void:
@@ -283,11 +287,18 @@ func player_reset_position() -> void:
 	target_level = curr_level
 	velocity = Vector3(0, 0, 0)
 	transform.origin.y = 5
+	health = INIT_HEALTH
 	$collision.disabled = false
 
 func player_play_animation(_anim: StringName) -> void:
 	$sprite_pistol.play(_anim)
 	$sprite_rifle.play(_anim)
+
+
+func player_take_damage(damage: int) -> void:
+	health -= damage
+	if health <= 0:
+		player_die()
 
 # ======== Callbacks ========
 func player_on_animation_finished() -> void:
@@ -313,7 +324,6 @@ func player_init_sprites() -> void:
 	$sprite_rifle.hide()
 
 	$sprite_pistol.play("idle")
-
 
 
 # ======== Reimplementaciones de entity ========
