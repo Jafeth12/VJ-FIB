@@ -10,8 +10,13 @@ const ATTACK_SPEED: float = PI/4
 
 var player_node = null
 
+const CRAWLER_INIT_SHIELD = 80
+const CRAWLER_INIT_HEALTH = 150
+
 func _ready():
 	entity_alpha = INIT_ALPHA
+	enemy_shield = CRAWLER_INIT_SHIELD
+	enemy_health = CRAWLER_INIT_HEALTH
 	$sprite.connect("animation_finished", crawler_on_animation_finished)
 	$activation_area.connect("area_entered", crawler_area_entered)
 	$activation_area.connect("area_exited", crawler_area_exited)
@@ -75,10 +80,6 @@ func enemy_update_animation() -> void:
 # OVERRIDE de ENEMY
 func enemy_should_attack() -> bool:
 	return player_in_area
-
-# OVERRIDE de ENEMY
-func enemy_should_die() -> bool:
-	return Input.is_action_just_pressed("dbg_enemies_die")
 
 # OVERRIDE de ENEMY
 func enemy_is_attack_finished() -> bool:
