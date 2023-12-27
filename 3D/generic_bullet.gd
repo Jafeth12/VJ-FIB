@@ -4,6 +4,7 @@ var BULLET_SPEED: float = PI/1.5
 var BULLET_MAX_TRAVEL_DISTANCE: float = PI/2
 
 var BULLET_INITIAL_ALPHA: float = 0
+var BULLET_DAMAGE: int = 33
 
 # -----------------------------------------------
 
@@ -72,7 +73,9 @@ func bullet_body_entered(body: Node3D) -> void:
 
 	if body is GenericEnemy:
 		# print("Bullet hit enemy")
-		pass
+		if body.enemy_is_dead():
+			return
+		body.enemy_take_damage(BULLET_DAMAGE)
 
 	elif body is StaticBody3D:
 		# print("Bullet hit wall")

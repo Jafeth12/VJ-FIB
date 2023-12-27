@@ -84,3 +84,6 @@ func enemy_should_attack() -> bool:
 # p.e.: when the attack animation is finished
 func enemy_is_attack_finished() -> bool:
 	return false
+
+func enemy_is_dead() -> bool:
+	return enemy_shield <= 0 && enemy_health <= 0
