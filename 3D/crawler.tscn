@@ -1,7 +1,8 @@
-[gd_scene load_steps=34 format=3 uid="uid://cyowg8g5vnbuf"]
+[gd_scene load_steps=36 format=3 uid="uid://cyowg8g5vnbuf"]
 
 [ext_resource type="Script" path="res://crawler.gd" id="1_46rf8"]
 [ext_resource type="Texture2D" uid="uid://is7kesgrn04" path="res://art/Crawler.png" id="2_hmv2l"]
+[ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://health_bar_3d.tscn" id="3_onfo2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_injn6"]
 
@@ -226,6 +227,9 @@ animations = [{
 "speed": 15.0
 }]
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_p6yj0"]
+viewport_path = NodePath("SubViewport")
+
 [node name="crawler" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.522354, 0)
 script = ExtResource("1_46rf8")
@@ -245,3 +249,14 @@ billboard = 2
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_jmyu3")
 animation = &"attack"
+
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+
+[node name="HealthBar3D" parent="SubViewport" instance=ExtResource("3_onfo2")]
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+billboard = 2
+texture = SubResource("ViewportTexture_p6yj0")
