@@ -37,6 +37,11 @@ const RING_SWITCH_JUMP_VELOCITY = JUMP_VELOCITY*1.2
 const INIT_JUMPS_LEFT = 2
 var jumps_left: int = INIT_JUMPS_LEFT # Cuenta el numero de saltos que puede dar el jugador
 
+# Salud
+const INIT_HEALTH = 100
+var health = INIT_HEALTH
+var god_mode = false
+
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
 func _ready() -> void:
@@ -187,7 +192,7 @@ func player_is_crouching() -> bool:
 
 # Determina si el jugador debe morir
 func player_should_die() -> bool:
-	return Input.is_action_pressed("dbg_die")
+	return health <= 0
 
 # Determina si el jugador ha muerto
 func player_is_dead() -> bool:
@@ -213,16 +218,20 @@ func player_move_dir() -> EntityDirection:
 
 # Ahora por ahora, solamente funciona para input de debug
 func player_handle_input() -> void:
+	if Input.is_action_just_pressed("god_mode"):
+		god_mode = !god_mode
+	if Input.is_action_just_pressed("dbg_die"):
+		health = 0
+	if Input.is_action_just_pressed("dbg_take_damage"):
+		player_take_damage(20)
 	if Input.is_action_just_pressed("dbg_switch_ring"):
 		player_change_ring_state()
 	if Input.is_action_just_pressed("dbg_next_level"):
 		if resetting_alpha:
 			return
-
 		resetting_alpha = true
 	if Input.is_action_just_pressed("dbg_reset_position"):
 		player_reset_position()
-	
 	if Input.is_action_just_pressed("dbg_switch_weapon"):
 		if active_weapon == WEAPON.PISTOL:
 			$sprite_pistol.hide()
@@ -292,6 +301,7 @@ func player_reset_position() -> void:
 	target_level = curr_level
 	velocity = Vector3(0, 0, 0)
 	transform.origin.y = 5
+	health = INIT_HEALTH
 	$collision.disabled = false
 
 func player_play_animation(_anim: StringName) -> void:
@@ -308,6 +318,8 @@ func player_shoot() -> void:
 	if changing_ring:
 		return
 
+	velocity.y = 0
+
 	var bullet = null
 
 	match active_weapon:
@@ -321,6 +333,12 @@ func player_shoot() -> void:
 
 	b.init(pos, entity_alpha, facing, entity_radius, player_is_crouching())
 	owner.add_child(b)
+
+
+func player_take_damage(damage: int) -> void:
+	if god_mode:
+		return
+	health -= damage
 
 # ======== Callbacks ========
 func player_on_animation_finished() -> void:
@@ -346,7 +364,6 @@ func player_init_sprites() -> void:
 	$sprite_rifle.hide()
 
 	$sprite_pistol.play("idle")
-
 
 
 # ======== Reimplementaciones de entity ========

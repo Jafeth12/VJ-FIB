@@ -1,7 +1,8 @@
-[gd_scene load_steps=34 format=3 uid="uid://cyowg8g5vnbuf"]
+[gd_scene load_steps=40 format=3 uid="uid://cyowg8g5vnbuf"]
 
 [ext_resource type="Script" path="res://crawler.gd" id="1_46rf8"]
 [ext_resource type="Texture2D" uid="uid://is7kesgrn04" path="res://art/Crawler.png" id="2_hmv2l"]
+[ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://health_bar_3d.tscn" id="3_onfo2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_injn6"]
 
@@ -226,9 +227,25 @@ animations = [{
 "speed": 15.0
 }]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_paess"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cji6q"]
+bg_color = Color(0.431373, 0, 0.0784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vr0e2"]
+bg_color = Color(0.431373, 0, 0.0784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wxhb0"]
+bg_color = Color(0, 0.647059, 0.901961, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_p6yj0"]
+viewport_path = NodePath("SubViewport")
+
 [node name="crawler" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.522354, 0)
 script = ExtResource("1_46rf8")
+entity_radius = null
 
 [node name="crawler_activation_area" type="Area3D" parent="."]
 
@@ -245,3 +262,20 @@ billboard = 2
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_jmyu3")
 animation = &"attack"
+
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+
+[node name="HealthBar3D" parent="SubViewport" instance=ExtResource("3_onfo2")]
+theme_override_styles/background = SubResource("StyleBoxFlat_paess")
+theme_override_styles/fill = SubResource("StyleBoxFlat_cji6q")
+
+[node name="ShieldBar3D" parent="SubViewport" instance=ExtResource("3_onfo2")]
+theme_override_styles/background = SubResource("StyleBoxFlat_vr0e2")
+theme_override_styles/fill = SubResource("StyleBoxFlat_wxhb0")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+billboard = 2
+texture = SubResource("ViewportTexture_p6yj0")

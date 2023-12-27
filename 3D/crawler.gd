@@ -3,19 +3,20 @@ class_name Crawler extends GenericEnemy
 var attack_ended: bool = false
 var player_in_area: bool = false
 
-@export var INIT_ALPHA = 0
-
 const SPEED: float = PI/10
 const ATTACK_SPEED: float = PI/4
 
 var player_node = null
 
 func _ready():
-	entity_alpha = INIT_ALPHA
+	ENEMY_INIT_SHIELD = 80
+	ENEMY_INIT_HEALTH = 150
+	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
 	$sprite.connect("animation_finished", crawler_on_animation_finished)
 	$crawler_activation_area.connect("body_entered", crawler_area_entered)
 	$crawler_activation_area.connect("body_exited", crawler_area_exited)
 	player_node = get_node("/root/main/level1/Player")
+	super()
 
 func modf(a: float, d: float) -> float:
 	var sign: int = 1 if a > 0 else -1
@@ -75,10 +76,6 @@ func enemy_update_animation() -> void:
 # OVERRIDE de ENEMY
 func enemy_should_attack() -> bool:
 	return player_in_area
-
-# OVERRIDE de ENEMY
-func enemy_should_die() -> bool:
-	return Input.is_action_just_pressed("dbg_enemies_die")
 
 # OVERRIDE de ENEMY
 func enemy_is_attack_finished() -> bool:
