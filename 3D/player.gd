@@ -42,10 +42,15 @@ const INIT_HEALTH = 100
 var health = INIT_HEALTH
 var god_mode = false
 
+# Armas
+var ammo_pistol = 30
+var ammo_rifle = 30
+
 # ======== Signals ========
 
 signal player_died()
 signal player_took_damage(new_health: int)
+signal player_shot_weapon(ammo_pistol: int, ammo_rifle: int)
 signal player_selected_pistol()
 signal player_selected_rifle()
 
@@ -319,6 +324,7 @@ func player_play_animation(_anim: StringName) -> void:
 	$sprite_rifle.play(_anim)
 
 func player_shoot() -> void:
+	# ---- Early returns ----
 	if player_is_dead():
 		return
 
@@ -327,16 +333,25 @@ func player_shoot() -> void:
 
 	if changing_ring:
 		return
-
-	velocity.y = 0
+	# -----------------------
 
 	var bullet = null
 
 	match active_weapon:
 		WEAPON.PISTOL:
+			if ammo_pistol <= 0:
+				return
+			ammo_pistol -= 1
 			bullet = bullet_pistol
 		WEAPON.RIFLE:
+			if ammo_rifle <= 0:
+				return
+			ammo_rifle -= 1
 			bullet = bullet_rifle
+
+	emit_signal("player_shot_weapon", ammo_pistol, ammo_rifle)
+
+	velocity.y = 0
 
 	var b = bullet.instantiate()
 	var pos = get_position()
