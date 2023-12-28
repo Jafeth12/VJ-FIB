@@ -42,6 +42,13 @@ const INIT_HEALTH = 100
 var health = INIT_HEALTH
 var god_mode = false
 
+# ======== Signals ========
+
+signal player_died()
+signal player_took_damage(new_health: int)
+signal player_selected_pistol()
+signal player_selected_rifle()
+
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
 func _ready() -> void:
@@ -237,10 +244,12 @@ func player_handle_input() -> void:
 			$sprite_pistol.hide()
 			$sprite_rifle.show()
 			active_weapon = WEAPON.RIFLE
+			emit_signal("player_selected_rifle")
 		else:
 			$sprite_pistol.show()
 			$sprite_rifle.hide()
 			active_weapon = WEAPON.PISTOL
+			emit_signal("player_selected_pistol")
 
 	if Input.is_action_just_pressed("shoot"):
 		player_shoot()
@@ -248,6 +257,7 @@ func player_handle_input() -> void:
 # ======== Actuadoras ========
 func player_die() -> void:
 	anim_state = ANIMATION_STATES.DIE
+	emit_signal("player_died")
 
 func player_switch_ring() -> void:
 	if curr_ring == RING.EXTERIOR:
@@ -339,6 +349,7 @@ func player_take_damage(damage: int) -> void:
 	if god_mode:
 		return
 	health -= damage
+	emit_signal("player_took_damage", health)
 
 # ======== Callbacks ========
 func player_on_animation_finished() -> void:
