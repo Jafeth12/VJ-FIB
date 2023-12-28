@@ -204,7 +204,7 @@ func player_is_crouching() -> bool:
 
 # Determina si el jugador debe morir
 func player_should_die() -> bool:
-	return health <= 0
+	return !player_is_dead() && health <= 0
 
 # Determina si el jugador ha muerto
 func player_is_dead() -> bool:
