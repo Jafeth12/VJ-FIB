@@ -1,7 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://b5g0ovr2iopjn"]
+[gd_scene load_steps=3 format=3 uid="uid://b5g0ovr2iopjn"]
 
 [ext_resource type="PackedScene" uid="uid://dg4cyo77q811f" path="res://level1.tscn" id="1_jraf3"]
+[ext_resource type="PackedScene" uid="uid://jmo7fkfdh33y" path="res://HUD.tscn" id="2_m04a3"]
 
 [node name="main" type="Node"]
 
 [node name="level1" parent="." instance=ExtResource("1_jraf3")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="CanvasLayer" instance=ExtResource("2_m04a3")]

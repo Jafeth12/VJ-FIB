@@ -1,0 +1,70 @@
+[gd_scene load_steps=5 format=3 uid="uid://jmo7fkfdh33y"]
+
+[ext_resource type="PackedScene" uid="uid://bo0mmw6euyv7i" path="res://weapon_hud.tscn" id="2_bo5pj"]
+[ext_resource type="Texture2D" uid="uid://be7nihnlk5t63" path="res://art/health-normal.svg" id="2_otavy"]
+[ext_resource type="Texture2D" uid="uid://cujb8rykjjemq" path="res://art/rifle_ui.png" id="3_3hewy"]
+[ext_resource type="Texture2D" uid="uid://btuumitgbrrnp" path="res://art/pistol_ui.png" id="3_ffv8t"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 2
+offset_left = 60.0
+offset_top = 20.0
+offset_right = 460.0
+offset_bottom = 52.0
+value = 50.0
+show_percentage = false
+
+[node name="health_icon" type="TextureRect" parent="."]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 52.0
+offset_bottom = 52.0
+texture = ExtResource("2_otavy")
+expand_mode = 1
+
+[node name="health" type="Label" parent="."]
+layout_mode = 0
+offset_left = 468.0
+offset_top = 18.0
+offset_right = 510.0
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 24
+text = "100"
+
+[node name="timer" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -43.0
+offset_right = 60.0
+offset_bottom = -20.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 48
+text = "2:00"
+
+[node name="pistol_hud" parent="." instance=ExtResource("2_bo5pj")]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 64.0
+offset_right = -932.0
+offset_bottom = -464.0
+weapon_tex = ExtResource("3_ffv8t")
+
+[node name="rifle_hud" parent="." instance=ExtResource("2_bo5pj")]
+layout_mode = 1
+offset_left = 220.0
+offset_top = 64.0
+offset_right = -732.0
+offset_bottom = -464.0
+weapon_tex = ExtResource("3_3hewy")
