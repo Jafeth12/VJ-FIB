@@ -11,7 +11,7 @@ func _process(_delta) -> void:
 	pass
 	
 func _on_play_button_up() -> void:
-	get_tree().change_scene_to_file("res://level1.tscn")
+	get_tree().change_scene_to_file("res://main.tscn")
 
 func _on_quit_button_up() -> void:
 	get_tree().quit()
