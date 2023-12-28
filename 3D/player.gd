@@ -364,6 +364,10 @@ func player_take_damage(damage: int) -> void:
 	if god_mode:
 		return
 	health -= damage
+
+	if health < 0:
+		health = 0
+
 	emit_signal("player_took_damage", health)
 
 # ======== Callbacks ========
