@@ -15,7 +15,7 @@ func _ready():
 	$sprite.connect("animation_finished", crawler_on_animation_finished)
 	$crawler_activation_area.connect("body_entered", crawler_area_entered)
 	$crawler_activation_area.connect("body_exited", crawler_area_exited)
-	player_node = get_node("/root/main/level1/Player")
+	player_node = get_node("/root/main/Player")
 	super()
 
 func modf(a: float, d: float) -> float:

@@ -42,6 +42,18 @@ const INIT_HEALTH = 100
 var health = INIT_HEALTH
 var god_mode = false
 
+# Armas
+var ammo_pistol = 30
+var ammo_rifle = 30
+
+# ======== Signals ========
+
+signal player_died()
+signal player_took_damage(new_health: int)
+signal player_shot_weapon(ammo_pistol: int, ammo_rifle: int)
+signal player_selected_pistol()
+signal player_selected_rifle()
+
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
 func _ready() -> void:
@@ -192,7 +204,7 @@ func player_is_crouching() -> bool:
 
 # Determina si el jugador debe morir
 func player_should_die() -> bool:
-	return health <= 0
+	return !player_is_dead() && health <= 0
 
 # Determina si el jugador ha muerto
 func player_is_dead() -> bool:
@@ -237,10 +249,12 @@ func player_handle_input() -> void:
 			$sprite_pistol.hide()
 			$sprite_rifle.show()
 			active_weapon = WEAPON.RIFLE
+			emit_signal("player_selected_rifle")
 		else:
 			$sprite_pistol.show()
 			$sprite_rifle.hide()
 			active_weapon = WEAPON.PISTOL
+			emit_signal("player_selected_pistol")
 
 	if Input.is_action_just_pressed("shoot"):
 		player_shoot()
@@ -248,6 +262,7 @@ func player_handle_input() -> void:
 # ======== Actuadoras ========
 func player_die() -> void:
 	anim_state = ANIMATION_STATES.DIE
+	emit_signal("player_died")
 
 func player_switch_ring() -> void:
 	if curr_ring == RING.EXTERIOR:
@@ -309,6 +324,7 @@ func player_play_animation(_anim: StringName) -> void:
 	$sprite_rifle.play(_anim)
 
 func player_shoot() -> void:
+	# ---- Early returns ----
 	if player_is_dead():
 		return
 
@@ -317,16 +333,25 @@ func player_shoot() -> void:
 
 	if changing_ring:
 		return
-
-	velocity.y = 0
+	# -----------------------
 
 	var bullet = null
 
 	match active_weapon:
 		WEAPON.PISTOL:
+			if ammo_pistol <= 0:
+				return
+			ammo_pistol -= 1
 			bullet = bullet_pistol
 		WEAPON.RIFLE:
+			if ammo_rifle <= 0:
+				return
+			ammo_rifle -= 1
 			bullet = bullet_rifle
+
+	emit_signal("player_shot_weapon", ammo_pistol, ammo_rifle)
+
+	velocity.y = 0
 
 	var b = bullet.instantiate()
 	var pos = get_position()
@@ -339,6 +364,11 @@ func player_take_damage(damage: int) -> void:
 	if god_mode:
 		return
 	health -= damage
+
+	if health < 0:
+		health = 0
+
+	emit_signal("player_took_damage", health)
 
 # ======== Callbacks ========
 func player_on_animation_finished() -> void:

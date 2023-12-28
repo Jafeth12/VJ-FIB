@@ -1,6 +1,5 @@
-[gd_scene load_steps=5 format=3 uid="uid://dg4cyo77q811f"]
+[gd_scene load_steps=4 format=3 uid="uid://dg4cyo77q811f"]
 
-[ext_resource type="PackedScene" uid="uid://d2h5lpkd1b7ff" path="res://player.tscn" id="1_eoxd6"]
 [ext_resource type="ArrayMesh" uid="uid://n42pql0fhqsy" path="res://obj/level.obj" id="3_onv32"]
 [ext_resource type="PackedScene" uid="uid://cyowg8g5vnbuf" path="res://crawler.tscn" id="3_qpl7s"]
 
@@ -11,9 +10,6 @@ data = PackedVector3Array(-0.0002, 4.05, -15.9544, -0.0002, 3.25, -15.9544, 1.04
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20, 0)
-
-[node name="Player" parent="." instance=ExtResource("1_eoxd6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.641, 0)
 
 [node name="Crawler1" parent="." instance=ExtResource("3_qpl7s")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 19.5121, 4.77865, 0)
