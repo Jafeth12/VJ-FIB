@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://dh5dj1mletea4"]
+
+[ext_resource type="Script" path="res://platform.gd" id="1_3yt2f"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pnnif"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_dwap8"]
+height = 0.05
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ltxgu"]
+size = Vector3(1.5, 1, 1.5)
+
+[node name="platform" type="StaticBody3D"]
+physics_material_override = SubResource("PhysicsMaterial_pnnif")
+script = ExtResource("1_3yt2f")
+
+[node name="mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+mesh = SubResource("CylinderMesh_dwap8")
+
+[node name="area" type="Area3D" parent="."]
+
+[node name="collision" type="CollisionShape3D" parent="area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_ltxgu")
+
+[connection signal="area_entered" from="area" to="." method="_on_area_entered"]
+[connection signal="body_entered" from="area" to="." method="_on_area_body_entered"]
+[connection signal="body_exited" from="area" to="." method="_on_area_body_exited"]

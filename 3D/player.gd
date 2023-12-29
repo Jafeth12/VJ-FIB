@@ -21,6 +21,7 @@ var target_level : LEVEL = curr_level
 var resetting_alpha : bool = false
 var active_weapon : WEAPON = WEAPON.PISTOL
 var facing: FACING = FACING.LEFT
+var is_on_platform: bool = false
 
 # Velocidades angulares del jugador
 @export var SPEED = PI/8 # 1 lap = 16 secs.
@@ -236,7 +237,7 @@ func player_handle_input() -> void:
 		health = 0
 	if Input.is_action_just_pressed("dbg_take_damage"):
 		player_take_damage(20)
-	if Input.is_action_just_pressed("dbg_switch_ring"):
+	if Input.is_action_just_pressed("dbg_switch_ring") || (is_on_platform && Input.is_action_just_pressed("interact")):
 		player_change_ring_state()
 	if Input.is_action_just_pressed("dbg_next_level"):
 		if resetting_alpha:
@@ -258,6 +259,9 @@ func player_handle_input() -> void:
 
 	if Input.is_action_just_pressed("shoot"):
 		player_shoot()
+
+func player_is_on_platform() -> bool:
+	return is_on_platform
 
 # ======== Actuadoras ========
 func player_die() -> void:
@@ -369,6 +373,9 @@ func player_take_damage(damage: int) -> void:
 		health = 0
 
 	emit_signal("player_took_damage", health)
+
+func player_set_on_platform(value: bool) -> void:
+	is_on_platform = value
 
 # ======== Callbacks ========
 func player_on_animation_finished() -> void:
