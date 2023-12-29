@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://cie6opa01ipy0"]
+
+[ext_resource type="PackedScene" uid="uid://dowvah8ep8i7v" path="res://background.tscn" id="1_1dj7d"]
+[ext_resource type="Script" path="res://controls.gd" id="1_q0uv1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oulj7"]
+bg_color = Color(0.721569, 0.580392, 0.188235, 1)
+
+[node name="controls" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q0uv1")
+
+[node name="background" parent="." instance=ExtResource("1_1dj7d")]
+layout_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -15.5
+offset_right = 25.0
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="controls_text" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 52
+text = "WASD AND KEYS TO MOVE
+SHIFT TO DODGE
+
+more to come...
+
+"
+
+[node name="back" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/hover = SubResource("StyleBoxFlat_oulj7")
+text = "BACK
+"
+
+[connection signal="button_up" from="VBoxContainer/back" to="." method="_on_back_button_up"]

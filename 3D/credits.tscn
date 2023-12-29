@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://wcn56b2km76q"]
+
+[ext_resource type="Script" path="res://credits.gd" id="1_mi7a8"]
+[ext_resource type="PackedScene" uid="uid://dowvah8ep8i7v" path="res://background.tscn" id="1_wb2ok"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g5ddk"]
+bg_color = Color(0.721569, 0.580392, 0.188235, 1)
+
+[node name="credits" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mi7a8")
+
+[node name="background" parent="." instance=ExtResource("1_wb2ok")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+expand_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -325.0
+offset_top = -230.5
+offset_right = 325.0
+offset_bottom = 230.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="credits_text" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "MADE BY
+ELOI MERINO
+AND
+JAFETH CONCEPCIÓN
+
+"
+horizontal_alignment = 1
+
+[node name="back" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/hover = SubResource("StyleBoxFlat_g5ddk")
+text = "BACK"
+
+[connection signal="button_up" from="VBoxContainer/back" to="." method="_on_back_button_up"]
