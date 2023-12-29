@@ -1,7 +1,24 @@
-[gd_scene load_steps=2 format=3 uid="uid://b5g0ovr2iopjn"]
+[gd_scene load_steps=5 format=3 uid="uid://b5g0ovr2iopjn"]
 
 [ext_resource type="PackedScene" uid="uid://dg4cyo77q811f" path="res://level1.tscn" id="1_jraf3"]
+[ext_resource type="Script" path="res://main.gd" id="1_u5uqy"]
+[ext_resource type="PackedScene" uid="uid://jmo7fkfdh33y" path="res://HUD.tscn" id="2_m04a3"]
+[ext_resource type="PackedScene" uid="uid://d2h5lpkd1b7ff" path="res://player.tscn" id="2_qkbcm"]
 
 [node name="main" type="Node"]
+script = ExtResource("1_u5uqy")
+
+[node name="Player" parent="." instance=ExtResource("2_qkbcm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.641, 0)
 
 [node name="level1" parent="." instance=ExtResource("1_jraf3")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="CanvasLayer" instance=ExtResource("2_m04a3")]
+
+[connection signal="player_died" from="Player" to="." method="_on_player_died"]
+[connection signal="player_selected_pistol" from="Player" to="." method="_on_player_selected_pistol"]
+[connection signal="player_selected_rifle" from="Player" to="." method="_on_player_selected_rifle"]
+[connection signal="player_shot_weapon" from="Player" to="." method="_on_player_shot_weapon"]
+[connection signal="player_took_damage" from="Player" to="." method="_on_player_took_damage"]

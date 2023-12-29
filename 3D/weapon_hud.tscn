@@ -1,0 +1,162 @@
+[gd_scene load_steps=14 format=3 uid="uid://bo0mmw6euyv7i"]
+
+[ext_resource type="Script" path="res://weapon_hud.gd" id="1_le38h"]
+[ext_resource type="Texture2D" uid="uid://qahy4d50rpws" path="res://art/WeaponHUD.png" id="1_nl0td"]
+[ext_resource type="Texture2D" uid="uid://bvjj3k7thno5u" path="res://art/ammo_icon.png" id="2_x6are"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gwxim"]
+
+[sub_resource type="Theme" id="Theme_mvruw"]
+default_font_size = 24
+/styles/disabled = SubResource("StyleBoxFlat_gwxim")
+
+[sub_resource type="Shader" id="Shader_fy3wy"]
+code = "shader_type canvas_item;
+
+uniform bool disabled = false;
+
+void vertex() {
+	// Called for every vertex the material is visible on.
+}
+
+void fragment() {
+	// Called for every pixel the material is visible on.
+	if (disabled) {
+		COLOR.rgb = COLOR.rgb * vec3(0.3, 0.3, 0.3);
+	}
+}
+
+void light() {
+	// Called for every pixel for every light affecting the CanvasItem.
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e7rmf"]
+shader = SubResource("Shader_fy3wy")
+shader_parameter/disabled = false
+
+[sub_resource type="Shader" id="Shader_631l8"]
+code = "shader_type canvas_item;
+
+uniform bool disabled = false;
+
+void vertex() {
+	// Called for every vertex the material is visible on.
+}
+
+void fragment() {
+	// Called for every pixel the material is visible on.
+	if (disabled) {
+		COLOR.rgb = COLOR.rgb * vec3(0.3, 0.3, 0.3);
+	}
+}
+
+void light() {
+	// Called for every pixel for every light affecting the CanvasItem.
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fg6o7"]
+shader = SubResource("Shader_631l8")
+shader_parameter/disabled = false
+
+[sub_resource type="Shader" id="Shader_g0be4"]
+code = "shader_type canvas_item;
+
+uniform bool disabled = false;
+
+void vertex() {
+	// Called for every vertex the material is visible on.
+}
+
+void fragment() {
+	// Called for every pixel the material is visible on.
+	if (disabled) {
+		COLOR.rgb = COLOR.rgb * vec3(0.3, 0.3, 0.3);
+	}
+}
+
+void light() {
+	// Called for every pixel for every light affecting the CanvasItem.
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jaecu"]
+shader = SubResource("Shader_g0be4")
+shader_parameter/disabled = false
+
+[sub_resource type="Shader" id="Shader_ar4ug"]
+code = "shader_type canvas_item;
+
+uniform bool disabled = false;
+
+void vertex() {
+	// Called for every vertex the material is visible on.
+}
+
+void fragment() {
+	// Called for every pixel the material is visible on.
+	if (disabled) {
+		COLOR.rgb = COLOR.rgb * vec3(0.3, 0.3, 0.3);
+	}
+}
+
+void light() {
+	// Called for every pixel for every light affecting the CanvasItem.
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ht2rf"]
+shader = SubResource("Shader_ar4ug")
+shader_parameter/disabled = false
+
+[node name="weapon_hud" type="Control"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_mvruw")
+script = ExtResource("1_le38h")
+
+[node name="box" type="TextureRect" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_e7rmf")
+layout_mode = 1
+offset_right = 200.0
+offset_bottom = 120.0
+texture = ExtResource("1_nl0td")
+
+[node name="weapon" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_fg6o7")
+layout_mode = 1
+offset_left = 48.0
+offset_top = 24.0
+offset_right = 157.0
+offset_bottom = 86.0
+
+[node name="ammo" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_jaecu")
+layout_mode = 2
+offset_left = 5.0
+offset_top = 84.0
+offset_right = 21.0
+offset_bottom = 100.0
+grow_vertical = 0
+scale = Vector2(2, 2)
+size_flags_vertical = 8
+texture = ExtResource("2_x6are")
+stretch_mode = 2
+
+[node name="ammo_label" type="Label" parent="."]
+texture_filter = 2
+material = SubResource("ShaderMaterial_ht2rf")
+layout_mode = 0
+offset_left = 40.0
+offset_top = 83.0
+offset_right = 80.0
+offset_bottom = 122.0
+text = "30
+"
