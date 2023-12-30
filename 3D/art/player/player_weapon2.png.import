@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://is7kesgrn04"
-path.s3tc="res://.godot/imported/Crawler.png-bd2df2fcab29d1310aa23e2c2388d774.s3tc.ctex"
+uid="uid://rrxc8pehdjfc"
+path="res://.godot/imported/player_weapon2.png-37d5f50b5b2e65e9870f9157db5fae97.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/Crawler.png"
-dest_files=["res://.godot/imported/Crawler.png-bd2df2fcab29d1310aa23e2c2388d774.s3tc.ctex"]
+source_file="res://art/player/player_weapon2.png"
+dest_files=["res://.godot/imported/player_weapon2.png-37d5f50b5b2e65e9870f9157db5fae97.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1

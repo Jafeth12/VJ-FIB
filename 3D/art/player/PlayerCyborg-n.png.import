@@ -2,27 +2,26 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnj418m5eohtt"
-path.s3tc="res://.godot/imported/weapon_Pistol-a.png-647aeab2df393f9b8d71a140f6437301.s3tc.ctex"
+uid="uid://v7pthb1ftsgl"
+path="res://.godot/imported/PlayerCyborg-n.png-6efe4c49455614b2e3b244097343c82e.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/weapon_Pistol-a.png"
-dest_files=["res://.godot/imported/weapon_Pistol-a.png-647aeab2df393f9b8d71a140f6437301.s3tc.ctex"]
+source_file="res://art/player/PlayerCyborg-n.png"
+dest_files=["res://.godot/imported/PlayerCyborg-n.png-6efe4c49455614b2e3b244097343c82e.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -32,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

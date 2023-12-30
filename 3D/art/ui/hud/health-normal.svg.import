@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://drn4r3bajqhm5"
-path="res://.godot/imported/our_logo.png-4ae7a116e5fbaa8aa553d3093a6a4666.ctex"
+uid="uid://be7nihnlk5t63"
+path="res://.godot/imported/health-normal.svg-3e94bd73e0261f82fc98ee16afc5e735.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/our_logo.png"
-dest_files=["res://.godot/imported/our_logo.png-4ae7a116e5fbaa8aa553d3093a6a4666.ctex"]
+source_file="res://art/ui/hud/health-normal.svg"
+dest_files=["res://.godot/imported/health-normal.svg-3e94bd73e0261f82fc98ee16afc5e735.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false
