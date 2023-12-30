@@ -1,8 +1,8 @@
 [gd_scene load_steps=14 format=3 uid="uid://bo0mmw6euyv7i"]
 
-[ext_resource type="Script" path="res://weapon_hud.gd" id="1_le38h"]
-[ext_resource type="Texture2D" uid="uid://qahy4d50rpws" path="res://art/WeaponHUD.png" id="1_nl0td"]
-[ext_resource type="Texture2D" uid="uid://bvjj3k7thno5u" path="res://art/ammo_icon.png" id="2_x6are"]
+[ext_resource type="Script" path="res://ui/hud/weapon_hud.gd" id="1_le38h"]
+[ext_resource type="Texture2D" uid="uid://qahy4d50rpws" path="res://art/ui/hud/WeaponHUD.png" id="1_nl0td"]
+[ext_resource type="Texture2D" uid="uid://bvjj3k7thno5u" path="res://art/ui/hud/ammo_icon.png" id="2_x6are"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gwxim"]
 

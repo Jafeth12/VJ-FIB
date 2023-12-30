@@ -1,8 +1,8 @@
 class_name Player extends GenericEntity
 
 # scenes
-var bullet_pistol = preload("res://bullet_pistol.tscn")
-var bullet_rifle = preload("res://bullet_rifle.tscn")
+var bullet_pistol = preload("res://entities/bullets/bullet_pistol.tscn")
+var bullet_rifle = preload("res://entities/bullets/bullet_rifle.tscn")
 
 # Enumerations
 enum ANIMATION_STATES { IDLE, WALK, JUMP, CROUCH, DIE, DODGE }

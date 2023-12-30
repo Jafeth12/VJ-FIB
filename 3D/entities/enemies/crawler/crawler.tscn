@@ -1,8 +1,8 @@
 [gd_scene load_steps=40 format=3 uid="uid://ctl47igc7wknw"]
 
-[ext_resource type="Script" path="res://crawler.gd" id="1_46rf8"]
-[ext_resource type="Texture2D" uid="uid://is7kesgrn04" path="res://art/Crawler.png" id="2_hmv2l"]
-[ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://health_bar_3d.tscn" id="3_onfo2"]
+[ext_resource type="Script" path="res://entities/enemies/crawler/crawler.gd" id="1_46rf8"]
+[ext_resource type="Texture2D" uid="uid://is7kesgrn04" path="res://art/enemy/crawler/Crawler.png" id="2_hmv2l"]
+[ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_onfo2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_injn6"]
 

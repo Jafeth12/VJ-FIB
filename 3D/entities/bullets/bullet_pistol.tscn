@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://bpd3xqnwxvtmm"]
 
-[ext_resource type="Script" path="res://bullet_pistol.gd" id="1_fucr5"]
+[ext_resource type="Script" path="res://entities/bullets/bullet_pistol.gd" id="1_fucr5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7b6mx"]
 albedo_color = Color(0.0431373, 1, 1, 1)

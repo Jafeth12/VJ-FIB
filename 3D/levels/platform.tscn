@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dh5dj1mletea4"]
 
-[ext_resource type="Script" path="res://platform.gd" id="1_3yt2f"]
+[ext_resource type="Script" path="res://levels/platform.gd" id="1_3yt2f"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pnnif"]
 
