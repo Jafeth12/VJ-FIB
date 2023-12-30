@@ -244,9 +244,12 @@ viewport_path = NodePath("SubViewport")
 
 [node name="crawler" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.522354, 0)
+collision_layer = 2
+collision_mask = 40
 script = ExtResource("1_46rf8")
 
 [node name="crawler_activation_area" type="Area3D" parent="."]
+collision_layer = 16
 
 [node name="activation_collision" type="CollisionShape3D" parent="crawler_activation_area"]
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 3.29915, 0)

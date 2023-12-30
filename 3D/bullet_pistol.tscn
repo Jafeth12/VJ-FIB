@@ -11,6 +11,8 @@ material = SubResource("StandardMaterial3D_7b6mx")
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sv58o"]
 
 [node name="bullet_pistol" type="CharacterBody3D"]
+collision_layer = 8
+collision_mask = 34
 script = ExtResource("1_fucr5")
 
 [node name="mesh" type="MeshInstance3D" parent="."]
@@ -18,6 +20,8 @@ transform = Transform3D(-4.37114e-09, 0.1, -4.37114e-09, 0, -4.37114e-09, -0.1, 
 mesh = SubResource("CapsuleMesh_6ekej")
 
 [node name="bullet_activation_area" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 34
 
 [node name="activation_collision" type="CollisionShape3D" parent="bullet_activation_area"]
 transform = Transform3D(-5.24537e-09, 0.12, -5.24537e-09, 0, -5.24537e-09, -0.12, -0.12, -5.24537e-09, 2.29282e-16, 0, 0, 0)

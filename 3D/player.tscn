@@ -823,6 +823,7 @@ animations = [{
 }]
 
 [node name="player" type="CharacterBody3D"]
+collision_mask = 32
 script = ExtResource("1_l5rtp")
 
 [node name="collision" type="CollisionShape3D" parent="."]
