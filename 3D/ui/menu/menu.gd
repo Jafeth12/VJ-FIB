@@ -14,7 +14,7 @@ func _on_quit_button_up() -> void:
 	get_tree().quit()
 
 func _on_credits_button_up():
-	get_tree().change_scene_to_file("res://credits.tscn")
+	get_tree().change_scene_to_file("res://ui/menu/views/credits/credits.tscn")
 
 func _on_controls_button_up():
-	get_tree().change_scene_to_file("res://controls.tscn")
+	get_tree().change_scene_to_file("res://ui/menu/views/controls/controls.tscn")
