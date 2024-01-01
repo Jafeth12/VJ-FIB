@@ -24,15 +24,11 @@ func _process(_delta):
 
 func set_key(new_key: INTERACTION_KEY):
 	key = new_key
-	match key:
-		INTERACTION_KEY.E:
-			$icon.texture = ImageTexture.create_from_image(sprites[(int)(key)])
-			$icon.show()
-		INTERACTION_KEY.TAB:
-			$icon.texture = ImageTexture.create_from_image(sprites[(int)(key)])
-			$icon.show()
-		INTERACTION_KEY.NONE:
-			$icon.hide()
+	if key == INTERACTION_KEY.NONE:
+		$icon.hide()
+	else:
+		$icon.texture = ImageTexture.create_from_image(sprites[(int)(key)])
+		$icon.show()
 
 func set_text(new_text: String):
 	text = new_text

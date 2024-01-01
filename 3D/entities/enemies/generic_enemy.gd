@@ -12,6 +12,11 @@ var enemy_health = ENEMY_INIT_HEALTH
 var enemy_shield_bar: ProgressBar = null
 var enemy_health_bar: ProgressBar = null
 
+var drop_item = preload("res://entities/other/drop.tscn")
+
+# 0 for health, 1 for ammo, 2 for rifle
+var drop_type: int = 0
+
 func _ready():
 	enemy_shield = ENEMY_INIT_SHIELD
 	enemy_health = ENEMY_INIT_HEALTH
@@ -72,6 +77,18 @@ func enemy_take_damage(damage: int) -> void:
 		enemy_health -= damage
 	
 	enemy_update_health_bar()
+
+	if enemy_is_dead():
+		print("Enemy died")
+		print("alpha: ", entity_alpha)
+		var drop = drop_item.instantiate()
+		var new_pos = get_position()
+		new_pos.z += 0.1
+		drop.set_position(new_pos)
+		drop.set_drop_type(1)
+		drop.set_drop_amount(10)
+		drop.apply_central_impulse(Vector3(0, 6, 0))
+		get_parent().add_child(drop)
 
 func enemy_update_health_bar() -> void:
 	if enemy_is_dead():
