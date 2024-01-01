@@ -19,6 +19,8 @@ func bullet_body_entered(body: Node3D) -> void:
 		# print("Bullet hit enemy")
 		if body.player_is_dead():
 			return
+		if body.player_is_dodging():
+			return
 		body.player_take_damage(BULLET_DAMAGE)
 
 	elif body is StaticBody3D:
