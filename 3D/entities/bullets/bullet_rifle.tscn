@@ -1,28 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://4w2k81o16j4y"]
+[gd_scene load_steps=5 format=3 uid="uid://cdwifp7oh73an"]
 
 [ext_resource type="Script" path="res://entities/bullets/bullet_rifle.gd" id="1_86gcl"]
+[ext_resource type="PackedScene" uid="uid://cir0yjv7rw8vf" path="res://entities/bullets/generic_bullet.tscn" id="1_x2r1l"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4g5b5"]
-albedo_color = Color(0.254902, 0.14902, 0.682353, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4yio4"]
+albedo_color = Color(0, 0, 1, 1)
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_lgtcw"]
-material = SubResource("StandardMaterial3D_4g5b5")
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_erfvp"]
+material = SubResource("StandardMaterial3D_4yio4")
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2odrn"]
-
-[node name="bullet_rifle" type="CharacterBody3D"]
-collision_layer = 8
-collision_mask = 34
+[node name="bullet_rifle" instance=ExtResource("1_x2r1l")]
 script = ExtResource("1_86gcl")
-
-[node name="mesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(-8.74228e-09, 0.2, -8.74228e-09, 0, -8.74228e-09, -0.2, -0.2, -8.74228e-09, 3.82137e-16, 0, 0, 0)
-mesh = SubResource("CapsuleMesh_lgtcw")
-
-[node name="bullet_activation_area" type="Area3D" parent="."]
-collision_layer = 8
-collision_mask = 34
-
-[node name="activation_collision" type="CollisionShape3D" parent="bullet_activation_area"]
-transform = Transform3D(-1.09278e-08, 0.25, -1.09278e-08, 0, -1.09278e-08, -0.25, -0.25, -1.09278e-08, 4.77671e-16, 0, 0, 0)
-shape = SubResource("CapsuleShape3D_2odrn")
+mesh = SubResource("CapsuleMesh_erfvp")
+mesh_scale = 0.3
+BULLET_SPEED = 2.417
+BULLET_MAX_TRAVEL_DISTANCE = 5.341
+BULLET_DAMAGE = 50
