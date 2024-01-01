@@ -24,6 +24,5 @@ func _on_player_selected_pistol():
 func _on_player_died():
 	pass # Replace with function body.
 
-
 func _on_player_shot_weapon(ammo_pistol: int, ammo_rifle: int):
 	hud.set_ammo(ammo_pistol, ammo_rifle)

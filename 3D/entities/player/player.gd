@@ -213,6 +213,9 @@ func player_should_die() -> bool:
 func player_is_dead() -> bool:
 	return anim_state == ANIMATION_STATES.DIE
 
+func player_has_max_health() -> bool:
+	return health == INIT_HEALTH
+
 # Dice si el jugador está en animación "DODGE"
 func player_is_dodging() -> bool:
 	return anim_state == ANIMATION_STATES.DODGE
@@ -375,6 +378,25 @@ func player_take_damage(damage: int) -> void:
 		health = 0
 
 	emit_signal("player_took_damage", health)
+
+func player_give_health(new_health: int) -> void:
+	if player_is_dead():
+		return
+
+	health += new_health
+	if health > INIT_HEALTH:
+		health = INIT_HEALTH
+
+	emit_signal("player_took_damage", health)
+
+func player_give_ammo(ammo: int) -> void:
+	match active_weapon:
+		WEAPON.PISTOL:
+			ammo_pistol += ammo
+		WEAPON.RIFLE:
+			ammo_rifle += ammo
+
+	emit_signal("player_shot_weapon", ammo_pistol, ammo_rifle)
 
 func player_set_on_platform(value: bool) -> void:
 	is_on_platform = value
