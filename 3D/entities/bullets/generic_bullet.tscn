@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cir0yjv7rw8vf"]
+
+[ext_resource type="Script" path="res://entities/bullets/generic_bullet.gd" id="1_ttwna"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4jgc1"]
+
+[node name="generic_bullet" type="CharacterBody3D"]
+script = ExtResource("1_ttwna")
+
+[node name="mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0, 0, 0)
+
+[node name="bullet_activation_area" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 34
+
+[node name="activation_collision" type="CollisionShape3D" parent="bullet_activation_area"]
+transform = Transform3D(-5.24537e-09, 0.12, -5.24537e-09, 0, -5.24537e-09, -0.12, -0.12, -5.24537e-09, 2.29282e-16, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_4jgc1")

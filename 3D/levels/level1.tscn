@@ -4,7 +4,7 @@
 [ext_resource type="ArrayMesh" uid="uid://n42pql0fhqsy" path="res://obj/level.obj" id="3_onv32"]
 [ext_resource type="PackedScene" uid="uid://ctl47igc7wknw" path="res://entities/enemies/crawler/crawler.tscn" id="3_qpl7s"]
 [ext_resource type="PackedScene" uid="uid://dh5dj1mletea4" path="res://levels/platform.tscn" id="4_uqkju"]
-[ext_resource type="PackedScene" path="res://ui/interaction.tscn" id="5_gcvtn"]
+[ext_resource type="PackedScene" uid="uid://cb7ivx5xj4ru5" path="res://ui/interaction.tscn" id="5_gcvtn"]
 [ext_resource type="PackedScene" uid="uid://fox0iydndbwi" path="res://levels/chest.tscn" id="5_pnm2b"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_4jaao"]

@@ -1,16 +1,21 @@
 class_name GenericBullet extends GenericEntity
 
-var BULLET_SPEED: float = PI/1.5
-var BULLET_MAX_TRAVEL_DISTANCE: float = PI/2
+@export var mesh: Mesh = null
+@export var mesh_scale: float = 1
+
+@export var BULLET_SPEED: float = PI/1.5
+@export var BULLET_MAX_TRAVEL_DISTANCE: float = PI/2
+@export var BULLET_DAMAGE: int = 33
 
 var BULLET_INITIAL_ALPHA: float = 0
-var BULLET_DAMAGE: int = 33
 
 # -----------------------------------------------
 
 func _ready():
 	entity_has_gravity = false
 	$bullet_activation_area.connect("body_entered", bullet_body_entered)
+	$mesh.mesh = mesh
+	$mesh.scale = Vector3(mesh_scale, mesh_scale, mesh_scale)
 
 func init(pos: Vector3, alpha: float, direction: EntityDirection, radius: float, _playerCrouching: bool):
 	BULLET_INITIAL_ALPHA = alpha
