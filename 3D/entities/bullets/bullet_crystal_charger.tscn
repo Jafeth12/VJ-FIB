@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://ctld331yu5y3"]
+
+[ext_resource type="PackedScene" uid="uid://cir0yjv7rw8vf" path="res://entities/bullets/generic_bullet.tscn" id="1_16235"]
+[ext_resource type="Script" path="res://entities/bullets/bullet_crystal_charger.gd" id="2_2bhqs"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gd8jd"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_p8vxo"]
+material = SubResource("StandardMaterial3D_gd8jd")
+
+[node name="bullet_crystal_charger" instance=ExtResource("1_16235")]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("2_2bhqs")
+mesh = SubResource("CapsuleMesh_p8vxo")
+mesh_scale = 0.2
+BULLET_SPEED = 0.524
+BULLET_MAX_TRAVEL_DISTANCE = 0.785
+
+[node name="bullet_activation_area" parent="." index="1"]
+collision_mask = 33
+
+[node name="activation_collision" parent="bullet_activation_area" index="0"]
+transform = Transform3D(-8.74228e-09, 0.2, -8.74228e-09, 0, -8.74228e-09, -0.2, -0.2, -8.74228e-09, 3.82137e-16, 0, 0, 0)

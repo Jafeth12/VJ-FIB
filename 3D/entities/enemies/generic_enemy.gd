@@ -17,6 +17,7 @@ func _ready():
 	enemy_health = ENEMY_INIT_HEALTH
 
 func _process(_delta):
+	look_at(Vector3(0, get_position().y, 0))
 	enemy_update_state()
 	enemy_update_animation()
 
@@ -73,7 +74,11 @@ func enemy_take_damage(damage: int) -> void:
 	enemy_update_health_bar()
 
 func enemy_update_health_bar() -> void:
-	# set_theme_item(data_type: DataType, name: StringName, theme_type: StringName, value: Variant)
+	if enemy_is_dead():
+		enemy_shield_bar.hide()
+		enemy_health_bar.hide()
+		return
+	
 	if enemy_shield > 0:
 		enemy_shield_bar.show()
 		enemy_health_bar.hide()
@@ -83,6 +88,7 @@ func enemy_update_health_bar() -> void:
 	
 	enemy_shield_bar.value = enemy_shield
 	enemy_health_bar.value = enemy_health
+
 
 # Use this function to see if the enemy should die
 # p.e.: if it's life is empty
@@ -114,3 +120,14 @@ func enemy_is_attack_finished() -> bool:
 
 func enemy_is_dead() -> bool:
 	return enemy_shield <= 0 && enemy_health <= 0
+
+func modf(a: float, d: float) -> float:
+	var sign: int = 1 if a > 0 else -1
+	a = abs(a)
+	while a >= d:
+		a -= d
+	return sign*a
+
+func enemy_get_direction_to_player(player_node):
+	var angular_separation: float = modf(player_node.entity_alpha, 2*PI) - modf(entity_alpha, 2*PI)
+	return EntityDirection.LEFT if angular_separation < 0 else EntityDirection.RIGHT

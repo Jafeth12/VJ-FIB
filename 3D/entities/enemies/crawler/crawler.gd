@@ -18,32 +18,18 @@ func _ready():
 	player_node = get_node("/root/main/Player")
 	super()
 
-func modf(a: float, d: float) -> float:
-	var sign: int = 1 if a > 0 else -1
-	a = abs(a)
-	while a >= d:
-		a -= d
-	return sign*a
-
 # OVERRIDE de ENTITY
 func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirection:
 	var prx_dir: EntityDirection = current_direction
 	match enemy_state:
 		EnemyState.WANDER:
 			if player_in_area:
-				var angular_separation: float = modf(abs(player_node.entity_alpha - entity_alpha), 2*PI)
-				#print(angular_separation)
-				if angular_separation < PI:
-					# angle1 is to the left of angle2
-					#print("ME TIRO A LA IZQUIERDA")
-					prx_dir = EntityDirection.LEFT
-				else:
-					#angle1 is to the right of angle2
-					#print("ME TIRO A LA DERECHA")
-					prx_dir = EntityDirection.RIGHT
+				prx_dir = enemy_get_direction_to_player(player_node)
 			if is_on_wall():
 				prx_dir = -current_direction
-
+		EnemyState.ATTACK:
+			if $sprite.frame < 3:
+				prx_dir = enemy_get_direction_to_player(player_node)
 	$sprite.set_flip_h(current_direction==EntityDirection.RIGHT)
 	return prx_dir
 

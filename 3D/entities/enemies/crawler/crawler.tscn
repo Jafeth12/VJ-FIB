@@ -4,7 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://is7kesgrn04" path="res://art/enemy/crawler/Crawler.png" id="2_hmv2l"]
 [ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_onfo2"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_injn6"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_dpd0f"]
+size = Vector3(10, 1, 2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gyj4u"]
 
@@ -243,7 +244,6 @@ bg_color = Color(0, 0.647059, 0.901961, 1)
 viewport_path = NodePath("SubViewport")
 
 [node name="crawler" type="CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.522354, 0)
 collision_layer = 2
 collision_mask = 40
 script = ExtResource("1_46rf8")
@@ -252,8 +252,7 @@ script = ExtResource("1_46rf8")
 collision_layer = 16
 
 [node name="activation_collision" type="CollisionShape3D" parent="crawler_activation_area"]
-transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 3.29915, 0)
-shape = SubResource("BoxShape3D_injn6")
+shape = SubResource("BoxShape3D_dpd0f")
 
 [node name="collision" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_gyj4u")

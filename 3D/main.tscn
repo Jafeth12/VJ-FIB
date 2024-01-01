@@ -10,6 +10,7 @@ script = ExtResource("1_u5uqy")
 
 [node name="Player" parent="." instance=ExtResource("2_qkbcm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.641, 0)
+entity_radius = 20.02
 
 [node name="level1" parent="." instance=ExtResource("1_jraf3")]
 

@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://dg4cyo77q811f"]
+[gd_scene load_steps=9 format=3 uid="uid://dg4cyo77q811f"]
 
 [ext_resource type="Script" path="res://levels/level1.gd" id="1_pvbng"]
+[ext_resource type="PackedScene" uid="uid://bu6rnyfm7ty4f" path="res://entities/enemies/crystal_charger/crystal_charger.tscn" id="3_mm86a"]
 [ext_resource type="ArrayMesh" uid="uid://n42pql0fhqsy" path="res://obj/level.obj" id="3_onv32"]
 [ext_resource type="PackedScene" uid="uid://ctl47igc7wknw" path="res://entities/enemies/crawler/crawler.tscn" id="3_qpl7s"]
 [ext_resource type="PackedScene" uid="uid://dh5dj1mletea4" path="res://levels/platform.tscn" id="4_uqkju"]
@@ -18,6 +19,11 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20,
 
 [node name="Crawler1" parent="." instance=ExtResource("3_qpl7s")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 19.5121, 4.77865, 0)
+entity_radius = 20.0
+
+[node name="CrystalCharger1" parent="." instance=ExtResource("3_mm86a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.29718, -19.5249)
+entity_alpha = 3.14
 entity_radius = 20.0
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
