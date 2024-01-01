@@ -247,8 +247,6 @@ viewport_path = NodePath("SubViewport")
 collision_layer = 2
 collision_mask = 40
 script = ExtResource("1_46rf8")
-entity_alpha = null
-entity_radius = null
 
 [node name="crawler_activation_area" type="Area3D" parent="."]
 collision_layer = 16

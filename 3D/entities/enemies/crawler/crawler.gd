@@ -11,6 +11,8 @@ var player_node = null
 func _ready():
 	ENEMY_INIT_SHIELD = 80
 	ENEMY_INIT_HEALTH = 150
+	enemy_drop_type = 0 # health
+	enemy_drop_amount = 15
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
 	$sprite.connect("animation_finished", crawler_on_animation_finished)
 	$crawler_activation_area.connect("body_entered", crawler_area_entered)
