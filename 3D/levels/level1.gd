@@ -16,6 +16,8 @@ func _process(delta):
 
 func on_player_entered_platform() -> void:
 	player.player_set_on_platform(true)
+	$switch_circle.show_interaction()
 	
 func on_player_exited_platform() -> void:
 	player.player_set_on_platform(false)
+	$switch_circle.hide_interaction()
