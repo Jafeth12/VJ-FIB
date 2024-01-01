@@ -1,11 +1,8 @@
-[gd_scene load_steps=40 format=3 uid="uid://ctl47igc7wknw"]
+[gd_scene load_steps=41 format=3 uid="uid://ctl47igc7wknw"]
 
 [ext_resource type="Script" path="res://entities/enemies/crawler/crawler.gd" id="1_46rf8"]
 [ext_resource type="Texture2D" uid="uid://is7kesgrn04" path="res://art/enemy/crawler/Crawler.png" id="2_hmv2l"]
 [ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_onfo2"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_dpd0f"]
-size = Vector3(10, 1, 2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gyj4u"]
 
@@ -228,6 +225,11 @@ animations = [{
 "speed": 15.0
 }]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_dpd0f"]
+size = Vector3(10, 1, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7yipq"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_paess"]
 bg_color = Color(0, 0, 0, 1)
 
@@ -248,12 +250,6 @@ collision_layer = 2
 collision_mask = 40
 script = ExtResource("1_46rf8")
 
-[node name="crawler_activation_area" type="Area3D" parent="."]
-collision_layer = 16
-
-[node name="activation_collision" type="CollisionShape3D" parent="crawler_activation_area"]
-shape = SubResource("BoxShape3D_dpd0f")
-
 [node name="collision" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_gyj4u")
 
@@ -263,6 +259,18 @@ billboard = 2
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_jmyu3")
 animation = &"attack"
+
+[node name="activation_area" type="Area3D" parent="."]
+collision_layer = 16
+
+[node name="activation_collision" type="CollisionShape3D" parent="activation_area"]
+shape = SubResource("BoxShape3D_dpd0f")
+
+[node name="damage_area" type="Area3D" parent="."]
+collision_layer = 2
+
+[node name="damage_area_collision" type="CollisionShape3D" parent="damage_area"]
+shape = SubResource("BoxShape3D_7yipq")
 
 [node name="SubViewport" type="SubViewport" parent="."]
 disable_3d = true
