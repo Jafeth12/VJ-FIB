@@ -30,7 +30,7 @@ var is_on_platform: bool = false
 
 # Radios de anillos y velocidad de cambio
 @export var RING_SWITCH_SPEED = 0.125
-const radius_exterior = 20.02
+const radius_exterior = 20
 const radius_interior = 15
 
 # Jump parameters

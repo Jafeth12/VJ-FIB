@@ -91,7 +91,8 @@ bg_color = Color(0.431373, 0, 0.0784314, 1)
 [sub_resource type="ViewportTexture" id="ViewportTexture_es28j"]
 viewport_path = NodePath("SubViewport")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_hr3tt"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_5qs11"]
+size = Vector3(15, 1, 2)
 
 [node name="CrystalCharger" type="CharacterBody3D"]
 collision_layer = 2
@@ -127,8 +128,7 @@ texture_filter = 0
 texture = SubResource("ViewportTexture_es28j")
 
 [node name="cc_player_detection" type="Area3D" parent="."]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 collision_layer = 16
 
 [node name="cc_detection_collider" type="CollisionShape3D" parent="cc_player_detection"]
-shape = SubResource("BoxShape3D_hr3tt")
+shape = SubResource("BoxShape3D_5qs11")

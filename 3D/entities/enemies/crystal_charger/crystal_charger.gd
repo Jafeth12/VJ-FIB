@@ -1,5 +1,7 @@
 class_name CrystalCharger extends GenericEnemy
 
+var bullet_cc = preload("res://entities/bullets/bullet_crystal_charger.tscn")
+
 var cc_attack_ended: bool = false
 var cc_player_in_area: bool = false
 var player_node = null
@@ -65,8 +67,15 @@ func cc_on_animation_finished() -> void:
 
 func cc_area_entered(body: Node3D):
 	print("entró")
+	cc_shoot()
 	cc_player_in_area = true
 
 func cc_area_exited(body: Node3D):
 	print("salió")
 	cc_player_in_area = false
+
+func cc_shoot():
+	var b = bullet_cc.instantiate()
+	var pos = get_position()
+	b.init(pos, entity_alpha, entity_direction, entity_radius, false)
+	owner.add_child(b)
