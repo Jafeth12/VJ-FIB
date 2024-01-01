@@ -49,5 +49,3 @@ func show_interaction():
 func hide_interaction():
 	self.hide()
 
-	
-
