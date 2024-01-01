@@ -18,6 +18,7 @@ config/icon="res://art/icon.png"
 [autoload]
 
 MusicController="*res://autoloads/music_controller.tscn"
+Enums="*res://autoloads/enums.gd"
 
 [display]
 

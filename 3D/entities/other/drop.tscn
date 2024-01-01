@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://byiyjbaayo6wi"]
+
+[ext_resource type="Script" path="res://entities/other/drop.gd" id="1_fctc0"]
+[ext_resource type="Texture2D" uid="uid://cpifv66xj2flt" path="res://art/ui/drops/HealthDrop.png" id="2_5525n"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_om8wn"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_df1x6"]
+
+[node name="Drop" type="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+collision_layer = 4
+collision_mask = 32
+script = ExtResource("1_fctc0")
+
+[node name="collision" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_om8wn")
+
+[node name="icon" type="Sprite3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+billboard = 1
+texture_filter = 0
+texture = ExtResource("2_5525n")
+
+[node name="drop_area" type="Area3D" parent="."]
+
+[node name="activation_area" type="CollisionShape3D" parent="drop_area"]
+shape = SubResource("BoxShape3D_df1x6")
+
+[connection signal="body_entered" from="drop_area" to="." method="_on_body_entered"]
