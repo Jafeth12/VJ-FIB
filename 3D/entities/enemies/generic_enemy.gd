@@ -120,3 +120,14 @@ func enemy_is_attack_finished() -> bool:
 
 func enemy_is_dead() -> bool:
 	return enemy_shield <= 0 && enemy_health <= 0
+
+func modf(a: float, d: float) -> float:
+	var sign: int = 1 if a > 0 else -1
+	a = abs(a)
+	while a >= d:
+		a -= d
+	return sign*a
+
+func enemy_get_direction_to_player(player_node):
+	var angular_separation: float = modf(player_node.entity_alpha, 2*PI) - modf(entity_alpha, 2*PI)
+	return EntityDirection.LEFT if angular_separation < 0 else EntityDirection.RIGHT

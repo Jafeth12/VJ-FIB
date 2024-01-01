@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dy3xtne50uonp" path="res://art/player/player_weapon1.png" id="4_wx50i"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1e10u"]
+size = Vector3(0.5, 1, 0.5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wl2by"]
 atlas = ExtResource("4_wx50i")

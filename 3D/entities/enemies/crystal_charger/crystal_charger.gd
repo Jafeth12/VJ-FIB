@@ -19,6 +19,13 @@ func _ready():
 	player_node = get_node("/root/main/Player")
 	super()
 
+func _process(delta):
+	match enemy_state:
+		EnemyState.WANDER:
+			if cc_player_in_area:
+				cc_shoot()
+	super(delta)
+
 # ===== REIMPLEMENTACIONES DE ENTITY =====
 
 func entity_should_jump() -> bool:
@@ -30,9 +37,25 @@ func entity_jump() -> float:
 func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delta: float) -> float:
 	return current_alpha # Este personaje no se mueve
 
+func modf(a: float, d: float) -> float:
+	var s: int = 1 if a > 0 else -1
+	a = abs(a)
+	while a >= d:
+		a -= d
+	return s*a
+
 func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirection:
-	# TODO: Apuntar para donde esté el jugador
-	return EntityDirection.LEFT
+	var prx_dir: EntityDirection = current_direction
+	match enemy_state:
+		EnemyState.WANDER:
+			if cc_player_in_area:
+				prx_dir = enemy_get_direction_to_player(player_node)
+		EnemyState.ATTACK:
+			if cc_player_in_area:
+				prx_dir = enemy_get_direction_to_player(player_node)
+
+	$sprite.set_flip_h(current_direction==EntityDirection.RIGHT)
+	return prx_dir
 
 
 # ===== REIMPLEMENTACIONES DE ENEMY =====
@@ -46,8 +69,8 @@ func enemy_update_animation() -> void:
 			if $sprite.animation != "idle":
 				$sprite.play("idle")
 		EnemyState.ATTACK:
-			if $sprite.animation != "idle":
-				$sprite.play("idle")
+			if $sprite.animation != "attack":
+				$sprite.play("attack")
 		EnemyState.DEAD:
 			if $sprite.animation != "die":
 				$sprite.play("die")
@@ -66,16 +89,13 @@ func cc_on_animation_finished() -> void:
 			cc_attack_ended = true
 
 func cc_area_entered(body: Node3D):
-	print("entró")
-	cc_shoot()
 	cc_player_in_area = true
 
 func cc_area_exited(body: Node3D):
-	print("salió")
 	cc_player_in_area = false
 
 func cc_shoot():
 	var b = bullet_cc.instantiate()
 	var pos = get_position()
-	b.init(pos, entity_alpha, entity_direction, entity_radius, false)
+	b.init(pos, entity_alpha, enemy_get_direction_to_player(player_node), entity_radius, false)
 	owner.add_child(b)

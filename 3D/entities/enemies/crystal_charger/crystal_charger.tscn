@@ -1,9 +1,25 @@
-[gd_scene load_steps=21 format=3 uid="uid://bu6rnyfm7ty4f"]
+[gd_scene load_steps=25 format=3 uid="uid://bu6rnyfm7ty4f"]
 
 [ext_resource type="Script" path="res://entities/enemies/crystal_charger/crystal_charger.gd" id="1_e4yym"]
 [ext_resource type="Texture2D" uid="uid://d04yr5tah8yit" path="res://art/enemy/cristal_charger/CrystalCharger_a.png" id="1_fqcfr"]
 [ext_resource type="Texture2D" uid="uid://c3qfa6wimnp5x" path="res://art/enemy/DeadEnemy_n_no_bg.png" id="3_d727a"]
 [ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_mem8h"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_blvbo"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xdu25"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ml6i"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xqs8p"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(144, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mqe8y"]
 atlas = ExtResource("1_fqcfr")
@@ -39,6 +55,23 @@ region = Rect2(144, 0, 48, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vnnaf"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_blvbo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xdu25")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ml6i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xqs8p")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 3.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_mqe8y")
@@ -104,7 +137,7 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 billboard = 2
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_vnnaf")
-animation = &"die"
+animation = &"attack"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0)
