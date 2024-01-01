@@ -5,6 +5,7 @@ var player_in_area: bool = false
 
 const SPEED: float = PI/10
 const ATTACK_SPEED: float = PI/4
+@export var ATTACK_DAMAGE: int = 20
 
 var player_node = null
 
@@ -13,8 +14,9 @@ func _ready():
 	ENEMY_INIT_HEALTH = 150
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
 	$sprite.connect("animation_finished", crawler_on_animation_finished)
-	$crawler_activation_area.connect("body_entered", crawler_area_entered)
-	$crawler_activation_area.connect("body_exited", crawler_area_exited)
+	$activation_area.connect("body_entered", crawler_area_entered)
+	$activation_area.connect("body_exited", crawler_area_exited)
+	$damage_area.connect("body_entered", crawler_damage_area_entered)
 	player_node = get_node("/root/main/Player")
 	super()
 
@@ -69,6 +71,9 @@ func enemy_is_attack_finished() -> bool:
 	attack_ended = false
 	return ae_copy
 
+func crawler_is_damaging():
+	return enemy_state == EnemyState.ATTACK && $sprite.frame >= 3
+
 func crawler_on_animation_finished() -> void:
 	match $sprite.animation:
 		"attack":
@@ -83,3 +88,7 @@ func crawler_area_entered(body: Node3D):
 func crawler_area_exited(body: Node3D):
 	#print("salió")
 	player_in_area = false
+
+func crawler_damage_area_entered(body: Node3D):
+	if crawler_is_damaging():
+		player_node.player_take_damage(ATTACK_DAMAGE)
