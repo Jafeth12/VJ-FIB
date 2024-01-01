@@ -127,6 +127,8 @@ func player_update_anim_state():
 
 		ANIMATION_STATES.JUMP:
 			if Input.is_action_just_pressed("dodge"):
+				if changing_ring:
+					return
 				anim_state = ANIMATION_STATES.DODGE
 			elif is_on_floor():
 				if velocity.length() > 0:
