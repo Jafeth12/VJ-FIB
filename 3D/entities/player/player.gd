@@ -45,8 +45,10 @@ var health = INIT_HEALTH
 var god_mode = false
 
 # Armas
-var ammo_pistol = 30
-var ammo_rifle = 30
+var MAX_AMMO_PISTOL = 50
+var MAX_AMMO_RIFLE = 50
+var ammo_pistol = MAX_AMMO_PISTOL
+var ammo_rifle = MAX_AMMO_RIFLE
 
 # ======== Signals ========
 
@@ -391,9 +393,9 @@ func player_give_health(new_health: int) -> void:
 func player_give_ammo(ammo: int) -> void:
 	match active_weapon:
 		WEAPON.PISTOL:
-			ammo_pistol += ammo
+			ammo_pistol = ammo_pistol+ammo if ammo_pistol+ammo < MAX_AMMO_PISTOL else MAX_AMMO_PISTOL
 		WEAPON.RIFLE:
-			ammo_rifle += ammo
+			ammo_rifle += ammo_pistol+ammo if ammo_pistol+ammo < MAX_AMMO_RIFLE else MAX_AMMO_RIFLE
 
 	hud.set_ammo(ammo_pistol, ammo_rifle)
 
