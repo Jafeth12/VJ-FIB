@@ -17,6 +17,7 @@ func _ready():
 	enemy_health = ENEMY_INIT_HEALTH
 
 func _process(_delta):
+	look_at(Vector3(0, get_position().y, 0))
 	enemy_update_state()
 	enemy_update_animation()
 
