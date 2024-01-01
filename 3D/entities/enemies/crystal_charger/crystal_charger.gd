@@ -1,13 +1,20 @@
 class_name CrystalCharger extends GenericEnemy
 
-var cc_attack_finished: bool = false
+var cc_attack_ended: bool = false
+var cc_player_in_area: bool = false
+var player_node = null
 
 func _ready():
 	$sprite.play("idle")
-	cc_attack_finished = false
+	cc_attack_ended = false
+	cc_player_in_area = false
 	ENEMY_INIT_SHIELD = 200
 	ENEMY_INIT_HEALTH = 50
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
+	$sprite.connect("animation_finished", cc_on_animation_finished)
+	$cc_player_detection.connect("body_entered", cc_area_entered)
+	$cc_player_detection.connect("body_exited", cc_area_exited)
+	player_node = get_node("/root/main/Player")
 	super()
 
 # ===== REIMPLEMENTACIONES DE ENTITY =====
@@ -43,14 +50,23 @@ func enemy_update_animation() -> void:
 			if $sprite.animation != "die":
 				$sprite.play("die")
 
-func enemy_should_activate() -> bool:
-	return true
-
 func enemy_should_attack() -> bool:
-	# TODO: Atacar cuando el jugador esté cerca
-	return false
+	return cc_player_in_area
 
 func enemy_is_attack_finished() -> bool:
-	var ae_copy: bool = cc_attack_finished
-	cc_attack_finished = false
+	var ae_copy: bool = cc_attack_ended
+	cc_attack_ended = false
 	return ae_copy
+
+func cc_on_animation_finished() -> void:
+	match $sprite.animation:
+		"attack":
+			cc_attack_ended = true
+
+func cc_area_entered(body: Node3D):
+	print("entró")
+	cc_player_in_area = true
+
+func cc_area_exited(body: Node3D):
+	print("salió")
+	cc_player_in_area = false

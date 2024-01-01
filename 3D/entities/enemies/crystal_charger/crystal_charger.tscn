@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bu6rnyfm7ty4f"]
+[gd_scene load_steps=21 format=3 uid="uid://bu6rnyfm7ty4f"]
 
 [ext_resource type="Script" path="res://entities/enemies/crystal_charger/crystal_charger.gd" id="1_e4yym"]
 [ext_resource type="Texture2D" uid="uid://d04yr5tah8yit" path="res://art/enemy/cristal_charger/CrystalCharger_a.png" id="1_fqcfr"]
@@ -91,6 +91,8 @@ bg_color = Color(0.431373, 0, 0.0784314, 1)
 [sub_resource type="ViewportTexture" id="ViewportTexture_es28j"]
 viewport_path = NodePath("SubViewport")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_hr3tt"]
+
 [node name="CrystalCharger" type="CharacterBody3D"]
 collision_layer = 2
 collision_mask = 40
@@ -123,3 +125,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 billboard = 2
 texture_filter = 0
 texture = SubResource("ViewportTexture_es28j")
+
+[node name="cc_player_detection" type="Area3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+collision_layer = 16
+
+[node name="cc_detection_collider" type="CollisionShape3D" parent="cc_player_detection"]
+shape = SubResource("BoxShape3D_hr3tt")
