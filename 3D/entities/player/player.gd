@@ -369,6 +369,8 @@ func player_shoot() -> void:
 func player_take_damage(damage: int) -> void:
 	if god_mode:
 		return
+	if player_is_dodging():
+		return
 	health -= damage
 
 	if health < 0:
