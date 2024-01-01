@@ -15,7 +15,7 @@ var enemy_health_bar: ProgressBar = null
 var drop_item = preload("res://entities/other/drop.tscn")
 
 # 0 for health, 1 for ammo, 2 for rifle
-var enemy_drop_type: int = 0
+var enemy_drop_type: Enums.DROP_TYPE = Enums.DROP_TYPE.HEALTH
 var enemy_drop_amount: int = 10
 
 func _ready():
