@@ -1,0 +1,125 @@
+[gd_scene load_steps=20 format=3 uid="uid://bu6rnyfm7ty4f"]
+
+[ext_resource type="Script" path="res://entities/enemies/crystal_charger/crystal_charger.gd" id="1_e4yym"]
+[ext_resource type="Texture2D" uid="uid://d04yr5tah8yit" path="res://art/enemy/cristal_charger/CrystalCharger_a.png" id="1_fqcfr"]
+[ext_resource type="Texture2D" uid="uid://c3qfa6wimnp5x" path="res://art/enemy/DeadEnemy_n_no_bg.png" id="3_d727a"]
+[ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_mem8h"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mqe8y"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rjev8"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p6gwn"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jgose"]
+atlas = ExtResource("3_d727a")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_it0wq"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_068rj"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gsh5h"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ud4r8"]
+atlas = ExtResource("1_fqcfr")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vnnaf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mqe8y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rjev8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p6gwn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jgose")
+}],
+"loop": false,
+"name": &"die",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_it0wq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_068rj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gsh5h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ud4r8")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b7ci3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5kmna"]
+bg_color = Color(0.431373, 0, 0.0784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d1xcd"]
+bg_color = Color(0, 0.647059, 0.901961, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_awtx7"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ubgvf"]
+bg_color = Color(0.431373, 0, 0.0784314, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_es28j"]
+viewport_path = NodePath("SubViewport")
+
+[node name="CrystalCharger" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 40
+script = ExtResource("1_e4yym")
+
+[node name="sprite" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+billboard = 2
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_vnnaf")
+animation = &"die"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0)
+shape = SubResource("BoxShape3D_b7ci3")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+
+[node name="ShieldBar3D" parent="SubViewport" instance=ExtResource("3_mem8h")]
+theme_override_styles/background = SubResource("StyleBoxFlat_5kmna")
+theme_override_styles/fill = SubResource("StyleBoxFlat_d1xcd")
+
+[node name="HealthBar3D" parent="SubViewport" instance=ExtResource("3_mem8h")]
+theme_override_styles/background = SubResource("StyleBoxFlat_awtx7")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ubgvf")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+billboard = 2
+texture_filter = 0
+texture = SubResource("ViewportTexture_es28j")
