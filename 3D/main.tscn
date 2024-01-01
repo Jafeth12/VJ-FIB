@@ -18,7 +18,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.641, 0)
 [node name="HUD" parent="CanvasLayer" instance=ExtResource("2_m04a3")]
 
 [connection signal="player_died" from="Player" to="." method="_on_player_died"]
-[connection signal="player_selected_pistol" from="Player" to="." method="_on_player_selected_pistol"]
-[connection signal="player_selected_rifle" from="Player" to="." method="_on_player_selected_rifle"]
-[connection signal="player_shot_weapon" from="Player" to="." method="_on_player_shot_weapon"]
-[connection signal="player_took_damage" from="Player" to="." method="_on_player_took_damage"]
