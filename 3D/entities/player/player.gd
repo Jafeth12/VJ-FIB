@@ -3,6 +3,7 @@ class_name Player extends GenericEntity
 # scenes
 var bullet_pistol = preload("res://entities/bullets/bullet_pistol.tscn")
 var bullet_rifle = preload("res://entities/bullets/bullet_rifle.tscn")
+@onready var hud = get_node("/root/main/CanvasLayer/HUD")
 
 # Enumerations
 enum ANIMATION_STATES { IDLE, WALK, JUMP, CROUCH, DIE, DODGE }
@@ -50,10 +51,6 @@ var ammo_rifle = 30
 # ======== Signals ========
 
 signal player_died()
-signal player_took_damage(new_health: int)
-signal player_shot_weapon(ammo_pistol: int, ammo_rifle: int)
-signal player_selected_pistol()
-signal player_selected_rifle()
 
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
@@ -255,12 +252,12 @@ func player_handle_input() -> void:
 			$sprite_pistol.hide()
 			$sprite_rifle.show()
 			active_weapon = WEAPON.RIFLE
-			emit_signal("player_selected_rifle")
+			hud.select_rifle()
 		else:
 			$sprite_pistol.show()
 			$sprite_rifle.hide()
 			active_weapon = WEAPON.PISTOL
-			emit_signal("player_selected_pistol")
+			hud.select_pistol()
 
 	if Input.is_action_just_pressed("shoot"):
 		player_shoot()
@@ -358,7 +355,7 @@ func player_shoot() -> void:
 			ammo_rifle -= 1
 			bullet = bullet_rifle
 
-	emit_signal("player_shot_weapon", ammo_pistol, ammo_rifle)
+	hud.set_ammo(ammo_pistol, ammo_rifle)
 
 	velocity.y = 0
 
@@ -377,7 +374,7 @@ func player_take_damage(damage: int) -> void:
 	if health < 0:
 		health = 0
 
-	emit_signal("player_took_damage", health)
+	hud.set_health(health)
 
 func player_give_health(new_health: int) -> void:
 	if player_is_dead():
@@ -387,7 +384,7 @@ func player_give_health(new_health: int) -> void:
 	if health > INIT_HEALTH:
 		health = INIT_HEALTH
 
-	emit_signal("player_took_damage", health)
+	hud.set_health(health)
 
 func player_give_ammo(ammo: int) -> void:
 	match active_weapon:
@@ -396,7 +393,7 @@ func player_give_ammo(ammo: int) -> void:
 		WEAPON.RIFLE:
 			ammo_rifle += ammo
 
-	emit_signal("player_shot_weapon", ammo_pistol, ammo_rifle)
+	hud.set_ammo(ammo_pistol, ammo_rifle)
 
 func player_set_on_platform(value: bool) -> void:
 	is_on_platform = value
