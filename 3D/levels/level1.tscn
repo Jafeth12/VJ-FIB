@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dg4cyo77q811f"]
+[gd_scene load_steps=9 format=3 uid="uid://dg4cyo77q811f"]
 
 [ext_resource type="Script" path="res://levels/level1.gd" id="1_pvbng"]
 [ext_resource type="PackedScene" uid="uid://bu6rnyfm7ty4f" path="res://entities/enemies/crystal_charger/crystal_charger.tscn" id="3_mm86a"]

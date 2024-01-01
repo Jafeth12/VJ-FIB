@@ -73,7 +73,11 @@ func enemy_take_damage(damage: int) -> void:
 	enemy_update_health_bar()
 
 func enemy_update_health_bar() -> void:
-	# set_theme_item(data_type: DataType, name: StringName, theme_type: StringName, value: Variant)
+	if enemy_is_dead():
+		enemy_shield_bar.hide()
+		enemy_health_bar.hide()
+		return
+	
 	if enemy_shield > 0:
 		enemy_shield_bar.show()
 		enemy_health_bar.hide()
@@ -83,6 +87,7 @@ func enemy_update_health_bar() -> void:
 	
 	enemy_shield_bar.value = enemy_shield
 	enemy_health_bar.value = enemy_health
+
 
 # Use this function to see if the enemy should die
 # p.e.: if it's life is empty
