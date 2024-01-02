@@ -1,10 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://bc4ihp6g2sa1y"]
+[gd_scene load_steps=10 format=3 uid="uid://bc4ihp6g2sa1y"]
 
 [ext_resource type="Script" path="res://ui/menu/menu.gd" id="1_hf4fs"]
 [ext_resource type="PackedScene" uid="uid://dowvah8ep8i7v" path="res://ui/menu/background.tscn" id="1_tbil2"]
 [ext_resource type="Texture2D" uid="uid://drn4r3bajqhm5" path="res://art/ui/menu/our_logo.png" id="3_pqyml"]
 [ext_resource type="PackedScene" uid="uid://b0t483boq5jv5" path="res://ui/volume_slider.tscn" id="4_wu6ey"]
-[ext_resource type="Texture2D" uid="uid://diireip4oxswn" path="res://art/ui/menu/background.png" id="5_oslx6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ipoos"]
 bg_color = Color(0.721569, 0.580392, 0.188235, 1)
@@ -143,11 +142,15 @@ layout_mode = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="tapadera" type="Sprite2D" parent="CanvasLayer"]
+[node name="tapadera" type="ColorRect" parent="CanvasLayer"]
 modulate = Color(0, 0, 0, 0)
-position = Vector2(657, 380)
-scale = Vector2(6.72005, 4.53497)
-texture = ExtResource("5_oslx6")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer"]
 libraries = {
