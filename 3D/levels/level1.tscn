@@ -25,6 +25,8 @@ entity_radius = 20.0
 
 [node name="Crawler1" parent="." instance=ExtResource("3_qpl7s")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 19.5121, 4.77865, 0)
+ATTACK_DAMAGE = null
+entity_alpha = null
 entity_radius = 20.0
 
 [node name="CrystalCharger1" parent="." instance=ExtResource("3_mm86a")]
