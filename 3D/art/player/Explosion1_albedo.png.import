@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://v7pthb1ftsgl"
-path.s3tc="res://.godot/imported/PlayerCyborg-n.png-6efe4c49455614b2e3b244097343c82e.s3tc.ctex"
+uid="uid://by5uxbqoyi8lb"
+path.s3tc="res://.godot/imported/Explosion1_albedo.png-1bb936e2c5e472d0ad5a5c001cd7fecc.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://art/player/PlayerCyborg-n.png"
-dest_files=["res://.godot/imported/PlayerCyborg-n.png-6efe4c49455614b2e3b244097343c82e.s3tc.ctex"]
+source_file="res://art/player/Explosion1_albedo.png"
+dest_files=["res://.godot/imported/Explosion1_albedo.png-1bb936e2c5e472d0ad5a5c001cd7fecc.s3tc.ctex"]
 
 [params]
 
