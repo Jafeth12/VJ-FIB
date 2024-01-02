@@ -10,10 +10,10 @@ const ATTACK_SPEED: float = PI/4
 var player_node = null
 
 func _ready():
-	ENEMY_INIT_SHIELD = 80
-	ENEMY_INIT_HEALTH = 150
-	enemy_drop_type = Enums.DROP_TYPE.HEALTH
-	enemy_drop_amount = 15
+	ENEMY_INIT_SHIELD = 200
+	ENEMY_INIT_HEALTH = 130
+	enemy_drop_type = Enums.DROP_TYPE.AMMO
+	enemy_drop_amount = 10
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
 	$damage_area.connect("body_entered", goomba_damage_area_entered)
 	player_node = get_node("/root/main/Player")
@@ -40,15 +40,15 @@ func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delt
 func enemy_update_animation() -> void:
 	match enemy_state:
 		EnemyState.WAIT:
-			if $sprite.animation != "walk":
-				$sprite.play("walk")
+			if $sprite.animation != "idle":
+				$sprite.play("idle")
 		EnemyState.WANDER:
 			if $sprite.animation != "walk":
 				$sprite.play("walk")
 		EnemyState.ATTACK:
 			# Aquí no llega NUNCA
-			if $sprite.animation != "walk":
-				$sprite.play("walk")
+			if $sprite.animation != "die":
+				$sprite.play("die")
 		EnemyState.DEAD:
 			if $sprite.animation != "die":
 				$sprite.play("die")

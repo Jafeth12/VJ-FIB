@@ -395,7 +395,7 @@ func player_give_ammo(ammo: int) -> void:
 		WEAPON.PISTOL:
 			ammo_pistol = ammo_pistol+ammo if ammo_pistol+ammo < MAX_AMMO_PISTOL else MAX_AMMO_PISTOL
 		WEAPON.RIFLE:
-			ammo_rifle += ammo_pistol+ammo if ammo_pistol+ammo < MAX_AMMO_RIFLE else MAX_AMMO_RIFLE
+			ammo_rifle = ammo_pistol+ammo if ammo_pistol+ammo < MAX_AMMO_RIFLE else MAX_AMMO_RIFLE
 
 	hud.set_ammo(ammo_pistol, ammo_rifle)
 
