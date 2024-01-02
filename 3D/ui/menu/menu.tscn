@@ -1,12 +1,65 @@
-[gd_scene load_steps=6 format=3 uid="uid://bc4ihp6g2sa1y"]
+[gd_scene load_steps=11 format=3 uid="uid://bc4ihp6g2sa1y"]
 
 [ext_resource type="Script" path="res://ui/menu/menu.gd" id="1_hf4fs"]
 [ext_resource type="PackedScene" uid="uid://dowvah8ep8i7v" path="res://ui/menu/background.tscn" id="1_tbil2"]
 [ext_resource type="Texture2D" uid="uid://drn4r3bajqhm5" path="res://art/ui/menu/our_logo.png" id="3_pqyml"]
 [ext_resource type="PackedScene" uid="uid://b0t483boq5jv5" path="res://ui/volume_slider.tscn" id="4_wu6ey"]
+[ext_resource type="Texture2D" uid="uid://diireip4oxswn" path="res://art/ui/menu/background.png" id="5_oslx6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ipoos"]
 bg_color = Color(0.721569, 0.580392, 0.188235, 1)
+
+[sub_resource type="Animation" id="Animation_hnjw6"]
+resource_name = "fade_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("tapadera:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_h5svy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("tapadera:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_cauul"]
+resource_name = "fade_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("tapadera:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_omh2v"]
+_data = {
+"RESET": SubResource("Animation_h5svy"),
+"fade_in": SubResource("Animation_hnjw6"),
+"fade_out": SubResource("Animation_cauul")
+}
 
 [node name="menu" type="Control"]
 layout_mode = 3
@@ -87,6 +140,19 @@ text = "QUIT
 
 [node name="VolumeSlider" parent="options" instance=ExtResource("4_wu6ey")]
 layout_mode = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="tapadera" type="Sprite2D" parent="CanvasLayer"]
+modulate = Color(0, 0, 0, 0)
+position = Vector2(657, 380)
+scale = Vector2(6.72005, 4.53497)
+texture = ExtResource("5_oslx6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer"]
+libraries = {
+"": SubResource("AnimationLibrary_omh2v")
+}
 
 [connection signal="button_up" from="options/play" to="." method="_on_play_button_up"]
 [connection signal="button_up" from="options/controls" to="." method="_on_controls_button_up"]
