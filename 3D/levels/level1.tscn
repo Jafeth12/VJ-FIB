@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://dg4cyo77q811f"]
+[gd_scene load_steps=11 format=3 uid="uid://dg4cyo77q811f"]
 
 [ext_resource type="Script" path="res://levels/level1.gd" id="1_pvbng"]
+[ext_resource type="PackedScene" uid="uid://bx0cuvm73okhp" path="res://entities/enemies/boss/boss.tscn" id="2_48w2w"]
 [ext_resource type="PackedScene" uid="uid://bu6rnyfm7ty4f" path="res://entities/enemies/crystal_charger/crystal_charger.tscn" id="3_mm86a"]
 [ext_resource type="ArrayMesh" uid="uid://n42pql0fhqsy" path="res://obj/level.obj" id="3_onv32"]
 [ext_resource type="PackedScene" uid="uid://ctl47igc7wknw" path="res://entities/enemies/crawler/crawler.tscn" id="3_qpl7s"]
@@ -17,6 +18,10 @@ script = ExtResource("1_pvbng")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20, 0)
+
+[node name="Boss" parent="." instance=ExtResource("2_48w2w")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 32, 18)
+entity_radius = 20.0
 
 [node name="Crawler1" parent="." instance=ExtResource("3_qpl7s")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 19.5121, 4.77865, 0)
