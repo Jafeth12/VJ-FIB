@@ -3,6 +3,7 @@ extends Node
 @onready var hud = $CanvasLayer/HUD
 
 func _ready():
+	MusicController.play_level_music()
 	pass
 
 func _process(_delta):
