@@ -1,4 +1,4 @@
-class_name Boss extends GenericEnemy
+class_name Crawler extends GenericEnemy
 
 var attack_ended: bool = false
 var player_in_area: bool = false
@@ -10,15 +10,15 @@ const ATTACK_SPEED: float = PI/4
 var player_node = null
 
 func _ready():
-	ENEMY_INIT_SHIELD = 80
-	ENEMY_INIT_HEALTH = 150
-	enemy_drop_type = Enums.DROP_TYPE.HEALTH
-	enemy_drop_amount = 15
+	ENEMY_INIT_SHIELD = 1000
+	ENEMY_INIT_HEALTH = 500
+	enemy_drop_type = Enums.DROP_TYPE.RIFLE
+	enemy_drop_amount = 1
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
-	$sprite.connect("animation_finished", crawler_on_animation_finished)
-	$activation_area.connect("body_entered", crawler_area_entered)
-	$activation_area.connect("body_exited", crawler_area_exited)
-	$damage_area.connect("body_entered", crawler_damage_area_entered)
+	$sprite.connect("animation_finished", boss_on_animation_finished)
+	$activation_area.connect("body_entered", boss_area_entered)
+	$activation_area.connect("body_exited", boss_area_exited)
+	$damage_area.connect("body_entered", boss_damage_area_entered)
 	player_node = get_node("/root/main/Player")
 	super()
 
@@ -73,24 +73,24 @@ func enemy_is_attack_finished() -> bool:
 	attack_ended = false
 	return ae_copy
 
-func crawler_is_damaging():
+func boss_is_damaging():
 	return enemy_state == EnemyState.ATTACK && $sprite.frame >= 3
 
-func crawler_on_animation_finished() -> void:
+func boss_on_animation_finished() -> void:
 	match $sprite.animation:
 		"attack":
 			attack_ended = true
 
-func crawler_area_entered(body: Node3D):
+func boss_area_entered(body: Node3D):
 	#print("entró")
 	if body is StaticBody3D:
 		return
 	player_in_area = true
 
-func crawler_area_exited(body: Node3D):
+func boss_area_exited(body: Node3D):
 	#print("salió")h
 	player_in_area = false
 
-func crawler_damage_area_entered(body: Node3D):
-	if crawler_is_damaging():
+func boss_damage_area_entered(body: Node3D):
+	if boss_is_damaging():
 		player_node.player_take_damage(ATTACK_DAMAGE)
