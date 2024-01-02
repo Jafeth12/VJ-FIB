@@ -11,7 +11,7 @@ func _ready():
 	load_texture()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	pass
 	
 #------------------------------------
@@ -42,7 +42,7 @@ func _on_body_entered(body):
 			Enums.DROP_TYPE.AMMO:
 				player.player_give_ammo(drop_amount)
 			Enums.DROP_TYPE.RIFLE:
-				pass
+				player.player_give_rifle()
 
 		queue_free()
 	

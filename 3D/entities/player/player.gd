@@ -49,6 +49,7 @@ var MAX_AMMO_PISTOL = 50
 var MAX_AMMO_RIFLE = 50
 var ammo_pistol = MAX_AMMO_PISTOL
 var ammo_rifle = MAX_AMMO_RIFLE
+var has_rifle : bool = false
 
 # ======== Signals ========
 
@@ -393,11 +394,19 @@ func player_give_health(new_health: int) -> void:
 func player_give_ammo(ammo: int) -> void:
 	match active_weapon:
 		WEAPON.PISTOL:
-			ammo_pistol = ammo_pistol+ammo if ammo_pistol+ammo < MAX_AMMO_PISTOL else MAX_AMMO_PISTOL
+			player_add_ammo(WEAPON.PISTOL, ammo)
 		WEAPON.RIFLE:
-			ammo_rifle = ammo_pistol+ammo if ammo_pistol+ammo < MAX_AMMO_RIFLE else MAX_AMMO_RIFLE
+			player_add_ammo(WEAPON.RIFLE, ammo)
 
 	hud.set_ammo(ammo_pistol, ammo_rifle)
+
+func player_give_rifle() -> void:
+	if has_rifle:
+		player_add_ammo(WEAPON.RIFLE, 10)
+
+	has_rifle = true
+	hud.set_ammo(ammo_pistol, ammo_rifle)
+	hud.show_rifle()
 
 func player_set_on_platform(value: bool) -> void:
 	is_on_platform = value
@@ -416,6 +425,15 @@ func player_get_current_active_sprite() -> AnimatedSprite3D:
 		return $sprite_pistol
 	else:
 		return $sprite_rifle
+
+func player_add_ammo(weapon: WEAPON, ammo: int) -> void:
+	match weapon:
+		WEAPON.PISTOL:
+			ammo_pistol = ammo_pistol+ammo if ammo_pistol+ammo < MAX_AMMO_PISTOL else MAX_AMMO_PISTOL
+		WEAPON.RIFLE:
+			ammo_rifle = ammo_pistol+ammo if ammo_pistol+ammo < MAX_AMMO_RIFLE else MAX_AMMO_RIFLE
+
+	hud.set_ammo(ammo_pistol, ammo_rifle)
 
 # ======== Initializations ========
 func player_init_sprites() -> void:

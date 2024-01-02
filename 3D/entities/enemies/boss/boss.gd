@@ -12,8 +12,6 @@ var player_node = null
 func _ready():
 	ENEMY_INIT_SHIELD = 1000
 	ENEMY_INIT_HEALTH = 500
-	enemy_drop_type = Enums.DROP_TYPE.RIFLE
-	enemy_drop_amount = 1
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
 	$sprite.connect("animation_finished", boss_on_animation_finished)
 	$activation_area.connect("body_entered", boss_area_entered)

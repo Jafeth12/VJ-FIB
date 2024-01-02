@@ -21,6 +21,8 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20,
 
 [node name="Boss" parent="." instance=ExtResource("2_48w2w")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 32, 18)
+enemy_drop_amount = 10
+enemy_drop_chance = 0.5
 entity_radius = 20.0
 
 [node name="Crawler1" parent="." instance=ExtResource("3_qpl7s")]
