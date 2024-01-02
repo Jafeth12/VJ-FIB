@@ -1,4 +1,4 @@
-class_name Boss extends GenericEnemy
+class_name Crawler extends GenericEnemy
 
 var attack_ended: bool = false
 var player_in_area: bool = false
