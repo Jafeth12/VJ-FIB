@@ -1,0 +1,110 @@
+[gd_scene load_steps=9 format=3 uid="uid://bh227ixe1pfm8"]
+
+[ext_resource type="Script" path="res://ui/menu/views/planets/water_planet.gd" id="1_8g7ah"]
+[ext_resource type="Texture2D" uid="uid://bpe4kob6xejjv" path="res://art/ui/planets/Waterplanet.png" id="1_asr72"]
+[ext_resource type="FontFile" uid="uid://bx0hymomr7xpu" path="res://fonts/BellMT/BellMTBold.ttf" id="2_6i4fj"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_m4i3l"]
+font = ExtResource("2_6i4fj")
+font_size = 60
+
+[sub_resource type="LabelSettings" id="LabelSettings_5lt6p"]
+font = ExtResource("2_6i4fj")
+font_size = 24
+
+[sub_resource type="Animation" id="Animation_k3pvu"]
+resource_name = "loading"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Loading:text")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": ["LOADING", "LOADING.", "LOADING..", "LOADING..."]
+}
+
+[sub_resource type="Animation" id="Animation_dpemw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Loading:text")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["LOADING"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_l1l67"]
+_data = {
+"RESET": SubResource("Animation_dpemw"),
+"loading": SubResource("Animation_k3pvu")
+}
+
+[node name="WaterPlanet" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8g7ah")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_asr72")
+expand_mode = 1
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.309
+anchor_top = 0.069
+anchor_right = 0.697
+anchor_bottom = 0.201
+offset_left = -0.52002
+offset_top = 0.319996
+offset_right = -0.160034
+offset_bottom = 0.279999
+grow_horizontal = 2
+text = "WATER PLANET"
+label_settings = SubResource("LabelSettings_m4i3l")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Loading" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.412
+anchor_top = 0.842
+anchor_right = 0.59
+anchor_bottom = 0.947
+offset_left = -0.360046
+offset_top = -0.240051
+offset_right = -0.200073
+offset_bottom = 0.159973
+grow_horizontal = 2
+grow_vertical = 0
+text = "LOADING"
+label_settings = SubResource("LabelSettings_5lt6p")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_l1l67")
+}
