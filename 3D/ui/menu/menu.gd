@@ -5,8 +5,7 @@ func _ready():
 	SceneTransitions.fade_in()
 
 func _on_play_button_up() -> void:
-	MusicController
-	SceneTransitions.change_scene("res://main.tscn")
+	SceneTransitions.change_scene_with_middle_scene("res://main.tscn", "res://ui/menu/views/credits/credits.tscn")
 
 func _on_quit_button_up() -> void:
 	SceneTransitions.fade_out()
