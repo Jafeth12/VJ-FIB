@@ -367,6 +367,8 @@ func player_shoot() -> void:
 	b.init(pos, entity_alpha, facing, entity_radius, player_is_crouching())
 	owner.add_child(b)
 
+	player_play_explosion()
+
 
 func player_take_damage(damage: int) -> void:
 	if god_mode:
@@ -416,6 +418,23 @@ func player_get_current_active_sprite() -> AnimatedSprite3D:
 		return $sprite_pistol
 	else:
 		return $sprite_rifle
+
+func player_play_explosion() -> void:
+	player_update_facing_explosion()
+	$explosion/viewport/animated.stop()
+	$explosion/viewport/animated.play("explosion")
+
+func player_update_facing_explosion() -> void:
+	if $explosion.transform.origin.x < 0:
+		# explosion is on the left
+		if facing == FACING.RIGHT:
+			$explosion.transform.origin.x *= -1
+			$explosion/viewport/animated.set_flip_h(true)
+	else:
+		# explosion is on the right
+		if facing == FACING.LEFT:
+			$explosion.transform.origin.x *= -1
+			$explosion/viewport/animated.set_flip_h(false)
 
 # ======== Initializations ========
 func player_init_sprites() -> void:
@@ -486,6 +505,7 @@ func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirec
 			return EntityDirection.RIGHT
 	elif right_pressed && !left_pressed:
 		facing = FACING.RIGHT
+		$explosion.transform.origin.x 
 		return EntityDirection.RIGHT
 	elif left_pressed && !right_pressed:
 		facing = FACING.LEFT
