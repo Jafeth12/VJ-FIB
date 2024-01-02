@@ -1,0 +1,83 @@
+[gd_scene load_steps=12 format=3 uid="uid://b2rcv7hvcy7a8"]
+
+[ext_resource type="Script" path="res://entities/enemies/goomba/goomba.gd" id="1_afs03"]
+[ext_resource type="Texture2D" uid="uid://dp020jqeapenx" path="res://art/enemy/goomba/goomba.png" id="2_l0yj2"]
+[ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_w826d"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gcde8"]
+atlas = ExtResource("2_l0yj2")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s2bmp"]
+atlas = ExtResource("2_l0yj2")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1xxjb"]
+atlas = ExtResource("2_l0yj2")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tfk0d"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gcde8")
+}],
+"loop": false,
+"name": &"die",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s2bmp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1xxjb")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 10.0
+}]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3d2gf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hcbxr"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_60gny"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rsyij"]
+
+[node name="Goomba" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 40
+script = ExtResource("1_afs03")
+
+[node name="sprite" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(3.25, 0, 0, 0, 3.25, 0, 0, 0, 3.25, 0, 0, 0)
+billboard = 2
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_tfk0d")
+animation = &"walk"
+
+[node name="collision" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_3d2gf")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+
+[node name="ShieldBar3D" parent="SubViewport" instance=ExtResource("3_w826d")]
+
+[node name="HealthBar3D" parent="SubViewport" instance=ExtResource("3_w826d")]
+theme_override_styles/background = SubResource("StyleBoxFlat_hcbxr")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+billboard = 2
+texture = SubResource("ViewportTexture_60gny")
+
+[node name="damage_area" type="Area3D" parent="."]
+collision_layer = 2
+
+[node name="damage_area_collision" type="CollisionShape3D" parent="damage_area"]
+shape = SubResource("BoxShape3D_rsyij")
