@@ -17,6 +17,7 @@ var drop_item = preload("res://entities/other/drop.tscn")
 # 0 for health, 1 for ammo, 2 for rifle
 var enemy_drop_type: Enums.DROP_TYPE = Enums.DROP_TYPE.HEALTH
 var enemy_drop_amount: int = 10
+var enemy_drop_chance: float = 0.5
 
 func _ready():
 	enemy_shield = ENEMY_INIT_SHIELD
@@ -80,6 +81,12 @@ func enemy_take_damage(damage: int) -> void:
 	enemy_update_health_bar()
 
 	if enemy_is_dead():
+		var chance = randf_range(0, 1)
+		var drops = chance < enemy_drop_chance
+
+		if !drops:
+			return
+
 		var drop = drop_item.instantiate()
 		var new_pos = get_position()
 		new_pos.z += 0.4
