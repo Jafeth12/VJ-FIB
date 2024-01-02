@@ -12,8 +12,6 @@ var player_node = null
 func _ready():
 	ENEMY_INIT_SHIELD = 200
 	ENEMY_INIT_HEALTH = 130
-	enemy_drop_type = Enums.DROP_TYPE.AMMO
-	enemy_drop_amount = 10
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
 	$damage_area.connect("body_entered", goomba_damage_area_entered)
 	player_node = get_node("/root/main/Player")

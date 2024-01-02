@@ -3,6 +3,7 @@ extends Control
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_health(100)
+	hide_rifle()
 	select_pistol()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,5 +27,11 @@ func select_pistol() -> void:
 func select_rifle() -> void:
 	$pistol_hud.disable()
 	$rifle_hud.enable()
+
+func hide_rifle() -> void:
+	$rifle_hud.hide()
+
+func show_rifle() -> void:
+	$rifle_hud.show()
 	
 	
