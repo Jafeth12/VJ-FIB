@@ -1,20 +1,19 @@
 extends Control
 
 func _ready():
-	$"/root/MusicController".play_menu_music()
-
-func _process(_delta) -> void:
-	pass
+	MusicController.play_menu_music()
+	SceneTransitions.fade_in()
 
 func _on_play_button_up() -> void:
-	$"/root/MusicController".play_level_music()
-	get_tree().change_scene_to_file("res://main.tscn")
+	SceneTransitions.change_scene_with_middle_scene("res://main.tscn", "res://ui/menu/views/planets/water_planet.tscn")
 
 func _on_quit_button_up() -> void:
+	SceneTransitions.fade_out()
+	await SceneTransitions.animation_player.animation_finished
 	get_tree().quit()
 
 func _on_credits_button_up():
-	get_tree().change_scene_to_file("res://ui/menu/views/credits/credits.tscn")
+	SceneTransitions.change_scene("res://ui/menu/views/credits/credits.tscn")
 
 func _on_controls_button_up():
-	get_tree().change_scene_to_file("res://ui/menu/views/controls/controls.tscn")
+	SceneTransitions.change_scene("res://ui/menu/views/controls/controls.tscn")
