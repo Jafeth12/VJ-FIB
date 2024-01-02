@@ -19,6 +19,7 @@ config/icon="res://art/icon.png"
 
 MusicController="*res://autoloads/music_controller.tscn"
 Enums="*res://autoloads/enums.gd"
+SceneTransitions="*res://autoloads/scene_transitions.tscn"
 
 [display]
 

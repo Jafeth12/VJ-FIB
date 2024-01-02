@@ -1,45 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://b5g0ovr2iopjn"]
+[gd_scene load_steps=5 format=3 uid="uid://b5g0ovr2iopjn"]
 
 [ext_resource type="PackedScene" uid="uid://dg4cyo77q811f" path="res://levels/level1.tscn" id="1_jraf3"]
 [ext_resource type="Script" path="res://main.gd" id="1_u5uqy"]
 [ext_resource type="PackedScene" uid="uid://jmo7fkfdh33y" path="res://ui/hud/HUD.tscn" id="2_m04a3"]
 [ext_resource type="PackedScene" uid="uid://d2h5lpkd1b7ff" path="res://entities/player/player.tscn" id="2_qkbcm"]
-
-[sub_resource type="Animation" id="Animation_ldl7y"]
-resource_name = "fade_in"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("tapadera:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_21q5n"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("tapadera:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(0, 0, 0, 1)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_fj8yv"]
-_data = {
-"RESET": SubResource("Animation_21q5n"),
-"fade_in": SubResource("Animation_ldl7y")
-}
 
 [node name="main" type="Node"]
 script = ExtResource("1_u5uqy")
@@ -53,18 +17,5 @@ entity_radius = 20.02
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="CanvasLayer" instance=ExtResource("2_m04a3")]
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer"]
-libraries = {
-"": SubResource("AnimationLibrary_fj8yv")
-}
-
-[node name="tapadera" type="ColorRect" parent="CanvasLayer"]
-modulate = Color(0, 0, 0, 1)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [connection signal="player_died" from="Player" to="." method="_on_player_died"]
