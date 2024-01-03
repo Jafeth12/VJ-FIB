@@ -11,8 +11,7 @@ Ni 1.450000
 d 1.000000
 illum 3
 
-newmtl base
-Ns 250.000000
+newmtl base1
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
@@ -20,4 +19,6 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd materiales/MetalCorrodedHeavy001_COL_4K_METALNESS.jpg
+map_Ns materiales/MetalCorrodedHeavy001_ROUGHNESS_4K_METALNESS.jpg
+map_refl materiales/MetalCorrodedHeavy001_METALNESS_4K_METALNESS.jpg
 map_Bump -bm 1.000000 materiales/MetalCorrodedHeavy001_NRM_4K_METALNESS.jpg
