@@ -1,0 +1,31 @@
+[gd_scene load_steps=9 format=3 uid="uid://c2d7odnj6kjhe"]
+
+[ext_resource type="Script" path="res://levels/obstacle.gd" id="1_f7owp"]
+[ext_resource type="Texture2D" uid="uid://c34hjh0niwynl" path="res://obj/materiales/steelplate1_albedo.png" id="1_n4bon"]
+[ext_resource type="Texture2D" uid="uid://jgx8bcsxei6" path="res://obj/materiales/steelplate1_metallic.png" id="2_ho0ae"]
+[ext_resource type="Texture2D" uid="uid://cj28umncgpbrx" path="res://obj/materiales/steelplate1_normal-ogl.png" id="3_6pix1"]
+[ext_resource type="Texture2D" uid="uid://0kptfkf6bvdt" path="res://obj/materiales/steelplate1_roughness.png" id="4_cbke2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_10xdn"]
+albedo_texture = ExtResource("1_n4bon")
+metallic = 1.0
+metallic_texture = ExtResource("2_ho0ae")
+roughness_texture = ExtResource("4_cbke2")
+normal_enabled = true
+normal_texture = ExtResource("3_6pix1")
+
+[sub_resource type="BoxMesh" id="BoxMesh_umk0o"]
+material = SubResource("StandardMaterial3D_10xdn")
+size = Vector3(1, 0.7, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b2yns"]
+size = Vector3(1, 0.7, 1)
+
+[node name="ObstacleLvl2" type="StaticBody3D"]
+script = ExtResource("1_f7owp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_umk0o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_b2yns")

@@ -23,6 +23,7 @@ var resetting_alpha : bool = false
 var active_weapon : WEAPON = WEAPON.PISTOL
 var facing: FACING = FACING.LEFT
 var is_on_platform: bool = false
+var can_go_to_next_height: bool = false
 
 # Velocidades angulares del jugador
 @export var SPEED = PI/8 # 1 lap = 16 secs.
@@ -244,7 +245,7 @@ func player_handle_input() -> void:
 		player_take_damage(20)
 	if Input.is_action_just_pressed("dbg_switch_ring") || (is_on_platform && Input.is_action_just_pressed("interact")):
 		player_change_ring_state()
-	if Input.is_action_just_pressed("dbg_next_level"):
+	if Input.is_action_just_pressed("dbg_next_level") || (can_go_to_next_height && Input.is_action_just_pressed("change_level_height")):
 		if resetting_alpha:
 			return
 		resetting_alpha = true
@@ -314,6 +315,7 @@ func player_switch_level() -> void:
 	else:
 		$collision.disabled = false
 		curr_level = target_level
+		can_go_to_next_height = false
 
 func player_reset_position() -> void:
 	#if player_is_dead():
@@ -420,6 +422,9 @@ func player_give_rifle() -> void:
 
 func player_set_on_platform(value: bool) -> void:
 	is_on_platform = value
+
+func player_set_ready_to_next_height(value: bool) -> void:
+	can_go_to_next_height = value
 
 # ======== Callbacks ========
 func player_on_animation_finished() -> void:
