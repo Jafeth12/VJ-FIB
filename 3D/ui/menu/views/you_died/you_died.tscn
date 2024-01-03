@@ -1,33 +1,41 @@
-[gd_scene load_steps=10 format=3 uid="uid://uessytjksnf0"]
+[gd_scene load_steps=14 format=3 uid="uid://uessytjksnf0"]
 
+[ext_resource type="Script" path="res://ui/menu/views/you_died/you_died.gd" id="1_5ayhj"]
 [ext_resource type="Texture2D" uid="uid://c8v321pqr0d11" path="res://art/ui/you_died/YouDied-Died_Red.png" id="1_66xmo"]
 [ext_resource type="Texture2D" uid="uid://dnb3ki6u053c0" path="res://art/ui/you_died/YouDied-Cross_Red.png" id="2_x34ev"]
 [ext_resource type="Texture2D" uid="uid://c8mjatb00bc3t" path="res://art/ui/you_died/YouDied-Base.png" id="3_cf3mk"]
 [ext_resource type="Texture2D" uid="uid://dcc4la0ooagqq" path="res://art/ui/you_died/YouDied-Eyes.png" id="3_mx21n"]
+[ext_resource type="FontFile" uid="uid://bx0hymomr7xpu" path="res://fonts/BellMT/BellMTBold.ttf" id="6_fupvq"]
 
 [sub_resource type="Gradient" id="Gradient_kgjby"]
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_v3sdh"]
 gradient = SubResource("Gradient_kgjby")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ha7j6"]
+bg_color = Color(0.180392, 0.14902, 0.164706, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1o3hq"]
+bg_color = Color(0.48, 0.11, 0.077, 1)
+
 [sub_resource type="Animation" id="Animation_ldrlq"]
 resource_name = "RESET"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("background:color")
+tracks/0/path = NodePath("text:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(0, 0, 0, 0)]
+"values": [Color(1, 1, 1, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("text:modulate")
+tracks/1/path = NodePath("red_cross:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -39,7 +47,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("red_cross:modulate")
+tracks/2/path = NodePath("skull_eyes:modulate")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -51,7 +59,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("skull_eyes:modulate")
+tracks/3/path = NodePath("skull:modulate")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -63,26 +71,38 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("skull:modulate")
+tracks/4/path = NodePath("light:energy")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 0)]
+"values": [1.0]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("light:energy")
+tracks/5/path = NodePath("Retry:modulate")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [1.0]
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Exit:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_8ybgu"]
@@ -91,19 +111,19 @@ length = 4.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("background:color")
-tracks/0/interp = 1
+tracks/0/path = NodePath("text:modulate")
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1, 3, 4),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 0.196078), Color(0, 0, 0, 0.196078), Color(0, 0, 0, 1)]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("text:modulate")
+tracks/1/path = NodePath("red_cross:modulate")
 tracks/1/interp = 2
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -115,7 +135,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("red_cross:modulate")
+tracks/2/path = NodePath("skull_eyes:modulate")
 tracks/2/interp = 2
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -127,7 +147,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("skull_eyes:modulate")
+tracks/3/path = NodePath("skull:modulate")
 tracks/3/interp = 2
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -139,26 +159,38 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("skull:modulate")
+tracks/4/path = NodePath("light:energy")
 tracks/4/interp = 2
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("light:energy")
-tracks/5/interp = 2
-tracks/5/loop_wrap = true
-tracks/5/keys = {
 "times": PackedFloat32Array(0, 0.6, 0.9, 1.1, 1.3, 1.4, 1.5, 1.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [1.0, 5.0, 1.0, 3.0, 1.0, 2.0, 1.0, 2.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Retry:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 1.6, 2.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Exit:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 1.6, 2.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_l6lh8"]
@@ -174,6 +206,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_5ayhj")
 
 [node name="light" type="PointLight2D" parent="."]
 position = Vector2(1035, 629)
@@ -220,14 +254,51 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_cf3mk")
 
-[node name="background" type="ColorRect" parent="."]
+[node name="Retry" type="Button" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.177
+anchor_top = 0.656
+anchor_right = 0.39
+anchor_bottom = 0.812
+offset_left = 0.440002
+offset_top = -0.320007
+offset_right = -0.200012
+offset_bottom = -1.64001
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("6_fupvq")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_ha7j6")
+text = "RETRY"
+
+[node name="Exit" type="Button" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.607
+anchor_top = 0.658
+anchor_right = 0.82
+anchor_bottom = 0.812
+offset_left = 0.039917
+offset_top = 0.23996
+offset_right = -0.600098
+offset_bottom = 0.359985
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("6_fupvq")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_1o3hq")
+text = "EXIT"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0)
+color = Color(0, 0, 0, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
