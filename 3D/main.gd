@@ -13,7 +13,10 @@ func _process(_delta):
 # -----------------------------
 
 func _on_player_died():
-	SceneTransitions.fade_out()
-	$Player.player_revive()
-	$Player.player_reset_position()
-	SceneTransitions.fade_in()
+	var timer = Timer.new()
+	timer.one_shot = true
+	add_child(timer)
+	timer.start(2)
+	await timer.timeout
+	timer.queue_free()
+	SceneTransitions.change_scene("res://ui/menu/views/you_died/you_died.tscn")

@@ -1,7 +1,14 @@
 extends CanvasLayer
 
 @onready var animation_player = $AnimationPlayer
-@onready var timer = Timer.new()
+
+signal transition_ended()
+
+func _ready() -> void:
+	animation_player.connect("animation_finished", _on_animation_finished)
+
+func _on_animation_finished(animation):
+	emit_signal("transition_ended")
 
 func change_scene(path_to_target_scene: String, speed: float = 1.0) -> void:
 	animation_player.play("dissolve", -1, speed, false)
@@ -17,6 +24,7 @@ func fade_out(speed: float = 1.0) -> void:
 
 func change_scene_with_middle_scene(target_scene: String, middle_scene: String, middle_scene_time: float = 5.0, speed: float = 1.0) -> void:
 	# Setup timer
+	var timer = Timer.new()
 	timer.one_shot = true
 	add_child(timer)
 	# Change to the middle scene
