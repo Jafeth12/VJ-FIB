@@ -1,4 +1,4 @@
-[gd_scene load_steps=152 format=3 uid="uid://d2h5lpkd1b7ff"]
+[gd_scene load_steps=155 format=3 uid="uid://d2h5lpkd1b7ff"]
 
 [ext_resource type="Script" path="res://entities/player/player.gd" id="1_l5rtp"]
 [ext_resource type="Texture2D" uid="uid://rrxc8pehdjfc" path="res://art/player/player_weapon2.png" id="2_jqr8u"]
@@ -1064,6 +1064,67 @@ animations = [{
 "speed": 70.0
 }]
 
+[sub_resource type="Animation" id="Animation_qlcpf"]
+resource_name = "RESET"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite_pistol:transparency")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("sprite_rifle:transparency")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_0ctnm"]
+resource_name = "vanish"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite_pistol:transparency")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.6, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.75, 0.35, 1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("sprite_rifle:transparency")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.6, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.75, 0.35, 1.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_r17qg"]
+_data = {
+"RESET": SubResource("Animation_qlcpf"),
+"vanish": SubResource("Animation_0ctnm")
+}
+
 [node name="player" type="CharacterBody3D"]
 collision_mask = 32
 script = ExtResource("1_l5rtp")
@@ -1081,7 +1142,8 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0.449255, 0)
 lod_bias = 0.001
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_72fuo")
-animation = &"jump"
+animation = &"idle"
+frame_progress = 0.827262
 
 [node name="sprite_rifle" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0.449, 0)
@@ -1105,3 +1167,8 @@ sprite_frames = SubResource("SpriteFrames_0nbtq")
 animation = &"explosion"
 frame = 31
 frame_progress = 1.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_r17qg")
+}

@@ -248,6 +248,8 @@ func player_handle_input() -> void:
 	if Input.is_action_just_pressed("dbg_next_level") || (can_go_to_next_height && Input.is_action_just_pressed("change_level_height")):
 		if resetting_alpha:
 			return
+		$AnimationPlayer.play("vanish")
+		await $AnimationPlayer.animation_finished
 		resetting_alpha = true
 		player_change_level_state()
 	if Input.is_action_just_pressed("dbg_reset_position"):
@@ -521,6 +523,8 @@ func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delt
 		resetting_alpha = !(on_target_alpha && on_target_y)
 		var mask = -int(resetting_alpha)
 		curr_level = target_level & mask | curr_level & ~mask # Dani te queremos
+		if !resetting_alpha:
+			$AnimationPlayer.play("vanish", -1, -1.0, true)
 	else:
 		$collision.disabled = false
 		entity_has_gravity = true
