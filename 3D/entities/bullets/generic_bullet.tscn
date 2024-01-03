@@ -17,3 +17,6 @@ collision_mask = 34
 [node name="activation_collision" type="CollisionShape3D" parent="bullet_activation_area"]
 transform = Transform3D(-5.24537e-09, 0.12, -5.24537e-09, 0, -5.24537e-09, -0.12, -0.12, -5.24537e-09, 2.29282e-16, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_4jgc1")
+
+[node name="light" type="OmniLight3D" parent="."]
+shadow_enabled = true

@@ -1,12 +1,20 @@
 shader_type canvas_item;
 
+uniform bool is_pistol = true;
+
 void vertex() {
 	// Called for every vertex the material is visible on.
 }
 
 void fragment() {
 	// Called for every pixel the material is visible on.
-	COLOR.rgb = COLOR.rgb * vec3(1, 0.8, 0);
+	vec3 pistol_color = vec3(0, 1, 1);
+	vec3 rifle_color = vec3(0, 0, 1);
+	if (is_pistol) {
+		COLOR.rgb = COLOR.rgb * pistol_color;
+	} else {
+		COLOR.rgb = COLOR.rgb * rifle_color;
+	}
 }
 
 void light() {

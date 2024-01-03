@@ -5,6 +5,8 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4yio4"]
 albedo_color = Color(0, 0, 1, 1)
+emission_enabled = true
+emission = Color(0, 0, 1, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_erfvp"]
 material = SubResource("StandardMaterial3D_4yio4")
@@ -13,6 +15,7 @@ material = SubResource("StandardMaterial3D_4yio4")
 script = ExtResource("1_86gcl")
 mesh = SubResource("CapsuleMesh_erfvp")
 mesh_scale = 0.3
+light_color = Color(0, 0, 1, 1)
 BULLET_SPEED = 2.417
 BULLET_MAX_TRAVEL_DISTANCE = 5.341
 BULLET_DAMAGE = 50

@@ -18,6 +18,8 @@ var drop_item = preload("res://entities/other/drop.tscn")
 @export var enemy_drop_amount: int = 10
 @export var enemy_drop_chance: float = 0.5
 
+signal enemy_died(enemy)
+
 func _ready():
 	super()
 	enemy_shield = ENEMY_INIT_SHIELD
@@ -81,6 +83,8 @@ func enemy_take_damage(damage: int) -> void:
 	enemy_update_health_bar()
 
 	if enemy_is_dead():
+		emit_signal("enemy_died", self)
+
 		var chance = randf_range(0, 1)
 		var drops = chance < enemy_drop_chance
 

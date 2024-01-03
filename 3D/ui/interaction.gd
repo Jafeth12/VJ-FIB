@@ -2,6 +2,7 @@ extends Control
 
 enum INTERACTION_KEY {
 	E,
+	R,
 	TAB,
 	NONE
 }
@@ -21,6 +22,8 @@ func load_texture() -> void:
 	match key:
 		INTERACTION_KEY.E:
 			$icon.texture = load("res://art/ui/hud/UI_Keyboard_Icon_E.png")
+		INTERACTION_KEY.R:
+			$icon.texture = load("res://art/ui/hud/UI_Keyboard_Icon_R.png")
 		INTERACTION_KEY.TAB:
 			$icon.texture = load("res://art/ui/hud/UI_Keyboard_Icon_Tab.png")
 		INTERACTION_KEY.NONE:

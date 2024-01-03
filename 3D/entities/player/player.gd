@@ -23,6 +23,7 @@ var resetting_alpha : bool = false
 var active_weapon : WEAPON = WEAPON.PISTOL
 var facing: FACING = FACING.LEFT
 var is_on_platform: bool = false
+var can_go_to_next_height: bool = false
 
 # Velocidades angulares del jugador
 @export var SPEED = PI/8 # 1 lap = 16 secs.
@@ -244,23 +245,28 @@ func player_handle_input() -> void:
 		player_take_damage(20)
 	if Input.is_action_just_pressed("dbg_switch_ring") || (is_on_platform && Input.is_action_just_pressed("interact")):
 		player_change_ring_state()
-	if Input.is_action_just_pressed("dbg_next_level"):
+	if Input.is_action_just_pressed("dbg_next_level") || (can_go_to_next_height && Input.is_action_just_pressed("change_level_height")):
 		if resetting_alpha:
 			return
 		resetting_alpha = true
 	if Input.is_action_just_pressed("dbg_reset_position"):
 		player_reset_position()
 	if Input.is_action_just_pressed("dbg_switch_weapon"):
+		if !has_rifle:
+			return
+
 		if active_weapon == WEAPON.PISTOL:
 			$sprite_pistol.hide()
 			$sprite_rifle.show()
 			active_weapon = WEAPON.RIFLE
 			hud.select_rifle()
+			$explosion/viewport/animated.material.set_shader_parameter("is_pistol", false)
 		else:
 			$sprite_pistol.show()
 			$sprite_rifle.hide()
 			active_weapon = WEAPON.PISTOL
 			hud.select_pistol()
+			$explosion/viewport/animated.material.set_shader_parameter("is_pistol", true)
 
 	if Input.is_action_just_pressed("shoot"):
 		player_shoot()
@@ -312,6 +318,7 @@ func player_switch_level() -> void:
 	else:
 		$collision.disabled = false
 		curr_level = target_level
+		can_go_to_next_height = false
 
 func player_reset_position() -> void:
 	#if player_is_dead():
@@ -418,6 +425,9 @@ func player_give_rifle() -> void:
 
 func player_set_on_platform(value: bool) -> void:
 	is_on_platform = value
+
+func player_set_ready_to_next_height(value: bool) -> void:
+	can_go_to_next_height = value
 
 # ======== Callbacks ========
 func player_on_animation_finished() -> void:
@@ -529,7 +539,6 @@ func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirec
 			return EntityDirection.RIGHT
 	elif right_pressed && !left_pressed:
 		facing = FACING.RIGHT
-		$explosion.transform.origin.x 
 		return EntityDirection.RIGHT
 	elif left_pressed && !right_pressed:
 		facing = FACING.LEFT
