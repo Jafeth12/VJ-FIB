@@ -10,7 +10,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	look_at(Vector3(0, get_position().y, 0), Vector3.UP)
 
 
 func _on_area_body_entered(body):
