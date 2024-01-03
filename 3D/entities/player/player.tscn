@@ -830,6 +830,7 @@ viewport_path = NodePath("explosion/viewport")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_70y1m"]
 shader = ExtResource("5_tjok6")
+shader_parameter/is_pistol = true
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_36qxg"]
 atlas = ExtResource("5_s237b")

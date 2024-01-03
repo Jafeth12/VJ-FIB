@@ -256,11 +256,13 @@ func player_handle_input() -> void:
 			$sprite_rifle.show()
 			active_weapon = WEAPON.RIFLE
 			hud.select_rifle()
+			$explosion/viewport/animated.material.set_shader_parameter("is_pistol", false)
 		else:
 			$sprite_pistol.show()
 			$sprite_rifle.hide()
 			active_weapon = WEAPON.PISTOL
 			hud.select_pistol()
+			$explosion/viewport/animated.material.set_shader_parameter("is_pistol", true)
 
 	if Input.is_action_just_pressed("shoot"):
 		player_shoot()
@@ -529,7 +531,6 @@ func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirec
 			return EntityDirection.RIGHT
 	elif right_pressed && !left_pressed:
 		facing = FACING.RIGHT
-		$explosion.transform.origin.x 
 		return EntityDirection.RIGHT
 	elif left_pressed && !right_pressed:
 		facing = FACING.LEFT
