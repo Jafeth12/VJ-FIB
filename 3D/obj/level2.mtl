@@ -1,0 +1,36 @@
+# Blender 4.0.1 MTL File: 'level2.blend'
+# www.blender.org
+
+newmtl base
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd materiales/steelplate1_albedo.png
+map_Ns materiales/steelplate1_roughness.png
+map_refl materiales/steelplate1_metallic.png
+map_Bump -bm 1.000000 materiales/steelplate1_normal-ogl.png
+
+newmtl nada
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.007110 0.007110 0.007110
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl red
+Ns 167.355347
+Ka 0.568182 0.568182 0.568182
+Kd 0.036770 0.036770 0.036770
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_refl materiales/MetalCorrodedHeavy001_METALNESS_4K_METALNESS.jpg
+map_Bump -bm 1.000000 materiales/MetalCorrodedHeavy001_NRM_4K_METALNESS.jpg
