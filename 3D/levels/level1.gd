@@ -28,7 +28,7 @@ func _process(_delta):
 			$open_chest.hide_interaction()
 	else:
 		$open_chest.hide_interaction()
-	
+
 func handle_input() -> void:
 	if Input.is_action_just_pressed("interact"):
 		if active_chest != null:

@@ -13,6 +13,9 @@ var old_alpha = entity_alpha
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+func _ready():
+	entity_goto_alpha(entity_alpha)
+
 # Loop principal de las físicas de una entidad
 func _physics_process(delta):
 	# Add the gravity.
@@ -55,6 +58,12 @@ func entity_get_xz(alpha: float) -> Vector2:
 #        Funciona, pero mal
 func entity_get_position_alpha(_pos: Vector3):
 	return old_alpha
+
+func entity_goto_alpha(alpha: float) -> void:
+	entity_alpha = alpha
+	var pos = entity_get_xz(alpha)
+	transform.origin.x = pos.x
+	transform.origin.z = pos.y
 
 # VIRTUAL. TO BE OVERRIDEN
 # Retorna si la entidad debe saltar

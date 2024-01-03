@@ -1,6 +1,7 @@
 extends Node
 
 @onready var hud = $CanvasLayer/HUD
+var timer = Timer.new()
 
 func _ready():
 	MusicController.play_level_music()
@@ -12,6 +13,7 @@ func _process(_delta):
 # -----------------------------
 
 func _on_player_died():
-	# $Player.player_reset()
-	# $level1.reset()
-	pass # Replace with function body.
+	SceneTransitions.fade_out()
+	$Player.player_revive()
+	$Player.player_reset_position()
+	SceneTransitions.fade_in()
