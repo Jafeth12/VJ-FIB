@@ -156,5 +156,6 @@ func modf(a: float, d: float) -> float:
 	return sign*a
 
 func enemy_get_direction_to_player(player_node):
-	var angular_separation: float = modf(player_node.entity_alpha, 2*PI) - modf(entity_alpha, 2*PI)
-	return EntityDirection.LEFT if angular_separation < 0 else EntityDirection.RIGHT
+	var angular_separation: float = abs(modf(player_node.entity_alpha, 2*PI)) - abs(modf(entity_alpha, 2*PI))
+	var invert = 1.0 if (player_node.entity_alpha < 0 && entity_alpha < 0) || (player_node.entity_alpha >= 0 && entity_alpha >= 0) else -1.0
+	return EntityDirection.LEFT if angular_separation*invert < 0 else EntityDirection.RIGHT
