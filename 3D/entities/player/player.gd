@@ -252,6 +252,9 @@ func player_handle_input() -> void:
 	if Input.is_action_just_pressed("dbg_reset_position"):
 		player_reset_position()
 	if Input.is_action_just_pressed("dbg_switch_weapon"):
+		if !has_rifle:
+			return
+
 		if active_weapon == WEAPON.PISTOL:
 			$sprite_pistol.hide()
 			$sprite_rifle.show()

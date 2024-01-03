@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://jmo7fkfdh33y"]
+[gd_scene load_steps=13 format=3 uid="uid://jmo7fkfdh33y"]
 
 [ext_resource type="Script" path="res://ui/hud/HUD.gd" id="1_wqd24"]
 [ext_resource type="PackedScene" uid="uid://bo0mmw6euyv7i" path="res://ui/hud/weapon_hud.tscn" id="2_bo5pj"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://btuumitgbrrnp" path="res://art/ui/hud/pistol_ui.png" id="3_ffv8t"]
 [ext_resource type="Shader" path="res://shaders/pistol_hud.gdshader" id="5_fyned"]
 [ext_resource type="Shader" path="res://shaders/rifle_hud.gdshader" id="6_1xaxf"]
+[ext_resource type="PackedScene" uid="uid://cb7ivx5xj4ru5" path="res://ui/interaction.tscn" id="8_1tt4e"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jvsb6"]
 bg_color = Color(0, 0, 0, 1)
@@ -91,3 +92,41 @@ offset_right = -732.0
 offset_bottom = -464.0
 weapon_tex = ExtResource("3_3hewy")
 new_material = SubResource("ShaderMaterial_kdpmq")
+
+[node name="switch_circle" parent="." instance=ExtResource("8_1tt4e")]
+visible = false
+layout_mode = 1
+text = "Switch circle"
+
+[node name="open_chest" parent="." instance=ExtResource("8_1tt4e")]
+visible = false
+layout_mode = 1
+text = "Open chest"
+
+[node name="next_height" parent="." instance=ExtResource("8_1tt4e")]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+offset_left = 0.0
+offset_top = -120.035
+offset_right = 0.0
+offset_bottom = -120.035
+grow_vertical = 0
+key = 1
+text = "Jump to next sector"
+
+[node name="next_level" parent="." instance=ExtResource("8_1tt4e")]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+offset_left = 0.0
+offset_top = -120.035
+offset_right = 0.0
+offset_bottom = -120.035
+grow_vertical = 0
+key = 1
+text = "Jump to next level"

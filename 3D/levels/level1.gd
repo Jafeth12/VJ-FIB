@@ -4,6 +4,7 @@ extends Node
 @onready var platforms = get_tree().get_nodes_in_group("lvl1_platforms")
 @onready var chests = get_tree().get_nodes_in_group("lvl1_chests")
 @onready var enemies = get_tree().get_nodes_in_group("lvl1_enemies")
+@onready var hud = get_node("/root/main/CanvasLayer/HUD")
 
 signal level_ended
 
@@ -43,11 +44,14 @@ func _process(_delta):
 	handle_input()
 	if active_chest != null:
 		if active_chest.can_open():
-			$open_chest.show_interaction()
+			# $open_chest.show_interaction()
+			hud.show_chest_interaction()
 		else:
-			$open_chest.hide_interaction()
+			# $open_chest.hide_interaction()
+			hud.hide_chest_interaction()
 	else:
-		$open_chest.hide_interaction()
+		# $open_chest.hide_interaction()
+		hud.hide_chest_interaction()
 
 func handle_input() -> void:
 	if Input.is_action_just_pressed("interact"):
@@ -56,18 +60,22 @@ func handle_input() -> void:
 				active_chest.open()
 	if Input.is_action_just_pressed("change_level_height"):
 		if is_player_ready_to_next_height:
-			$next_height.hide_interaction()
+			# $next_height.hide_interaction()
+			hud.hide_next_height_interaction()
 		if is_player_ready_to_next_level:
-			$next_level.hide_interaction()
+			# $next_level.hide_interaction()
+			hud.hide_next_level_interaction()
 			emit_signal("level_ended")
 
 func on_player_entered_platform() -> void:
 	player.player_set_on_platform(true)
-	$switch_circle.show_interaction()
+	# $switch_circle.show_interaction()
+	hud.show_switch_circle_interaction()
 	
 func on_player_exited_platform() -> void:
 	player.player_set_on_platform(false)
-	$switch_circle.hide_interaction()
+	# $switch_circle.hide_interaction()
+	hud.hide_switch_circle_interaction()
 
 # --- Chests ---
 
@@ -93,11 +101,12 @@ func _on_enemy_died(enemy):
 
 func check_if_all_enemies_are_dead(height_enemies) -> void:
 	if height_enemies == 0:
-		$next_height.show_interaction()
+		# $next_height.show_interaction()
+		hud.show_next_height_interaction()
 		is_player_ready_to_next_height = true
 		player.player_set_ready_to_next_height(true)
 
 func check_if_can_go_to_next_level() -> void:
 	if height3_enemies == 0:
-		$next_level.show_interaction()
+		hud.show_next_height_interaction()
 		is_player_ready_to_next_height = true
