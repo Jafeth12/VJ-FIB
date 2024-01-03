@@ -10,8 +10,8 @@ enum ANIMATION_STATES { IDLE, WALK, JUMP, CROUCH, DIE, DODGE }
 enum FACING { LEFT=-1, RIGHT=1 }
 enum WEAPON { PISTOL, RIFLE }
 enum RING { EXTERIOR, INTERIOR }
-enum LEVEL { LOWER, MIDDLE, UPPER }
-var LEVEL_HEIGHTS = [ 0, 20, 30 ]
+enum LEVEL { LOWER=0, MIDDLE=1, UPPER=2 }
+var LEVEL_HEIGHTS = [ 0, 16, 28 ]
 
 # Máquinas de estados
 var anim_state = ANIMATION_STATES.IDLE
@@ -85,8 +85,8 @@ func _physics_process(delta: float) -> void:
 		player_switch_ring()
 
 	# Changing level
-	if curr_level != target_level:
-		player_switch_level()
+	#if curr_level != target_level:
+	#	player_switch_level()
 
 	# Handle jump logic.
 	if is_on_floor():
@@ -249,6 +249,7 @@ func player_handle_input() -> void:
 		if resetting_alpha:
 			return
 		resetting_alpha = true
+		player_change_level_state()
 	if Input.is_action_just_pressed("dbg_reset_position"):
 		player_reset_position()
 	if Input.is_action_just_pressed("dbg_switch_weapon"):
@@ -501,16 +502,28 @@ func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delt
 	# Update entity_alpha
 	var next_alpha = current_alpha
 	if resetting_alpha:
+		$collision.disabled = true
+		entity_has_gravity = false
 		# Autopilot. Vamos a lo que vamos
-		var speed: float = SPEED*15
+		var speed: float = SPEED*10
 		next_alpha += (direction * speed * delta)
-		if (current_alpha >= -0.05 && current_alpha <= 0.05 ) || (next_alpha > 0 && current_alpha < 0) or (next_alpha < 0 and current_alpha > 0):
+		var on_target_alpha = (current_alpha >= -0.05 && current_alpha <= 0.05 ) || (next_alpha > 0 && current_alpha < 0) or (next_alpha < 0 and current_alpha > 0)
+		if on_target_alpha:
 			next_alpha = 0
-			resetting_alpha = false
-			player_change_level_state()
 		# else:
 		# 	next_alpha = next_alpha
+		var next_y = transform.origin.y + delta * 20
+		var target_y = LEVEL_HEIGHTS[target_level]
+		var on_target_y = (next_y >= target_y-0.05 && next_y <= target_y+0.05 ) || (next_y > target_y+0.05)
+		if on_target_y:
+			next_y = target_y
+		transform.origin.y = next_y
+		resetting_alpha = !(on_target_alpha && on_target_y)
+		var mask = -int(resetting_alpha)
+		curr_level = target_level & mask | curr_level & ~mask # Dani te queremos
 	else:
+		$collision.disabled = false
+		entity_has_gravity = true
 		if !player_is_crouching():
 			var speed: float = DODGE_SPEED if player_is_dodging() else SPEED
 			var real_dir: int = facing if player_is_dodging() else direction
