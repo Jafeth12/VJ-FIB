@@ -329,6 +329,7 @@ func player_reset_position() -> void:
 	velocity = Vector3(0, 0, 0)
 	transform.origin.y = 5
 	health = INIT_HEALTH
+	hud.set_health(health)
 	jumps_left = INIT_JUMPS_LEFT
 	god_mode = false
 	$collision.disabled = false
