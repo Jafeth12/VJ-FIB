@@ -7,16 +7,16 @@
 [ext_resource type="Texture2D" uid="uid://dcc4la0ooagqq" path="res://art/ui/you_died/YouDied-Eyes.png" id="3_mx21n"]
 [ext_resource type="FontFile" uid="uid://bx0hymomr7xpu" path="res://fonts/BellMT/BellMTBold.ttf" id="6_fupvq"]
 
-[sub_resource type="Gradient" id="Gradient_kgjby"]
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_v3sdh"]
-gradient = SubResource("Gradient_kgjby")
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ha7j6"]
 bg_color = Color(0.180392, 0.14902, 0.164706, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1o3hq"]
 bg_color = Color(0.48, 0.11, 0.077, 1)
+
+[sub_resource type="Gradient" id="Gradient_kgjby"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_v3sdh"]
+gradient = SubResource("Gradient_kgjby")
 
 [sub_resource type="Animation" id="Animation_ldrlq"]
 resource_name = "RESET"
@@ -209,51 +209,6 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_5ayhj")
 
-[node name="light" type="PointLight2D" parent="."]
-position = Vector2(1035, 629)
-scale = Vector2(32.2188, 19.7813)
-texture = SubResource("GradientTexture2D_v3sdh")
-
-[node name="text" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("1_66xmo")
-
-[node name="red_cross" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_x34ev")
-
-[node name="skull_eyes" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("3_mx21n")
-
-[node name="skull" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("3_cf3mk")
-
 [node name="Retry" type="Button" parent="."]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
@@ -290,6 +245,55 @@ theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_1o3hq")
 text = "EXIT"
 
+[node name="light" type="PointLight2D" parent="."]
+position = Vector2(1035, 629)
+scale = Vector2(32.2188, 19.7813)
+texture = SubResource("GradientTexture2D_v3sdh")
+
+[node name="text" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_66xmo")
+
+[node name="red_cross" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_x34ev")
+
+[node name="skull_eyes" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_mx21n")
+
+[node name="skull" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_cf3mk")
+
 [node name="ColorRect" type="ColorRect" parent="."]
 show_behind_parent = true
 layout_mode = 1
@@ -298,9 +302,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_l6lh8")
 }
+
+[connection signal="button_up" from="Retry" to="." method="_on_retry_button_up"]
+[connection signal="button_up" from="Exit" to="." method="_on_exit_button_up"]
