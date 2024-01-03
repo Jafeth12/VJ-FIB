@@ -272,6 +272,9 @@ func player_is_on_platform() -> bool:
 func player_die() -> void:
 	anim_state = ANIMATION_STATES.DIE
 	emit_signal("player_died")
+ 
+func player_revive() -> void:
+	anim_state = ANIMATION_STATES.IDLE
 
 func player_switch_ring() -> void:
 	if curr_ring == RING.EXTERIOR:
@@ -311,14 +314,14 @@ func player_switch_level() -> void:
 		curr_level = target_level
 
 func player_reset_position() -> void:
-	if player_is_dead():
-		return
+	#if player_is_dead():
+	#	return
 	if changing_ring:
 		return
 	if curr_level != target_level:
 		return
 
-	entity_alpha = 0
+	entity_goto_alpha(0)
 	entity_radius = radius_exterior
 	curr_ring = RING.EXTERIOR
 	curr_level = LEVEL.LOWER
@@ -326,6 +329,8 @@ func player_reset_position() -> void:
 	velocity = Vector3(0, 0, 0)
 	transform.origin.y = 5
 	health = INIT_HEALTH
+	jumps_left = INIT_JUMPS_LEFT
+	god_mode = false
 	$collision.disabled = false
 
 func player_play_animation(_anim: StringName) -> void:

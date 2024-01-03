@@ -19,6 +19,7 @@ var drop_item = preload("res://entities/other/drop.tscn")
 @export var enemy_drop_chance: float = 0.5
 
 func _ready():
+	super()
 	enemy_shield = ENEMY_INIT_SHIELD
 	enemy_health = ENEMY_INIT_HEALTH
 
