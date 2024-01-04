@@ -18,4 +18,4 @@ mesh_scale = 0.3
 light_color = Color(0, 0, 1, 1)
 BULLET_SPEED = 2.417
 BULLET_MAX_TRAVEL_DISTANCE = 5.341
-BULLET_DAMAGE = 50
+BULLET_DAMAGE = 80
