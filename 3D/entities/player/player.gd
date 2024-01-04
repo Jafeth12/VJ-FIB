@@ -48,10 +48,11 @@ var health = INIT_HEALTH
 var god_mode = false
 
 # Armas
-var MAX_AMMO_PISTOL = 80
-var MAX_AMMO_RIFLE = 100
+const MAX_AMMO_PISTOL = 80
+const MAX_AMMO_RIFLE = 100
 var ammo_pistol = MAX_AMMO_PISTOL
 var ammo_rifle = MAX_AMMO_RIFLE
+const INIT_HAS_RIFLE: bool = false
 var has_rifle : bool = false
 
 # ======== Signals ========
@@ -62,13 +63,15 @@ signal level_ended()
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
 func _ready() -> void:
+	player_reset_position()
+	player_set_state(MainLogic.get_player_state())
+	hud.set_health(health)
 	if has_rifle:
 		hud.show_rifle()
 	else:
 		hud.hide_rifle()
 	hud.set_ammo(ammo_pistol, ammo_rifle)
 	player_init_sprites()
-	player_reset_position()
 
 # Gestionar la lógica que no tiene que ver con la física del jugador
 # p.e.: Vida y muerte, cambio de anillo, animaciones, etc.
@@ -354,7 +357,6 @@ func player_reset_position() -> void:
 	velocity = Vector3(0, 0, 0)
 	transform.origin.y = 5
 	health = INIT_HEALTH
-	hud.set_health(health)
 	jumps_left = INIT_JUMPS_LEFT
 	god_mode = false
 	$collision.disabled = false
@@ -583,3 +585,17 @@ func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirec
 		return EntityDirection.LEFT
 	else:
 		return current_direction
+
+func player_get_state() -> MainLogic.PlayerState:
+	var ret = MainLogic.PlayerState.new()
+	ret.health = self.health
+	ret.ammo_pistol = self.ammo_pistol
+	ret.ammo_rifle = self.ammo_rifle
+	ret.has_rifle = self.has_rifle
+	return ret
+
+func player_set_state(info: MainLogic.PlayerState) -> void:
+	self.health = info.health
+	self.ammo_pistol = info.ammo_pistol
+	self.ammo_rifle = info.ammo_rifle
+	self.has_rifle = info.has_rifle

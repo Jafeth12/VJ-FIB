@@ -6,7 +6,6 @@ func _ready():
 	hide_chest_interaction()
 	hide_next_height_interaction()
 	hide_next_level_interaction()
-	set_health(100)
 	# hide_rifle()
 	select_pistol()
 
