@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_onfo2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gyj4u"]
+size = Vector3(1, 0.66, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fyhvn"]
 atlas = ExtResource("2_hmv2l")
@@ -253,10 +254,11 @@ enemy_drop_amount = 15
 enemy_drop_chance = 0.8
 
 [node name="collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.167957, 0)
 shape = SubResource("BoxShape3D_gyj4u")
 
 [node name="sprite" type="AnimatedSprite3D" parent="."]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, -0.170324, 0)
 billboard = 2
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_jmyu3")

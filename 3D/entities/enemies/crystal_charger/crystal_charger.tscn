@@ -108,6 +108,7 @@ animations = [{
 }]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b7ci3"]
+size = Vector3(1, 0.7, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5kmna"]
 bg_color = Color(0.431373, 0, 0.0784314, 1)
@@ -143,7 +144,6 @@ sprite_frames = SubResource("SpriteFrames_vnnaf")
 animation = &"attack"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0)
 shape = SubResource("BoxShape3D_b7ci3")
 
 [node name="SubViewport" type="SubViewport" parent="."]
