@@ -14,12 +14,15 @@ func _ready():
 		MainLogic.LEVEL.LEVEL2:
 			add_child(level2.instantiate())
 		MainLogic.LEVEL.END:
-			SceneTransitions.change_scene("res://ui/menu/views/you_won/you_won.tscn")
+			pass
 	MusicController.play_level_music()
 
 func _on_level_ended() -> void:
 	MainLogic.save_player_state($Player.player_get_state())
-	MainLogic.go_to_next_level()
+	if MainLogic.go_to_next_level() == MainLogic.LEVEL.END:
+		SceneTransitions.change_scene("res://ui/menu/views/you_won/you_won.tscn")
+	else:
+		SceneTransitions.change_scene("res://main.tscn")
 
 func _on_player_died():
 	MainLogic.reset_player_state()
