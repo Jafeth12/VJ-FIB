@@ -59,6 +59,11 @@ signal player_died()
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
 func _ready() -> void:
+	if has_rifle:
+		hud.show_rifle()
+	else:
+		hud.hide_rifle()
+	hud.set_ammo(ammo_pistol, ammo_rifle)
 	player_init_sprites()
 	player_reset_position()
 

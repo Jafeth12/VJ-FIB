@@ -2,20 +2,22 @@
 
 [ext_resource type="Script" path="res://entities/bullets/bullet_rifle.gd" id="1_86gcl"]
 [ext_resource type="PackedScene" uid="uid://cir0yjv7rw8vf" path="res://entities/bullets/generic_bullet.tscn" id="1_x2r1l"]
+[ext_resource type="ArrayMesh" uid="uid://bwh2rbqfx7fd3" path="res://obj/Bullet_Rifle.obj" id="3_p3lqp"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4yio4"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kjjpu"]
 albedo_color = Color(0, 0, 1, 1)
 emission_enabled = true
 emission = Color(0, 0, 1, 1)
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_erfvp"]
-material = SubResource("StandardMaterial3D_4yio4")
-
 [node name="bullet_rifle" instance=ExtResource("1_x2r1l")]
 script = ExtResource("1_86gcl")
-mesh = SubResource("CapsuleMesh_erfvp")
-mesh_scale = 0.3
+mesh_scale = 0.5
 light_color = Color(0, 0, 1, 1)
 BULLET_SPEED = 2.417
 BULLET_MAX_TRAVEL_DISTANCE = 5.341
 BULLET_DAMAGE = 80
+
+[node name="mesh" parent="." index="0"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+mesh = ExtResource("3_p3lqp")
+surface_material_override/0 = SubResource("StandardMaterial3D_kjjpu")
