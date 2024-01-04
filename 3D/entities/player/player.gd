@@ -24,6 +24,8 @@ var active_weapon : WEAPON = WEAPON.PISTOL
 var facing: FACING = FACING.LEFT
 var is_on_platform: bool = false
 var can_go_to_next_height: bool = false
+var can_go_to_next_level: bool = false
+var shoot_to_the_sky: bool = false
 
 # Velocidades angulares del jugador
 @export var SPEED = PI/8 # 1 lap = 16 secs.
@@ -46,26 +48,30 @@ var health = INIT_HEALTH
 var god_mode = false
 
 # Armas
-var MAX_AMMO_PISTOL = 80
-var MAX_AMMO_RIFLE = 100
+const MAX_AMMO_PISTOL = 80
+const MAX_AMMO_RIFLE = 100
 var ammo_pistol = MAX_AMMO_PISTOL
 var ammo_rifle = MAX_AMMO_RIFLE
+const INIT_HAS_RIFLE: bool = false
 var has_rifle : bool = false
 
 # ======== Signals ========
 
 signal player_died()
+signal level_ended()
 
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
 func _ready() -> void:
+	player_reset_position()
+	player_set_state(MainLogic.get_player_state())
+	hud.set_health(health)
 	if has_rifle:
 		hud.show_rifle()
 	else:
 		hud.hide_rifle()
 	hud.set_ammo(ammo_pistol, ammo_rifle)
 	player_init_sprites()
-	player_reset_position()
 
 # Gestionar la lógica que no tiene que ver con la física del jugador
 # p.e.: Vida y muerte, cambio de anillo, animaciones, etc.
@@ -205,7 +211,6 @@ func player_change_level_state() -> void:
 		LEVEL.MIDDLE:
 			target_level = LEVEL.UPPER
 
-
 # ======== Consultoras ========
 # Dice si el jugador está crouching
 func player_is_crouching() -> bool:
@@ -258,6 +263,13 @@ func player_handle_input() -> void:
 		resetting_alpha = true
 		can_go_to_next_height = false
 		player_change_level_state()
+	if (can_go_to_next_level && Input.is_action_just_pressed("change_level_height")):
+		can_go_to_next_level = false
+		$AnimationPlayer.play("vanish")
+		await $AnimationPlayer.animation_finished
+		emit_signal("level_ended")
+		SceneTransitions.change_scene("res://main.tscn")
+		shoot_to_the_sky = true
 	if Input.is_action_just_pressed("dbg_reset_position"):
 		player_reset_position()
 	if Input.is_action_just_pressed("dbg_switch_weapon"):
@@ -345,7 +357,6 @@ func player_reset_position() -> void:
 	velocity = Vector3(0, 0, 0)
 	transform.origin.y = 5
 	health = INIT_HEALTH
-	hud.set_health(health)
 	jumps_left = INIT_JUMPS_LEFT
 	god_mode = false
 	$collision.disabled = false
@@ -438,6 +449,9 @@ func player_set_on_platform(value: bool) -> void:
 func player_set_ready_to_next_height(value: bool) -> void:
 	can_go_to_next_height = value
 
+func player_set_ready_to_next_level(value: bool) -> void:
+	can_go_to_next_level = value
+
 # ======== Callbacks ========
 func player_on_animation_finished() -> void:
 	match anim_state:
@@ -507,6 +521,9 @@ func entity_jump() -> float:
 # Retorna el siguiente alpha, en base al alpha
 # actual, la dirección, y el delta
 func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delta: float) -> float:
+	if shoot_to_the_sky:
+		transform.origin.y += 40 * delta
+		return current_alpha
 	# Update entity_alpha
 	var next_alpha = current_alpha
 	if resetting_alpha:
@@ -568,3 +585,17 @@ func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirec
 		return EntityDirection.LEFT
 	else:
 		return current_direction
+
+func player_get_state() -> MainLogic.PlayerState:
+	var ret = MainLogic.PlayerState.new()
+	ret.health = self.health
+	ret.ammo_pistol = self.ammo_pistol
+	ret.ammo_rifle = self.ammo_rifle
+	ret.has_rifle = self.has_rifle
+	return ret
+
+func player_set_state(info: MainLogic.PlayerState) -> void:
+	self.health = info.health
+	self.ammo_pistol = info.ammo_pistol
+	self.ammo_rifle = info.ammo_rifle
+	self.has_rifle = info.has_rifle

@@ -11,6 +11,7 @@ transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
 script = ExtResource("2_460em")
 enemy_drop_type = 2
 enemy_drop_amount = 1
+enemy_drop_chance = 1.0
 
 [node name="Sprite3D" parent="." index="5"]
 texture = SubResource("ViewportTexture_3byfe")

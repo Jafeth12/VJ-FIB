@@ -86,7 +86,7 @@ func enemy_take_damage(damage: int) -> void:
 		emit_signal("enemy_died", self)
 
 		var chance = randf_range(0, 1)
-		var drops = chance < enemy_drop_chance
+		var drops = chance <= enemy_drop_chance
 
 		if !drops:
 			return

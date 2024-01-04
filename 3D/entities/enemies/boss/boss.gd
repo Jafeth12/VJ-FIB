@@ -10,6 +10,7 @@ const ATTACK_SPEED: float = PI/4
 var player_node = null
 
 func _ready():
+	enemy_drop_chance = 1
 	ENEMY_INIT_SHIELD = 1000
 	ENEMY_INIT_HEALTH = 500
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)

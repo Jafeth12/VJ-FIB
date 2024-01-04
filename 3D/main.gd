@@ -3,16 +3,24 @@ extends Node
 @onready var hud = $CanvasLayer/HUD
 var timer = Timer.new()
 
+var level1 = preload("res://levels/level1.tscn")
+var level2 = preload("res://levels/level2.tscn")
+
 func _ready():
+	$Player.connect("level_ended", _on_level_ended)
+	match MainLogic.get_current_level():
+		MainLogic.LEVEL.LEVEL1:
+			add_child(level1.instantiate())
+		MainLogic.LEVEL.LEVEL2:
+			add_child(level2.instantiate())
 	MusicController.play_level_music()
-	pass
 
-func _process(_delta):
-	pass
-
-# -----------------------------
+func _on_level_ended() -> void:
+	MainLogic.save_player_state($Player.player_get_state())
+	MainLogic.go_to_next_level()
 
 func _on_player_died():
+	MainLogic.reset_player_state()
 	var timer = Timer.new()
 	timer.one_shot = true
 	add_child(timer)
