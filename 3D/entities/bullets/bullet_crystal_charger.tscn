@@ -12,8 +12,7 @@ emission = Color(1, 0, 1, 1)
 material = SubResource("StandardMaterial3D_gd8jd")
 
 [node name="bullet_crystal_charger" instance=ExtResource("1_16235")]
-collision_layer = 0
-collision_mask = 0
+collision_mask = 33
 script = ExtResource("2_2bhqs")
 mesh = SubResource("CapsuleMesh_p8vxo")
 mesh_scale = 0.2

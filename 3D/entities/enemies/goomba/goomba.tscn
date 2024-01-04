@@ -221,7 +221,8 @@ collision_layer = 2
 collision_mask = 40
 script = ExtResource("1_afs03")
 enemy_drop_type = 1
-enemy_drop_chance = 0.6
+enemy_drop_amount = 25
+enemy_drop_chance = 0.8
 
 [node name="sprite" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(3.25, 0, 0, 0, 3.25, 0, 0, 0, 3.25, 0, 0, 0)

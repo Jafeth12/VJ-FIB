@@ -32,6 +32,7 @@ func open():
 		player.player_give_health(health_amount)
 
 	has_been_opened = true
+	$light.light_energy = 0
 
 # ------------------------------
 
