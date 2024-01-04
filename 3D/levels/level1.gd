@@ -108,5 +108,5 @@ func check_if_all_enemies_are_dead(height_enemies) -> void:
 
 func check_if_can_go_to_next_level() -> void:
 	if height3_enemies == 0:
-		hud.show_next_height_interaction()
-		is_player_ready_to_next_height = true
+		hud.show_next_level_interaction()
+		is_player_ready_to_next_level = true

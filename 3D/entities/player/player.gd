@@ -46,8 +46,8 @@ var health = INIT_HEALTH
 var god_mode = false
 
 # Armas
-var MAX_AMMO_PISTOL = 50
-var MAX_AMMO_RIFLE = 50
+var MAX_AMMO_PISTOL = 80
+var MAX_AMMO_RIFLE = 100
 var ammo_pistol = MAX_AMMO_PISTOL
 var ammo_rifle = MAX_AMMO_RIFLE
 var has_rifle : bool = false
@@ -251,6 +251,7 @@ func player_handle_input() -> void:
 		$AnimationPlayer.play("vanish")
 		await $AnimationPlayer.animation_finished
 		resetting_alpha = true
+		can_go_to_next_height = false
 		player_change_level_state()
 	if Input.is_action_just_pressed("dbg_reset_position"):
 		player_reset_position()
