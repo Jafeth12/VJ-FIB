@@ -6,11 +6,16 @@ var player_in_area: bool = false
 const SPEED: float = PI/10
 const ATTACK_SPEED: float = PI/4
 @export var ATTACK_DAMAGE: int = 20
+@export var LEVEL: MainLogic.LEVEL = MainLogic.LEVEL.LEVEL1
 
 var player_node = null
 
 func _ready():
-	enemy_drop_chance = 1
+	match LEVEL:
+		MainLogic.LEVEL.LEVEL1:
+			enemy_drop_chance = 1
+		MainLogic.LEVEL.LEVEL2 || MainLogic.LEVEL.END:
+			enemy_drop_chance = 0
 	ENEMY_INIT_SHIELD = 1000
 	ENEMY_INIT_HEALTH = 500
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)

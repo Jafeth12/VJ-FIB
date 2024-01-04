@@ -13,6 +13,8 @@ func _ready():
 			add_child(level1.instantiate())
 		MainLogic.LEVEL.LEVEL2:
 			add_child(level2.instantiate())
+		MainLogic.LEVEL.END:
+			SceneTransitions.change_scene("res://ui/menu/views/you_won/you_won.tscn")
 	MusicController.play_level_music()
 
 func _on_level_ended() -> void:

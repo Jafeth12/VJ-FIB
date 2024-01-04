@@ -22,8 +22,6 @@ func _ready():
 	reset_player_state()
 
 func get_current_level() -> LEVEL:
-	if current_level == LEVEL.END:
-		current_level = LEVEL.LEVEL1
 	return current_level
 
 func go_to_next_level() -> LEVEL:
