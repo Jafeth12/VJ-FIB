@@ -148,14 +148,14 @@ func enemy_is_attack_finished() -> bool:
 func enemy_is_dead() -> bool:
 	return enemy_shield <= 0 && enemy_health <= 0
 
-func modf(a: float, d: float) -> float:
-	var sign: int = 1 if a > 0 else -1
-	a = abs(a)
-	while a >= d:
-		a -= d
-	return sign*a
+func is_same_sign(a: float, b: float) -> bool:
+	return (a < 0 && b < 0) || (a >= 0 && b >= 0)
 
 func enemy_get_direction_to_player(player_node):
-	var angular_separation: float = abs(modf(player_node.entity_alpha, 2*PI)) - abs(modf(entity_alpha, 2*PI))
-	var invert = 1.0 if (player_node.entity_alpha < 0 && entity_alpha < 0) || (player_node.entity_alpha >= 0 && entity_alpha >= 0) else -1.0
-	return EntityDirection.LEFT if angular_separation*invert < 0 else EntityDirection.RIGHT
+	# Normalize angles to the range (-180, 180]
+	var a = fposmod(entity_alpha+PI, 2.0*PI) - PI
+	var b = fposmod(player_node.entity_alpha+PI, 2.0*PI) - PI
+	# Calculate the shortest angular distance
+	var distance = fposmod((b - a + PI), 2.0*PI) - PI
+	# Deduce direction, based on distance sign
+	return EntityDirection.LEFT if distance < 0 else EntityDirection.RIGHT
