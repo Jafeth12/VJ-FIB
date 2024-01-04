@@ -5,7 +5,6 @@ func _ready():
 	await $AnimationPlayer.animation_finished
 
 func _on_retry_button_up():
-	print("Hola hola")
 	SceneTransitions.change_scene("res://main.tscn")
 
 func _on_exit_button_up():
