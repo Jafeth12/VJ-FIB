@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cd4dvo2hs0fxh"]
+
+[ext_resource type="Material" uid="uid://x6o53v8nx0ac" path="res://shaders/water.tres" id="1_6poww"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_jvjvp"]
+size = Vector2(700, 700)
+subdivide_width = 200
+subdivide_depth = 200
+
+[node name="WaterPlane" type="MeshInstance3D"]
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_jvjvp")
+surface_material_override/0 = ExtResource("1_6poww")
