@@ -24,6 +24,8 @@ var active_weapon : WEAPON = WEAPON.PISTOL
 var facing: FACING = FACING.LEFT
 var is_on_platform: bool = false
 var can_go_to_next_height: bool = false
+var can_go_to_next_level: bool = false
+var shoot_to_the_sky: bool = false
 
 # Velocidades angulares del jugador
 @export var SPEED = PI/8 # 1 lap = 16 secs.
@@ -205,6 +207,8 @@ func player_change_level_state() -> void:
 		LEVEL.MIDDLE:
 			target_level = LEVEL.UPPER
 
+func player_change_world() -> void:
+	shoot_to_the_sky = true
 
 # ======== Consultoras ========
 # Dice si el jugador está crouching
@@ -258,6 +262,12 @@ func player_handle_input() -> void:
 		resetting_alpha = true
 		can_go_to_next_height = false
 		player_change_level_state()
+	if (can_go_to_next_level && Input.is_action_just_pressed("change_level_height")):
+		can_go_to_next_level = false
+		$AnimationPlayer.play("vanish")
+		await $AnimationPlayer.animation_finished
+		SceneTransitions.change_scene("res://ui/menu/menu.tscn")
+		player_change_world()
 	if Input.is_action_just_pressed("dbg_reset_position"):
 		player_reset_position()
 	if Input.is_action_just_pressed("dbg_switch_weapon"):
@@ -438,6 +448,9 @@ func player_set_on_platform(value: bool) -> void:
 func player_set_ready_to_next_height(value: bool) -> void:
 	can_go_to_next_height = value
 
+func player_set_ready_to_next_level(value: bool) -> void:
+	can_go_to_next_level = value
+
 # ======== Callbacks ========
 func player_on_animation_finished() -> void:
 	match anim_state:
@@ -507,6 +520,9 @@ func entity_jump() -> float:
 # Retorna el siguiente alpha, en base al alpha
 # actual, la dirección, y el delta
 func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delta: float) -> float:
+	if shoot_to_the_sky:
+		transform.origin.y += 40 * delta
+		return current_alpha
 	# Update entity_alpha
 	var next_alpha = current_alpha
 	if resetting_alpha:

@@ -11,7 +11,7 @@ func _ready():
 	cc_attack_ended = false
 	cc_player_in_area = false
 	ENEMY_INIT_SHIELD = 200
-	ENEMY_INIT_HEALTH = 50
+	ENEMY_INIT_HEALTH = 90
 	enemy_init_bars($SubViewport/ShieldBar3D, $SubViewport/HealthBar3D)
 	$sprite.connect("animation_finished", cc_on_animation_finished)
 	$cc_player_detection.connect("body_entered", cc_area_entered)

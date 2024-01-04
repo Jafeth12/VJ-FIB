@@ -110,3 +110,4 @@ func check_if_can_go_to_next_level() -> void:
 	if height3_enemies == 0:
 		hud.show_next_level_interaction()
 		is_player_ready_to_next_level = true
+		player.player_set_ready_to_next_level(true)
