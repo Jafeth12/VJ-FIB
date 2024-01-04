@@ -11,7 +11,13 @@ class PlayerState:
 @onready var current_level: LEVEL = LEVEL.LEVEL1
 @onready var player_info: PlayerState = PlayerState.new()
 
+var scores: Array = []
+
 func _ready():
+	add_score(10)
+	add_score(100)
+	add_score(500)
+	add_score(1)	
 	reset_level()
 	reset_player_state()
 
@@ -42,3 +48,10 @@ func reset_player_state() -> void:
 	player_info.ammo_pistol = Player.MAX_AMMO_PISTOL
 	player_info.ammo_rifle = Player.MAX_AMMO_RIFLE
 	player_info.has_rifle = Player.INIT_HAS_RIFLE
+	
+func add_score(time: int) -> void:
+	scores.push_back(time)
+	scores.sort()
+	
+func get_scores() -> Array:
+	return scores

@@ -17,3 +17,7 @@ func _on_credits_button_up():
 
 func _on_controls_button_up():
 	SceneTransitions.change_scene("res://ui/menu/views/controls/controls.tscn")
+
+
+func _on_leaderboard_button_up():
+	SceneTransitions.change_scene("res://ui/menu/views/leaderboard/leaderboard.tscn")
