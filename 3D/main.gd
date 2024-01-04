@@ -26,7 +26,6 @@ func _process(_delta):
 
 func _on_level_ended() -> void:
 	MainLogic.go_to_next_level()
-	level.queue_free()
 
 func _on_player_died():
 	var timer = Timer.new()
