@@ -507,13 +507,13 @@ func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delt
 		$collision.disabled = true
 		entity_has_gravity = false
 		# Autopilot. Vamos a lo que vamos
+		curr_ring = RING.EXTERIOR
+		entity_radius = radius_exterior
 		var speed: float = SPEED*10
 		next_alpha += (direction * speed * delta)
 		var on_target_alpha = (current_alpha >= -0.05 && current_alpha <= 0.05 ) || (next_alpha > 0 && current_alpha < 0) or (next_alpha < 0 and current_alpha > 0)
 		if on_target_alpha:
 			next_alpha = 0
-		# else:
-		# 	next_alpha = next_alpha
 		var next_y = transform.origin.y + delta * 20
 		var target_y = LEVEL_HEIGHTS[target_level]
 		var on_target_y = (next_y >= target_y-0.05 && next_y <= target_y+0.05 ) || (next_y > target_y+0.05)
