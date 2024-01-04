@@ -57,6 +57,7 @@ var has_rifle : bool = false
 # ======== Signals ========
 
 signal player_died()
+signal level_ended()
 
 # ======== Reimplementaciones de funciones de CharacterBody3D ========
 
@@ -207,9 +208,6 @@ func player_change_level_state() -> void:
 		LEVEL.MIDDLE:
 			target_level = LEVEL.UPPER
 
-func player_change_world() -> void:
-	shoot_to_the_sky = true
-
 # ======== Consultoras ========
 # Dice si el jugador está crouching
 func player_is_crouching() -> bool:
@@ -266,8 +264,9 @@ func player_handle_input() -> void:
 		can_go_to_next_level = false
 		$AnimationPlayer.play("vanish")
 		await $AnimationPlayer.animation_finished
-		SceneTransitions.change_scene("res://ui/menu/menu.tscn")
-		player_change_world()
+		emit_signal("level_ended")
+		SceneTransitions.change_scene("res://main.tscn")
+		shoot_to_the_sky = true
 	if Input.is_action_just_pressed("dbg_reset_position"):
 		player_reset_position()
 	if Input.is_action_just_pressed("dbg_switch_weapon"):

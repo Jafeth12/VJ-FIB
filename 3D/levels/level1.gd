@@ -6,8 +6,6 @@ extends Node
 @onready var enemies = get_tree().get_nodes_in_group("lvl1_enemies")
 @onready var hud = get_node("/root/main/CanvasLayer/HUD")
 
-signal level_ended
-
 var active_chest = null
 
 var height1_enemies: int = 0
@@ -65,7 +63,6 @@ func handle_input() -> void:
 		if is_player_ready_to_next_level:
 			# $next_level.hide_interaction()
 			hud.hide_next_level_interaction()
-			emit_signal("level_ended")
 
 func on_player_entered_platform() -> void:
 	player.player_set_on_platform(true)

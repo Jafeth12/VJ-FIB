@@ -6,9 +6,10 @@ var timer = Timer.new()
 var level1 = preload("res://levels/level1.tscn")
 var level2 = preload("res://levels/level2.tscn")
 
+var level = null
 
 func _ready():
-	var level = null
+	$Player.connect("level_ended", _on_level_ended)
 	match MainLogic.get_current_level():
 		MainLogic.LEVEL.LEVEL1:
 			level = level1.instantiate()
@@ -22,6 +23,10 @@ func _process(_delta):
 	pass
 
 # -----------------------------
+
+func _on_level_ended() -> void:
+	MainLogic.go_to_next_level()
+	level.queue_free()
 
 func _on_player_died():
 	var timer = Timer.new()
