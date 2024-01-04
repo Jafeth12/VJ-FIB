@@ -2,19 +2,21 @@
 
 [ext_resource type="PackedScene" uid="uid://cir0yjv7rw8vf" path="res://entities/bullets/generic_bullet.tscn" id="1_fa7v2"]
 [ext_resource type="Script" path="res://entities/bullets/bullet_pistol.gd" id="2_33jvk"]
+[ext_resource type="ArrayMesh" uid="uid://b5fphhn5sepgm" path="res://obj/Bullet.obj" id="3_6m3kp"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r32yd"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_60r8g"]
 albedo_color = Color(0, 1, 1, 1)
 emission_enabled = true
 emission = Color(0, 1, 1, 1)
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_rugph"]
-material = SubResource("StandardMaterial3D_r32yd")
-
 [node name="bullet_pistol" instance=ExtResource("1_fa7v2")]
 script = ExtResource("2_33jvk")
-mesh = SubResource("CapsuleMesh_rugph")
 mesh_scale = 0.2
 light_color = Color(0, 1, 1, 1)
 BULLET_SPEED = 1.366
 BULLET_DAMAGE = 50
+
+[node name="mesh" parent="." index="0"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+mesh = ExtResource("3_6m3kp")
+surface_material_override/0 = SubResource("StandardMaterial3D_60r8g")

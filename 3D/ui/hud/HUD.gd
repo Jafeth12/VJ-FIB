@@ -7,7 +7,7 @@ func _ready():
 	hide_next_height_interaction()
 	hide_next_level_interaction()
 	set_health(100)
-	hide_rifle()
+	# hide_rifle()
 	select_pistol()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

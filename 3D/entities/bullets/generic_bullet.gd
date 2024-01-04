@@ -1,6 +1,6 @@
 class_name GenericBullet extends GenericEntity
 
-@export var mesh: Mesh = null
+#@export var mesh: Mesh = null
 @export var mesh_scale: float = 1
 @export var light_color: Color = Color("black")
 
@@ -15,7 +15,7 @@ var BULLET_INITIAL_ALPHA: float = 0
 func _ready():
 	entity_has_gravity = false
 	$bullet_activation_area.connect("body_entered", bullet_body_entered)
-	$mesh.mesh = mesh
+	#$mesh.mesh = mesh
 	$mesh.scale = Vector3(mesh_scale, mesh_scale, mesh_scale)
 	$light.light_color = light_color
 
@@ -41,6 +41,9 @@ func bullet_set_alpha(alpha: float):
 
 func bullet_set_direction(direction: EntityDirection):
 	entity_direction = direction
+	if direction == EntityDirection.LEFT:
+		$mesh.rotate_y(PI)
+	
 
 func bullet_set_radius(radius: float):
 	entity_radius = radius

@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bwh2rbqfx7fd3"
+path="res://.godot/imported/Bullet_Rifle.obj-91c0f9451fad19223a6cec5ed198d75f.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Bullet_Rifle.obj-91c0f9451fad19223a6cec5ed198d75f.mesh"]
+
+source_file="res://obj/Bullet_Rifle.obj"
+dest_files=["res://.godot/imported/Bullet_Rifle.obj-91c0f9451fad19223a6cec5ed198d75f.mesh", "res://.godot/imported/Bullet_Rifle.obj-91c0f9451fad19223a6cec5ed198d75f.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false
