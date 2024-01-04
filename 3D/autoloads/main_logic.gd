@@ -18,8 +18,7 @@ func _ready():
 	add_score(100)
 	add_score(500)
 	add_score(1)	
-	reset_level()
-	reset_player_state()
+	reset_all()
 
 func get_current_level() -> LEVEL:
 	return current_level
@@ -46,7 +45,11 @@ func reset_player_state() -> void:
 	player_info.ammo_pistol = Player.MAX_AMMO_PISTOL
 	player_info.ammo_rifle = Player.MAX_AMMO_RIFLE
 	player_info.has_rifle = Player.INIT_HAS_RIFLE
-	
+
+func reset_all() -> void:
+	reset_level()
+	reset_player_state()
+
 func add_score(time: int) -> void:
 	scores.push_back(time)
 	scores.sort()
