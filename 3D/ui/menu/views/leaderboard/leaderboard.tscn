@@ -1,0 +1,98 @@
+[gd_scene load_steps=6 format=3 uid="uid://ba8ayralsmfk7"]
+
+[ext_resource type="Script" path="res://ui/menu/views/leaderboard/leaderboard.gd" id="1_km0kq"]
+[ext_resource type="Texture2D" uid="uid://drn4r3bajqhm5" path="res://art/ui/menu/our_logo.png" id="2_p480x"]
+[ext_resource type="PackedScene" uid="uid://dowvah8ep8i7v" path="res://ui/menu/background.tscn" id="3_fgiwm"]
+[ext_resource type="FontFile" uid="uid://bx0hymomr7xpu" path="res://fonts/BellMT/BellMTBold.ttf" id="4_l4esc"]
+
+[sub_resource type="Theme" id="Theme_x35lf"]
+default_font = ExtResource("4_l4esc")
+default_font_size = 32
+Label/colors/font_color = Color(0.0784314, 0.941176, 0.941176, 1)
+Label/colors/font_outline_color = Color(1, 1, 1, 1)
+
+[node name="leaderboard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_km0kq")
+
+[node name="background" parent="." instance=ExtResource("3_fgiwm")]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.062
+anchor_right = 0.414
+anchor_bottom = 0.643
+offset_left = 0.639999
+offset_right = 0.0799561
+offset_bottom = 0.0400085
+texture = ExtResource("2_p480x")
+expand_mode = 5
+stretch_mode = 5
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.469
+anchor_top = 0.096
+anchor_right = 0.862
+anchor_bottom = 0.903
+offset_left = -0.320007
+offset_top = -0.120003
+offset_right = 0.639893
+offset_bottom = -0.160034
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_x35lf")
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -104.0
+offset_top = 20.0
+offset_right = 104.0
+offset_bottom = 65.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+text = "HIGH SCORES"
+
+[node name="list" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03
+anchor_top = 0.138
+anchor_right = 0.984
+anchor_bottom = 0.96
+offset_left = -6.12
+offset_top = -0.178001
+offset_right = 0.0641174
+offset_bottom = 0.240051
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.156
+anchor_top = 0.833
+anchor_right = 0.312
+anchor_bottom = 0.903
+offset_left = 0.319992
+offset_top = 0.239929
+offset_right = 0.639984
+offset_bottom = -0.160034
+grow_vertical = 0
+text = "GO BACK"
+
+[connection signal="button_up" from="Button" to="." method="_on_button_back"]
