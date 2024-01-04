@@ -37,13 +37,6 @@ func entity_jump() -> float:
 func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delta: float) -> float:
 	return current_alpha # Este personaje no se mueve
 
-func modf(a: float, d: float) -> float:
-	var s: int = 1 if a > 0 else -1
-	a = abs(a)
-	while a >= d:
-		a -= d
-	return s*a
-
 func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirection:
 	var prx_dir: EntityDirection = current_direction
 	match enemy_state:
