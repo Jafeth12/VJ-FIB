@@ -2,8 +2,7 @@ extends Control
 
 func _ready():
 	MainLogic.finish_timer_died()
-	#MusicController.music_stop()
-	#$amogus.play()
+	MusicController.play_amogus_music()
 	$AnimationPlayer.play("you_died_anim")
 	await $AnimationPlayer.animation_finished
 
