@@ -5,10 +5,10 @@ extends Control
 func _ready():
 	hide()
 	process_mode = Node.PROCESS_MODE_WHEN_PAUSED # Solo corre cuando el tree está pausado
-	$voptions/resume.connect("button_down", _on_resume_button_down)
-	$voptions/exit.connect("button_down", _on_exit_button_down)
+	$background/voptions/resume.connect("button_down", _on_resume_button_down)
+	$background/voptions/exit.connect("button_down", _on_exit_button_down)
 
-func _input(event):
+func _input(event: InputEvent):
 	if event.is_action_pressed("pause"):
 		_on_resume_button_down()
 

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://yvpu2foyoxrh"]
+[gd_scene load_steps=3 format=3 uid="uid://yvpu2foyoxrh"]
 
 [ext_resource type="Script" path="res://ui/pause_menu/pause_menu.gd" id="1_4m6mf"]
+[ext_resource type="PackedScene" uid="uid://b0t483boq5jv5" path="res://ui/volume_slider.tscn" id="2_cfhht"]
 
 [node name="PauseMenu" type="Control"]
 layout_mode = 3
@@ -11,24 +12,56 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4m6mf")
 
-[node name="voptions" type="VBoxContainer" parent="."]
+[node name="background" type="ColorRect" parent="."]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.409
-anchor_top = 0.378
-anchor_right = 0.596
-anchor_bottom = 0.651
-offset_left = 0.47998
-offset_top = -0.160004
-offset_right = 0.119995
-offset_bottom = 0.279968
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -188.0
+offset_top = -96.0
+offset_right = 196.0
+offset_bottom = 163.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.203922)
+
+[node name="voptions" type="VBoxContainer" parent="background"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -33.0
+offset_bottom = 33.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="resume" type="Button" parent="voptions"]
+[node name="resume" type="Button" parent="background/voptions"]
 layout_mode = 2
 text = "RESUME"
 
-[node name="exit" type="Button" parent="voptions"]
+[node name="exit" type="Button" parent="background/voptions"]
 layout_mode = 2
 text = "MAIN MENU"
+
+[node name="master" parent="background/voptions" instance=ExtResource("2_cfhht")]
+layout_mode = 2
+label = "Master"
+
+[node name="fx" parent="background/voptions" instance=ExtResource("2_cfhht")]
+layout_mode = 2
+label = "SFX"
+
+[node name="music" parent="background/voptions" instance=ExtResource("2_cfhht")]
+layout_mode = 2
+label = "Music"
+
+[node name="player" parent="background/voptions" instance=ExtResource("2_cfhht")]
+layout_mode = 2
+label = "PlayerSFX"
+
+[node name="enemies" parent="background/voptions" instance=ExtResource("2_cfhht")]
+layout_mode = 2
+label = "EnemySFX"

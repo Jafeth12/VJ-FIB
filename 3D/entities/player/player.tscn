@@ -1181,22 +1181,28 @@ libraries = {
 
 [node name="damage" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_swhf5")
+bus = &"player"
 
 [node name="shoot_rifle" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_1qk84")
 volume_db = 4.0
+bus = &"player"
 
 [node name="shoot_pistol" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("9_1i7ge")
 volume_db = 4.0
+bus = &"player"
 
 [node name="death" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_d2u11")
+bus = &"player"
 
 [node name="heal" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_c1k8q")
+bus = &"player"
 
 [node name="more_ammo" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_tdksh")
+bus = &"player"
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

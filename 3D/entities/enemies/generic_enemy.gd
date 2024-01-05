@@ -27,6 +27,9 @@ func _ready():
 	super()
 	enemy_shield = ENEMY_INIT_SHIELD
 	enemy_health = ENEMY_INIT_HEALTH
+	enemy_damage_sound.bus = "enemies"
+	enemy_attack_sound.bus = "enemies"
+	enemy_death_sound.bus = "enemies"
 
 func _process(_delta):
 	look_at(Vector3(0, get_position().y, 0))
