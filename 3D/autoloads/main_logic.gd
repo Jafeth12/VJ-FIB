@@ -120,3 +120,19 @@ func finish_timer_died() -> void:
 		game_timer.stop()
 	game_timer.queue_free()
 	game_timer = null
+
+func format(seconds: float) -> String:
+	var mins: String = ""
+	var secs: String = ""
+	if seconds >= 60:
+		mins = str(int(seconds)/60) + ":"
+	secs = str(snapped(fmod(seconds, 60.0), 0.01)).pad_zeros(2)
+	return  mins + secs
+
+func get_time_left_formatted() -> String:
+	if game_timer == null:
+		return ""
+	if !game_timer.is_stopped():
+		return format(game_timer.time_left)
+	else:
+		return format(tmp_time_left)
