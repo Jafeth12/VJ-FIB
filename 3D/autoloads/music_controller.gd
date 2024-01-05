@@ -13,3 +13,6 @@ func play_level_music() -> void:
 	if $Music.stream != level_music:
 		$Music.stream = level_music
 		$Music.play()
+
+func music_stop() -> void:
+	$Music.stop()

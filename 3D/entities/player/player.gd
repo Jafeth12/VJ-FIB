@@ -95,10 +95,6 @@ func _physics_process(delta: float) -> void:
 	if changing_ring:
 		player_switch_ring()
 
-	# Changing level
-	#if curr_level != target_level:
-	#	player_switch_level()
-
 	# Handle jump logic.
 	if is_on_floor():
 		jumps_left = INIT_JUMPS_LEFT
@@ -118,10 +114,9 @@ func player_update_anim_state():
 	# prox_estado:
 	match anim_state:
 		ANIMATION_STATES.IDLE:
-			if resetting_alpha:
-				return
-				
 			if Input.is_action_just_pressed("dodge"):
+				if $AnimationPlayer.is_playing():
+					return
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
 				anim_state = ANIMATION_STATES.JUMP
@@ -131,9 +126,6 @@ func player_update_anim_state():
 				anim_state = ANIMATION_STATES.WALK
 
 		ANIMATION_STATES.WALK:
-			if resetting_alpha:
-				return
-				
 			if Input.is_action_just_pressed("dodge"):
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
@@ -144,9 +136,8 @@ func player_update_anim_state():
 				anim_state = ANIMATION_STATES.IDLE
 
 		ANIMATION_STATES.JUMP:
-			if resetting_alpha:
+			if $AnimationPlayer.is_playing():
 				return
-				
 			if Input.is_action_just_pressed("dodge"):
 				if changing_ring:
 					return
@@ -158,9 +149,8 @@ func player_update_anim_state():
 					anim_state = ANIMATION_STATES.IDLE
 
 		ANIMATION_STATES.CROUCH:
-			if resetting_alpha:
+			if $AnimationPlayer.is_playing():
 				return
-				
 			if Input.is_action_just_pressed("dodge"):
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
@@ -245,6 +235,8 @@ func player_is_dodging() -> bool:
 
 # Devuelve si el jugador se debería mover
 func player_should_move() -> bool:
+	if $AnimationPlayer.is_playing():
+		return false
 	var move_right = Input.is_action_pressed("move_right")
 	var move_left  = Input.is_action_pressed("move_left" )
 	return (move_right != move_left) || player_is_dodging()
@@ -271,6 +263,7 @@ func player_handle_input() -> void:
 		if resetting_alpha:
 			return
 		$AnimationPlayer.play("vanish")
+		god_mode = true
 		await $AnimationPlayer.animation_finished
 		resetting_alpha = true
 		can_go_to_next_height = false
@@ -623,3 +616,7 @@ func player_set_state(info: MainLogic.PlayerState) -> void:
 	self.ammo_pistol = info.ammo_pistol
 	self.ammo_rifle = info.ammo_rifle
 	self.has_rifle = info.has_rifle
+
+
+func _on_animation_player_animation_finished(anim_name):
+	god_mode = false

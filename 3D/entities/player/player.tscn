@@ -1198,3 +1198,5 @@ stream = ExtResource("10_c1k8q")
 
 [node name="more_ammo" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_tdksh")
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

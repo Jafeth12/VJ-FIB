@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://uessytjksnf0"]
+[gd_scene load_steps=15 format=3 uid="uid://uessytjksnf0"]
 
 [ext_resource type="Script" path="res://ui/menu/views/you_died/you_died.gd" id="1_5ayhj"]
 [ext_resource type="Texture2D" uid="uid://c8v321pqr0d11" path="res://art/ui/you_died/YouDied-Died_Red.png" id="1_66xmo"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c8mjatb00bc3t" path="res://art/ui/you_died/YouDied-Base.png" id="3_cf3mk"]
 [ext_resource type="Texture2D" uid="uid://dcc4la0ooagqq" path="res://art/ui/you_died/YouDied-Eyes.png" id="3_mx21n"]
 [ext_resource type="FontFile" uid="uid://bx0hymomr7xpu" path="res://fonts/BellMT/BellMTBold.ttf" id="6_fupvq"]
+[ext_resource type="AudioStream" uid="uid://628jvkrplmkp" path="res://sound/you_died.mp3" id="7_egdc7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ha7j6"]
 bg_color = Color(0.180392, 0.14902, 0.164706, 1)
@@ -310,6 +311,11 @@ color = Color(0, 0, 0, 1)
 libraries = {
 "": SubResource("AnimationLibrary_l6lh8")
 }
+
+[node name="amogus" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_egdc7")
+volume_db = 20.0
+bus = &"music"
 
 [connection signal="button_up" from="Retry" to="." method="_on_retry_button_up"]
 [connection signal="button_up" from="Exit" to="." method="_on_exit_button_up"]
