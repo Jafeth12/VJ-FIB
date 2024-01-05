@@ -68,5 +68,13 @@ func show_next_level_interaction() -> void:
 
 func hide_next_level_interaction() -> void:
 	$next_level.hide_interaction()
-
 	
+func show_more_health(amount: int) -> void:
+	$moar.set_key(Enums.INTERACTION_KEY.HEALTH)
+	$moar.set_text("+ " + str(amount) + " health")
+	$moar.show_interaction()
+	
+func show_more_ammo(amount: int) -> void:
+	$moar.set_key(Enums.INTERACTION_KEY.AMMO)
+	$moar.set_text("+ " + str(amount) + " ammo")
+	$moar.show_interaction()
