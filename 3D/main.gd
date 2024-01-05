@@ -19,6 +19,11 @@ func _ready():
 	MainLogic.resume_timer()
 	MainLogic.game_timer.connect("timeout", _on_game_timer_timeout)
 
+func _input(event: InputEvent):
+	if event.is_action_pressed("pause"):
+		var state = get_tree().paused
+		get_tree().paused = !state
+
 func _on_level_ended() -> void:
 	MainLogic.save_player_state($Player.player_get_state())
 	MainLogic.pause_timer()
