@@ -21,8 +21,8 @@ func _ready():
 
 func _input(event: InputEvent):
 	if event.is_action_pressed("pause"):
-		var state = get_tree().paused
-		get_tree().paused = !state
+		$CanvasLayer/PauseMenu.show()
+		get_tree().paused = true
 
 func _on_level_ended() -> void:
 	MainLogic.save_player_state($Player.player_get_state())
