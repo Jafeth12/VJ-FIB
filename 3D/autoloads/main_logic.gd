@@ -11,26 +11,12 @@ class PlayerState:
 @onready var current_level: LEVEL = LEVEL.LEVEL1
 @onready var player_info: PlayerState = PlayerState.new()
 @onready var game_timer: Timer = null
-const TOTAL_GAME_TIME: float = 120.0
+const TOTAL_GAME_TIME: float = 5.0*60.0
 var tmp_time_left: float = 0.0
 
 var scores: Array = []
 
 func _ready():
-	add_score(10)
-	add_score(100)
-	add_score(500)
-	add_score(1)
-	add_score(10)
-	add_score(100)
-	add_score(500)
-	add_score(1)
-	add_score(500)
-	add_score(1)
-	add_score(500)
-	add_score(1)
-	add_score(500)
-	add_score(1)
 	reset_all()
 
 func get_current_level() -> LEVEL:
@@ -126,3 +112,11 @@ func get_game_time_left() -> float:
 		return tmp_time_left
 	else:
 		return game_timer.time_left
+
+func format_time(seconds: float) -> String:
+	var mins: String = ""
+	var secs: String = ""
+	if seconds >= 60:
+		mins = str(int(seconds)/60) + ":"
+	secs = str(snapped(fmod(seconds, 60.0), 0.01)).pad_zeros(2)
+	return  mins + secs

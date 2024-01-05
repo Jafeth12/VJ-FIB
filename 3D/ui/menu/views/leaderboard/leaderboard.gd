@@ -21,7 +21,7 @@ func draw_scores():
 	for entry in scores:
 		var text = Label.new()
 		text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		text.text = str(snapped(entry, 0.01)) + " seconds"
+		text.text = MainLogic.format_time(entry) # str(snapped(entry, 0.01)) + " seconds"
 			
 		list.add_child(text)
 

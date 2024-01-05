@@ -2,7 +2,7 @@ extends Control
 
 func _ready():
 	var time = MainLogic.finish_timer_won()
-	$VBoxContainer/time.text = str(snapped(time, 0.01)) + " seconds"
+	$VBoxContainer/time.text = MainLogic.format_time(time)
 	$AnimationPlayer.play("you_won_anim")
 	await $AnimationPlayer.animation_finished
 
