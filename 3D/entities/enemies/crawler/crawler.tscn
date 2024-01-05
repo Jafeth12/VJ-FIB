@@ -1,8 +1,11 @@
-[gd_scene load_steps=41 format=3 uid="uid://ctl47igc7wknw"]
+[gd_scene load_steps=44 format=3 uid="uid://ctl47igc7wknw"]
 
 [ext_resource type="Script" path="res://entities/enemies/crawler/crawler.gd" id="1_46rf8"]
 [ext_resource type="Texture2D" uid="uid://is7kesgrn04" path="res://art/enemy/crawler/Crawler.png" id="2_hmv2l"]
 [ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_onfo2"]
+[ext_resource type="AudioStream" uid="uid://r2j6t2cg78xq" path="res://sound/crawler_damage.wav" id="4_wp2qy"]
+[ext_resource type="AudioStream" uid="uid://btakuyvnbgnmi" path="res://sound/crawer_death.wav" id="5_o6yuq"]
+[ext_resource type="AudioStream" uid="uid://cubfs1087kv8b" path="res://sound/crawler_attack.wav" id="6_q2vkl"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gyj4u"]
 size = Vector3(1, 0.66, 1)
@@ -246,12 +249,15 @@ bg_color = Color(0, 0.647059, 0.901961, 1)
 [sub_resource type="ViewportTexture" id="ViewportTexture_p6yj0"]
 viewport_path = NodePath("SubViewport")
 
-[node name="crawler" type="CharacterBody3D"]
+[node name="crawler" type="CharacterBody3D" node_paths=PackedStringArray("enemy_damage_sound", "enemy_attack_sound", "enemy_death_sound")]
 collision_layer = 2
 collision_mask = 40
 script = ExtResource("1_46rf8")
 enemy_drop_amount = 15
 enemy_drop_chance = 0.8
+enemy_damage_sound = NodePath("damage")
+enemy_attack_sound = NodePath("attack")
+enemy_death_sound = NodePath("death")
 
 [node name="collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.167957, 0)
@@ -292,3 +298,13 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_wxhb0")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 billboard = 2
 texture = SubResource("ViewportTexture_p6yj0")
+
+[node name="damage" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_wp2qy")
+
+[node name="death" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_o6yuq")
+max_distance = 20.0
+
+[node name="attack" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_q2vkl")
