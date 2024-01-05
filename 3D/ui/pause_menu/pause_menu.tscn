@@ -62,15 +62,18 @@ label_font_size = 14
 
 [node name="fx" parent="background/voptions" instance=ExtResource("2_cfhht")]
 layout_mode = 2
+bus_name = "FX"
 label = "SFX"
 label_font_size = 14
 
 [node name="player" parent="background/voptions" instance=ExtResource("2_cfhht")]
 layout_mode = 2
+bus_name = "player"
 label = "PlayerSFX"
 label_font_size = 14
 
 [node name="enemies" parent="background/voptions" instance=ExtResource("2_cfhht")]
 layout_mode = 2
+bus_name = "enemies"
 label = "EnemySFX"
 label_font_size = 14
