@@ -120,3 +120,9 @@ func finish_timer_died() -> void:
 		game_timer.stop()
 	game_timer.queue_free()
 	game_timer = null
+
+func get_game_time_left() -> float:
+	if game_timer == null || game_timer.is_stopped():
+		return tmp_time_left
+	else:
+		return game_timer.time_left

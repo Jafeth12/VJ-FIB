@@ -9,9 +9,25 @@ func _ready():
 	# hide_rifle()
 	select_pistol()
 
+func format_time(seconds: float) -> String:
+	var mins: String = ""
+	var secs: String = ""
+	if seconds >= 60:
+		mins = str(int(seconds)/60) + ":"
+	secs = str(snapped(fmod(seconds, 60.0), 0.01)).pad_zeros(2)
+	return  mins + secs
+
+func timer_color(seconds: float) -> Color:
+	if seconds < 30.0:
+		return Color.RED
+	else:
+		return Color.WHITE
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	pass
+	var seconds_left = MainLogic.get_game_time_left()
+	$timer.modulate = timer_color(seconds_left)
+	$timer.text = format_time(seconds_left)
 
 # ------------------------------
 

@@ -3,9 +3,9 @@
 [ext_resource type="Material" uid="uid://x6o53v8nx0ac" path="res://shaders/water.tres" id="1_6poww"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_jvjvp"]
-size = Vector2(2000, 2000)
-subdivide_width = 200
-subdivide_depth = 200
+size = Vector2(500, 500)
+subdivide_width = 300
+subdivide_depth = 300
 
 [node name="WaterPlane" type="MeshInstance3D"]
 cast_shadow = 0

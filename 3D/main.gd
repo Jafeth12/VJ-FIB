@@ -17,6 +17,7 @@ func _ready():
 			pass
 	MusicController.play_level_music()
 	MainLogic.resume_timer()
+	MainLogic.game_timer.connect("timeout", _on_game_timer_timeout)
 
 func _on_level_ended() -> void:
 	MainLogic.save_player_state($Player.player_get_state())
@@ -35,3 +36,6 @@ func _on_player_died():
 	await timer.timeout
 	timer.queue_free()
 	SceneTransitions.change_scene("res://ui/menu/views/you_died/you_died.tscn")
+
+func _on_game_timer_timeout() -> void:
+	$Player.player_take_damage(1000)
