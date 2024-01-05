@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://jmo7fkfdh33y"]
+[gd_scene load_steps=15 format=3 uid="uid://jmo7fkfdh33y"]
 
 [ext_resource type="Script" path="res://ui/hud/HUD.gd" id="1_wqd24"]
 [ext_resource type="PackedScene" uid="uid://bo0mmw6euyv7i" path="res://ui/hud/weapon_hud.tscn" id="2_bo5pj"]
 [ext_resource type="Texture2D" uid="uid://be7nihnlk5t63" path="res://art/ui/hud/health-normal.svg" id="2_otavy"]
 [ext_resource type="Texture2D" uid="uid://cujb8rykjjemq" path="res://art/ui/hud/rifle_ui.png" id="3_3hewy"]
 [ext_resource type="Texture2D" uid="uid://btuumitgbrrnp" path="res://art/ui/hud/pistol_ui.png" id="3_ffv8t"]
+[ext_resource type="FontFile" uid="uid://bx0hymomr7xpu" path="res://fonts/BellMT/BellMTBold.ttf" id="3_osgpj"]
 [ext_resource type="Shader" path="res://shaders/pistol_hud.gdshader" id="5_fyned"]
 [ext_resource type="Shader" path="res://shaders/rifle_hud.gdshader" id="6_1xaxf"]
 [ext_resource type="PackedScene" uid="uid://cb7ivx5xj4ru5" path="res://ui/interaction.tscn" id="8_1tt4e"]
@@ -14,6 +15,10 @@ bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xtfvq"]
 bg_color = Color(0, 0.823529, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_am6qj"]
+font = ExtResource("3_osgpj")
+font_size = 32
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5emas"]
 shader = ExtResource("5_fyned")
@@ -74,6 +79,7 @@ offset_bottom = -20.0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 48
 text = "2:00"
+label_settings = SubResource("LabelSettings_am6qj")
 
 [node name="pistol_hud" parent="." instance=ExtResource("2_bo5pj")]
 layout_mode = 1
