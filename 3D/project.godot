@@ -136,3 +136,7 @@ pause={
 3d_physics/layer_4="bullet"
 3d_physics/layer_5="enemy_detection_area"
 3d_physics/layer_6="floor"
+
+[rendering]
+
+anti_aliasing/quality/msaa_3d=1
