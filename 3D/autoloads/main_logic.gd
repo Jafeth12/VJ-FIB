@@ -20,7 +20,17 @@ func _ready():
 	add_score(10)
 	add_score(100)
 	add_score(500)
-	add_score(1)	
+	add_score(1)
+	add_score(10)
+	add_score(100)
+	add_score(500)
+	add_score(1)
+	add_score(500)
+	add_score(1)
+	add_score(500)
+	add_score(1)
+	add_score(500)
+	add_score(1)
 	reset_all()
 
 func get_current_level() -> LEVEL:
@@ -53,10 +63,10 @@ func reset_all() -> void:
 	reset_level()
 	reset_player_state()
 
-func add_score(time: int) -> void:
+func add_score(time: float) -> void:
 	scores.push_back(time)
 	scores.sort()
-	scores = scores.slice(0, 9)
+	scores = scores.slice(0, 12)
 	
 func get_scores() -> Array:
 	return scores
@@ -96,10 +106,11 @@ func finish_timer_won() -> float:
 	if !game_timer.is_stopped():
 		tmp_time_left = game_timer.time_left
 		game_timer.stop()
-	add_score(tmp_time_left)
+	var score = TOTAL_GAME_TIME - tmp_time_left
+	add_score(score)
 	game_timer.queue_free()
 	game_timer = null
-	return tmp_time_left
+	return score
 
 # Detiene el timer y retorna los segundos restantes (resultado)
 func finish_timer_died() -> void:

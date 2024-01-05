@@ -8,7 +8,7 @@
 [sub_resource type="Theme" id="Theme_x35lf"]
 default_font = ExtResource("4_l4esc")
 default_font_size = 32
-Label/colors/font_color = Color(0.0784314, 0.941176, 0.941176, 1)
+Label/colors/font_color = Color(0.670588, 0.870588, 0.705882, 1)
 Label/colors/font_outline_color = Color(1, 1, 1, 1)
 
 [node name="leaderboard" type="Control"]
@@ -63,7 +63,7 @@ offset_top = 20.0
 offset_right = 104.0
 offset_bottom = 65.0
 grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_color = Color(0.745098, 0.741176, 0.870588, 1)
 theme_override_font_sizes/font_size = 32
 text = "HIGH SCORES"
 

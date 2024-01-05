@@ -27,7 +27,6 @@ func _on_level_ended() -> void:
 		SceneTransitions.change_scene("res://main.tscn")
 
 func _on_player_died():
-	MainLogic.finish_timer_died()
 	MainLogic.reset_player_state()
 	var timer = Timer.new()
 	timer.one_shot = true

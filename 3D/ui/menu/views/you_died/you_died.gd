@@ -1,6 +1,7 @@
 extends Control
 
 func _ready():
+	MainLogic.finish_timer_died()
 	$AnimationPlayer.play("you_died_anim")
 	await $AnimationPlayer.animation_finished
 
