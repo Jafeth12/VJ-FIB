@@ -18,7 +18,7 @@ bg_color = Color(0, 0.823529, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_am6qj"]
 font = ExtResource("3_osgpj")
-font_size = 32
+font_size = 64
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5emas"]
 shader = ExtResource("5_fyned")

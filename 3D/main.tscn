@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b5g0ovr2iopjn"]
+[gd_scene load_steps=5 format=3 uid="uid://b5g0ovr2iopjn"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_u5uqy"]
 [ext_resource type="PackedScene" uid="uid://jmo7fkfdh33y" path="res://ui/hud/HUD.tscn" id="2_m04a3"]
 [ext_resource type="PackedScene" uid="uid://d2h5lpkd1b7ff" path="res://entities/player/player.tscn" id="2_qkbcm"]
+[ext_resource type="PackedScene" uid="uid://yvpu2foyoxrh" path="res://ui/pause_menu/pause_menu.tscn" id="4_hb6jf"]
 
 [node name="main" type="Node"]
 script = ExtResource("1_u5uqy")
@@ -14,5 +15,7 @@ entity_radius = 20.02
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="CanvasLayer" instance=ExtResource("2_m04a3")]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("4_hb6jf")]
 
 [connection signal="player_died" from="Player" to="." method="_on_player_died"]
