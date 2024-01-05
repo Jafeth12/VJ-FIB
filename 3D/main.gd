@@ -16,15 +16,18 @@ func _ready():
 		MainLogic.LEVEL.END:
 			pass
 	MusicController.play_level_music()
+	MainLogic.resume_timer()
 
 func _on_level_ended() -> void:
 	MainLogic.save_player_state($Player.player_get_state())
+	MainLogic.pause_timer()
 	if MainLogic.go_to_next_level() == MainLogic.LEVEL.END:
 		SceneTransitions.change_scene("res://ui/menu/views/you_won/you_won.tscn")
 	else:
 		SceneTransitions.change_scene("res://main.tscn")
 
 func _on_player_died():
+	MainLogic.finish_timer_died()
 	MainLogic.reset_player_state()
 	var timer = Timer.new()
 	timer.one_shot = true

@@ -10,6 +10,9 @@ class PlayerState:
 
 @onready var current_level: LEVEL = LEVEL.LEVEL1
 @onready var player_info: PlayerState = PlayerState.new()
+@onready var game_timer: Timer = null
+const TOTAL_GAME_TIME: float = 120.0
+var tmp_time_left: float = 0.0
 
 var scores: Array = []
 
@@ -53,6 +56,56 @@ func reset_all() -> void:
 func add_score(time: int) -> void:
 	scores.push_back(time)
 	scores.sort()
+	scores = scores.slice(0, 9)
 	
 func get_scores() -> Array:
 	return scores
+
+# ====== TIMER ======
+# Comienza la cuenta atrás del timer
+func init_timer() -> void:
+	game_timer = Timer.new()
+	game_timer.one_shot = true
+	add_child(game_timer)
+	game_timer.start(TOTAL_GAME_TIME)
+
+# Detiene el timer so este está comenzado
+func pause_timer() -> void:
+	if game_timer == null:
+		return
+	if game_timer.is_stopped():
+		return
+	tmp_time_left = game_timer.time_left
+	game_timer.stop()
+	print("PAUSE. tl: ", tmp_time_left)
+
+# Continua el timer si este está pausado. Te lo crea si no existe
+func resume_timer() -> void:
+	if game_timer == null:
+		init_timer()
+		return
+	if !game_timer.is_stopped():
+		return
+	game_timer.start(tmp_time_left)
+	print("RESUME. tl: ", tmp_time_left)
+
+# Detiene el timer y retorna los segundos restantes (resultado)
+func finish_timer_won() -> float:
+	if game_timer == null:
+		return -1
+	if !game_timer.is_stopped():
+		tmp_time_left = game_timer.time_left
+		game_timer.stop()
+	add_score(tmp_time_left)
+	game_timer.queue_free()
+	game_timer = null
+	return tmp_time_left
+
+# Detiene el timer y retorna los segundos restantes (resultado)
+func finish_timer_died() -> void:
+	if game_timer == null:
+		return
+	if !game_timer.is_stopped():
+		game_timer.stop()
+	game_timer.queue_free()
+	game_timer = null
