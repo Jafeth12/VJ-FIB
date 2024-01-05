@@ -424,6 +424,7 @@ func player_give_health(new_health: int) -> void:
 		health = INIT_HEALTH
 
 	hud.set_health(health)
+	hud.show_more_health(new_health)
 
 func player_give_ammo(ammo: int) -> void:
 	match active_weapon:
@@ -433,6 +434,7 @@ func player_give_ammo(ammo: int) -> void:
 			player_add_ammo(WEAPON.RIFLE, ammo)
 
 	hud.set_ammo(ammo_pistol, ammo_rifle)
+	hud.show_more_ammo(ammo)
 
 func player_give_rifle() -> void:
 	if has_rifle:
