@@ -5,6 +5,7 @@ func _ready():
 	MusicController.play_amogus_music()
 	$AnimationPlayer.play("you_died_anim")
 	await $AnimationPlayer.animation_finished
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _on_retry_button_up():
 	MainLogic.reset_all()
