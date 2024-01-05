@@ -1,9 +1,12 @@
-[gd_scene load_steps=25 format=3 uid="uid://bu6rnyfm7ty4f"]
+[gd_scene load_steps=28 format=3 uid="uid://bu6rnyfm7ty4f"]
 
 [ext_resource type="Script" path="res://entities/enemies/crystal_charger/crystal_charger.gd" id="1_e4yym"]
 [ext_resource type="Texture2D" uid="uid://d04yr5tah8yit" path="res://art/enemy/cristal_charger/CrystalCharger_a.png" id="1_fqcfr"]
 [ext_resource type="Texture2D" uid="uid://c3qfa6wimnp5x" path="res://art/enemy/DeadEnemy_n_no_bg.png" id="3_d727a"]
 [ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_mem8h"]
+[ext_resource type="AudioStream" uid="uid://bayx4ot8h0a4r" path="res://sound/charger_attack.wav" id="5_vdo1c"]
+[ext_resource type="AudioStream" uid="uid://b5eurefucpt33" path="res://sound/charger_damage.wav" id="6_oabe7"]
+[ext_resource type="AudioStream" uid="uid://csgnfcbhlv53e" path="res://sound/charger_death.wav" id="7_82i1j"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_blvbo"]
 atlas = ExtResource("1_fqcfr")
@@ -128,13 +131,16 @@ viewport_path = NodePath("SubViewport")
 [sub_resource type="BoxShape3D" id="BoxShape3D_5qs11"]
 size = Vector3(15, 1, 2)
 
-[node name="CrystalCharger" type="CharacterBody3D"]
+[node name="CrystalCharger" type="CharacterBody3D" node_paths=PackedStringArray("enemy_damage_sound", "enemy_attack_sound", "enemy_death_sound")]
 collision_layer = 2
 collision_mask = 40
 script = ExtResource("1_e4yym")
 enemy_drop_type = 1
 enemy_drop_amount = 30
 enemy_drop_chance = 1.0
+enemy_damage_sound = NodePath("attack")
+enemy_attack_sound = NodePath("damage")
+enemy_death_sound = NodePath("death")
 
 [node name="sprite" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
@@ -168,3 +174,15 @@ collision_layer = 16
 
 [node name="cc_detection_collider" type="CollisionShape3D" parent="cc_player_detection"]
 shape = SubResource("BoxShape3D_5qs11")
+
+[node name="attack" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_vdo1c")
+max_distance = 20.0
+
+[node name="damage" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_oabe7")
+
+[node name="death" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("7_82i1j")
+volume_db = 15.0
+max_distance = 20.0

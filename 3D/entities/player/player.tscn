@@ -1,4 +1,4 @@
-[gd_scene load_steps=155 format=3 uid="uid://d2h5lpkd1b7ff"]
+[gd_scene load_steps=161 format=3 uid="uid://d2h5lpkd1b7ff"]
 
 [ext_resource type="Script" path="res://entities/player/player.gd" id="1_l5rtp"]
 [ext_resource type="Texture2D" uid="uid://rrxc8pehdjfc" path="res://art/player/player_weapon2.png" id="2_jqr8u"]
@@ -6,6 +6,12 @@
 [ext_resource type="Texture2D" uid="uid://dy3xtne50uonp" path="res://art/player/player_weapon1.png" id="4_wx50i"]
 [ext_resource type="Texture2D" uid="uid://by5uxbqoyi8lb" path="res://art/player/Explosion1_albedo.png" id="5_s237b"]
 [ext_resource type="Shader" path="res://shaders/boom.gdshader" id="5_tjok6"]
+[ext_resource type="AudioStream" uid="uid://dffvg2q33jhrf" path="res://sound/player_damage_og.mp3" id="7_swhf5"]
+[ext_resource type="AudioStream" uid="uid://djurtbn3u8ij" path="res://sound/rifle.mp3" id="8_1qk84"]
+[ext_resource type="AudioStream" uid="uid://boa2ako1c4ox4" path="res://sound/pistol.mp3" id="9_1i7ge"]
+[ext_resource type="AudioStream" uid="uid://ojy6edplaeqf" path="res://sound/health.wav" id="10_c1k8q"]
+[ext_resource type="AudioStream" uid="uid://ce5kldbcjbjt2" path="res://sound/player_just_died.mp3" id="10_d2u11"]
+[ext_resource type="AudioStream" uid="uid://c0o0ilux2yjqi" path="res://sound/ammo.wav" id="11_tdksh"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1e10u"]
 size = Vector3(0.5, 1, 0.5)
@@ -1172,3 +1178,23 @@ frame_progress = 1.0
 libraries = {
 "": SubResource("AnimationLibrary_r17qg")
 }
+
+[node name="damage" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_swhf5")
+
+[node name="shoot_rifle" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_1qk84")
+volume_db = 4.0
+
+[node name="shoot_pistol" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_1i7ge")
+volume_db = 4.0
+
+[node name="death" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_d2u11")
+
+[node name="heal" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_c1k8q")
+
+[node name="more_ammo" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_tdksh")

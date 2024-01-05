@@ -17,6 +17,9 @@ var drop_item = preload("res://entities/other/drop.tscn")
 @export var enemy_drop_type: Enums.DROP_TYPE = Enums.DROP_TYPE.HEALTH
 @export var enemy_drop_amount: int = 10
 @export var enemy_drop_chance: float = 0.5
+@export var enemy_damage_sound: AudioStreamPlayer3D
+@export var enemy_attack_sound: AudioStreamPlayer3D
+@export var enemy_death_sound: AudioStreamPlayer3D
 
 signal enemy_died(enemy)
 
@@ -53,6 +56,7 @@ func enemy_update_state():
 				prx_state = EnemyState.DEAD
 			elif enemy_should_attack():
 				prx_state = EnemyState.ATTACK
+				enemy_attack_sound.play()
 			else:
 				prx_state = EnemyState.WANDER
 		EnemyState.ATTACK:
@@ -99,6 +103,12 @@ func enemy_take_damage(damage: int) -> void:
 		drop.set_drop_amount(enemy_drop_amount)
 		drop.apply_central_impulse(Vector3(0, 6, 0))
 		get_parent().add_child(drop)
+		
+		enemy_attack_sound.stop()
+		enemy_damage_sound.stop()
+		enemy_death_sound.play()
+	else:
+		enemy_damage_sound.play()
 
 func enemy_update_health_bar() -> void:
 	if enemy_is_dead():

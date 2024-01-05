@@ -1,8 +1,11 @@
-[gd_scene load_steps=37 format=3 uid="uid://b2rcv7hvcy7a8"]
+[gd_scene load_steps=40 format=3 uid="uid://b2rcv7hvcy7a8"]
 
 [ext_resource type="Script" path="res://entities/enemies/goomba/goomba.gd" id="1_afs03"]
 [ext_resource type="Texture2D" uid="uid://ctwyf8gbrihh6" path="res://art/enemy/goomba/LightningStriker.png" id="3_usvok"]
 [ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_w826d"]
+[ext_resource type="AudioStream" uid="uid://cs0345twdx826" path="res://sound/goomba_damage.wav" id="4_lowfm"]
+[ext_resource type="AudioStream" uid="uid://2qlhhs21fqew" path="res://sound/goomba_attack.wav" id="5_gmjvt"]
+[ext_resource type="AudioStream" uid="uid://cn5dlukf8xjfy" path="res://sound/goomba_death.wav" id="6_o1a2n"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hl3c6"]
 atlas = ExtResource("3_usvok")
@@ -216,13 +219,16 @@ viewport_path = NodePath("SubViewport")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rsyij"]
 
-[node name="Goomba" type="CharacterBody3D"]
+[node name="Goomba" type="CharacterBody3D" node_paths=PackedStringArray("enemy_damage_sound", "enemy_attack_sound", "enemy_death_sound")]
 collision_layer = 2
 collision_mask = 40
 script = ExtResource("1_afs03")
 enemy_drop_type = 1
 enemy_drop_amount = 25
 enemy_drop_chance = 0.8
+enemy_damage_sound = NodePath("damage")
+enemy_attack_sound = NodePath("attack")
+enemy_death_sound = NodePath("death")
 
 [node name="sprite" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(3.25, 0, 0, 0, 3.25, 0, 0, 0, 3.25, 0, 0, 0)
@@ -255,3 +261,12 @@ collision_layer = 2
 
 [node name="damage_area_collision" type="CollisionShape3D" parent="damage_area"]
 shape = SubResource("BoxShape3D_rsyij")
+
+[node name="damage" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_lowfm")
+
+[node name="attack" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_gmjvt")
+
+[node name="death" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_o1a2n")

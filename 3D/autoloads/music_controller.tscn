@@ -5,4 +5,7 @@
 [node name="MusicController" type="Node"]
 script = ExtResource("1_dxo1v")
 
+[node name="Master" type="AudioStreamPlayer" parent="."]
+
 [node name="Music" type="AudioStreamPlayer" parent="."]
+bus = &"music"

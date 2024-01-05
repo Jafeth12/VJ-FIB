@@ -118,6 +118,9 @@ func player_update_anim_state():
 	# prox_estado:
 	match anim_state:
 		ANIMATION_STATES.IDLE:
+			if resetting_alpha:
+				return
+				
 			if Input.is_action_just_pressed("dodge"):
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
@@ -128,6 +131,9 @@ func player_update_anim_state():
 				anim_state = ANIMATION_STATES.WALK
 
 		ANIMATION_STATES.WALK:
+			if resetting_alpha:
+				return
+				
 			if Input.is_action_just_pressed("dodge"):
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
@@ -138,6 +144,9 @@ func player_update_anim_state():
 				anim_state = ANIMATION_STATES.IDLE
 
 		ANIMATION_STATES.JUMP:
+			if resetting_alpha:
+				return
+				
 			if Input.is_action_just_pressed("dodge"):
 				if changing_ring:
 					return
@@ -149,6 +158,9 @@ func player_update_anim_state():
 					anim_state = ANIMATION_STATES.IDLE
 
 		ANIMATION_STATES.CROUCH:
+			if resetting_alpha:
+				return
+				
 			if Input.is_action_just_pressed("dodge"):
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
@@ -298,6 +310,7 @@ func player_is_on_platform() -> bool:
 func player_die() -> void:
 	anim_state = ANIMATION_STATES.DIE
 	emit_signal("player_died")
+	$death.play()
  
 func player_revive() -> void:
 	anim_state = ANIMATION_STATES.IDLE
@@ -384,11 +397,13 @@ func player_shoot() -> void:
 				return
 			ammo_pistol -= 1
 			bullet = bullet_pistol
+			$shoot_pistol.play()
 		WEAPON.RIFLE:
 			if ammo_rifle <= 0:
 				return
 			ammo_rifle -= 1
 			bullet = bullet_rifle
+			$shoot_rifle.play()
 
 	hud.set_ammo(ammo_pistol, ammo_rifle)
 
@@ -408,7 +423,13 @@ func player_take_damage(damage: int) -> void:
 		return
 	if player_is_dodging():
 		return
+	
+	if player_is_dead():
+		return
+		
 	health -= damage
+	
+	$damage.play()
 
 	if health < 0:
 		health = 0
@@ -422,6 +443,8 @@ func player_give_health(new_health: int) -> void:
 	health += new_health
 	if health > INIT_HEALTH:
 		health = INIT_HEALTH
+		
+	$heal.play()
 
 	hud.set_health(health)
 
@@ -432,6 +455,7 @@ func player_give_ammo(ammo: int) -> void:
 		WEAPON.RIFLE:
 			player_add_ammo(WEAPON.RIFLE, ammo)
 
+	$more_ammo.play()
 	hud.set_ammo(ammo_pistol, ammo_rifle)
 
 func player_give_rifle() -> void:
@@ -499,6 +523,7 @@ func player_init_sprites() -> void:
 	$sprite_pistol.connect("animation_finished", player_on_animation_finished)
 	$sprite_rifle.connect("animation_finished", player_on_animation_finished)
 	$sprite_rifle.hide()
+	$explosion/viewport/animated.material.set_shader_parameter("is_pistol", true)
 
 	$sprite_pistol.play("idle")
 

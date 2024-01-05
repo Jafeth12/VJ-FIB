@@ -9,7 +9,7 @@ var player_in_range: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	$audio.play()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -32,6 +32,8 @@ func open():
 		player.player_give_health(health_amount)
 
 	has_been_opened = true
+	$audio.stop()
+	$open.play()
 	$light.light_energy = 0
 
 # ------------------------------
