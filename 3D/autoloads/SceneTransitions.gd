@@ -11,10 +11,14 @@ func _on_animation_finished(animation):
 	emit_signal("transition_ended")
 
 func change_scene(path_to_target_scene: String, speed: float = 1.0) -> void:
-	animation_player.play("dissolve", -1, speed, false)
+	fade_out(speed)
 	await animation_player.animation_finished
 	get_tree().change_scene_to_file(path_to_target_scene)
-	animation_player.play("dissolve", -1, -speed, true)
+	fade_in(speed)
+
+func change_scene_fade_in(path_to_target_scene: String, speed: float = 1.0) -> void:
+	get_tree().change_scene_to_file(path_to_target_scene)
+	fade_in(speed)
 
 func fade_in(speed: float = 1.0) -> void:
 	animation_player.play("dissolve", -1, -speed, true)

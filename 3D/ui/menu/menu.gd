@@ -5,6 +5,7 @@ func _ready():
 	SceneTransitions.fade_in()
 
 func _on_play_button_up() -> void:
+	MainLogic.reset_all()
 	SceneTransitions.change_scene_with_middle_scene("res://main.tscn", "res://ui/menu/views/planets/water_planet.tscn")
 
 func _on_quit_button_up() -> void:
