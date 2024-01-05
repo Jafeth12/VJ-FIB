@@ -29,12 +29,15 @@ color = Color(0, 0, 0, 0.627451)
 
 [node name="voptions" type="VBoxContainer" parent="background"]
 layout_mode = 1
-anchors_preset = 14
+anchors_preset = -1
+anchor_left = 0.06
 anchor_top = 0.5
-anchor_right = 1.0
+anchor_right = 0.937
 anchor_bottom = 0.5
-offset_top = -33.0
-offset_bottom = 33.0
+offset_left = -0.0400009
+offset_top = -100.5
+offset_right = 0.191986
+offset_bottom = 100.5
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -49,24 +52,25 @@ text = "MAIN MENU"
 [node name="master" parent="background/voptions" instance=ExtResource("2_cfhht")]
 layout_mode = 2
 label = "Master"
-label_font_size = 16
+label_font_size = 14
+
+[node name="music" parent="background/voptions" instance=ExtResource("2_cfhht")]
+layout_mode = 2
+bus_name = "music"
+label = "Music"
+label_font_size = 14
 
 [node name="fx" parent="background/voptions" instance=ExtResource("2_cfhht")]
 layout_mode = 2
 label = "SFX"
-label_font_size = 16
-
-[node name="music" parent="background/voptions" instance=ExtResource("2_cfhht")]
-layout_mode = 2
-label = "Music"
-label_font_size = 16
+label_font_size = 14
 
 [node name="player" parent="background/voptions" instance=ExtResource("2_cfhht")]
 layout_mode = 2
 label = "PlayerSFX"
-label_font_size = 16
+label_font_size = 14
 
 [node name="enemies" parent="background/voptions" instance=ExtResource("2_cfhht")]
 layout_mode = 2
 label = "EnemySFX"
-label_font_size = 16
+label_font_size = 14

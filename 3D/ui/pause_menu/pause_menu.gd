@@ -8,10 +8,6 @@ func _ready():
 	$background/voptions/resume.connect("button_down", _on_resume_button_down)
 	$background/voptions/exit.connect("button_down", _on_exit_button_down)
 
-func _input(event: InputEvent):
-	if event.is_action_pressed("pause"):
-		_on_resume_button_down()
-
 func _on_resume_button_down() -> void:
 	hide()
 	get_tree().paused = false

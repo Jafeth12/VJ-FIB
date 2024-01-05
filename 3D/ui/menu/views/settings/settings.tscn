@@ -1,0 +1,126 @@
+[gd_scene load_steps=8 format=3 uid="uid://dde0yacbf8v53"]
+
+[ext_resource type="Script" path="res://ui/menu/views/settings/settings.gd" id="1_jfaf0"]
+[ext_resource type="PackedScene" uid="uid://dowvah8ep8i7v" path="res://ui/menu/background.tscn" id="2_vchhx"]
+[ext_resource type="Texture2D" uid="uid://drn4r3bajqhm5" path="res://art/ui/menu/our_logo.png" id="3_fryml"]
+[ext_resource type="PackedScene" uid="uid://b0t483boq5jv5" path="res://ui/volume_slider.tscn" id="4_ke37h"]
+[ext_resource type="FontFile" uid="uid://bx0hymomr7xpu" path="res://fonts/BellMT/BellMTBold.ttf" id="4_lqpae"]
+
+[sub_resource type="Theme" id="Theme_x35lf"]
+default_font = ExtResource("4_lqpae")
+default_font_size = 32
+Label/colors/font_color = Color(0.670588, 0.870588, 0.705882, 1)
+Label/colors/font_outline_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iw34s"]
+bg_color = Color(0.188235, 0.188235, 0.188235, 1)
+border_blend = true
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jfaf0")
+
+[node name="background" parent="." instance=ExtResource("2_vchhx")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.062
+anchor_right = 0.414
+anchor_bottom = 0.643
+offset_left = 0.639999
+offset_right = 0.0799561
+offset_bottom = 0.0400085
+texture = ExtResource("3_fryml")
+expand_mode = 5
+stretch_mode = 5
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.469
+anchor_top = 0.204
+anchor_right = 0.862
+anchor_bottom = 0.783
+offset_left = -0.320007
+offset_top = 0.119995
+offset_right = 0.639893
+offset_bottom = 0.23999
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_x35lf")
+theme_override_styles/panel = SubResource("StyleBoxFlat_iw34s")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03
+anchor_top = 0.5
+anchor_right = 0.974
+anchor_bottom = 0.5
+offset_left = -0.120001
+offset_top = -207.5
+offset_right = -3.89603
+offset_bottom = 208.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="master" parent="Panel/VBoxContainer" instance=ExtResource("4_ke37h")]
+layout_mode = 2
+label = "Master"
+
+[node name="music" parent="Panel/VBoxContainer" instance=ExtResource("4_ke37h")]
+layout_mode = 2
+bus_name = "music"
+label = "Music"
+
+[node name="fx" parent="Panel/VBoxContainer" instance=ExtResource("4_ke37h")]
+layout_mode = 2
+bus_name = "FX"
+label = "SFX"
+
+[node name="player" parent="Panel/VBoxContainer" instance=ExtResource("4_ke37h")]
+layout_mode = 2
+bus_name = "player"
+label = "PlayerSFX"
+
+[node name="enemies" parent="Panel/VBoxContainer" instance=ExtResource("4_ke37h")]
+layout_mode = 2
+bus_name = "enemies"
+label = "EnemySFX"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.156
+anchor_top = 0.833
+anchor_right = 0.312
+anchor_bottom = 0.903
+offset_left = 0.319992
+offset_top = 0.239929
+offset_right = 0.639984
+offset_bottom = -0.160034
+grow_vertical = 0
+text = "GO BACK"
+
+[connection signal="button_up" from="Button" to="." method="_on_button_back"]
