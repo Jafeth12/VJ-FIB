@@ -8,10 +8,7 @@ func _ready():
 
 func _on_retry_button_up():
 	MainLogic.reset_all()
-	#$amogus.stop()
 	SceneTransitions.change_scene("res://main.tscn")
 
 func _on_exit_button_up():
-	$amogus.stop()
-	#MusicController.play_menu_music()
 	SceneTransitions.change_scene("res://ui/menu/menu.tscn")
