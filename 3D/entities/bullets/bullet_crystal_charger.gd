@@ -16,7 +16,6 @@ func _physics_process(delta):
 # @override
 func bullet_body_entered(body: Node3D) -> void:
 	if body is Player:
-		# print("Bullet hit enemy")
 		if body.player_is_dead():
 			return
 		if body.player_is_dodging():

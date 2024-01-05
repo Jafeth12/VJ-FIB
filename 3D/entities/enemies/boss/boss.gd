@@ -86,13 +86,11 @@ func boss_on_animation_finished() -> void:
 			attack_ended = true
 
 func boss_area_entered(body: Node3D):
-	#print("entró")
 	if body is StaticBody3D:
 		return
 	player_in_area = true
 
 func boss_area_exited(body: Node3D):
-	#print("salió")h
 	player_in_area = false
 
 func boss_damage_area_entered(body: Node3D):

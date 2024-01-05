@@ -73,7 +73,6 @@ func pause_timer() -> void:
 		return
 	tmp_time_left = game_timer.time_left
 	game_timer.stop()
-	print("PAUSE. tl: ", tmp_time_left)
 
 # Continua el timer si este está pausado. Te lo crea si no existe
 func resume_timer() -> void:
@@ -83,7 +82,6 @@ func resume_timer() -> void:
 	if !game_timer.is_stopped():
 		return
 	game_timer.start(tmp_time_left)
-	print("RESUME. tl: ", tmp_time_left)
 
 # Detiene el timer y retorna los segundos restantes (resultado)
 func finish_timer_won() -> float:
