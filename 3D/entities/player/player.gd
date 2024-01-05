@@ -95,10 +95,6 @@ func _physics_process(delta: float) -> void:
 	if changing_ring:
 		player_switch_ring()
 
-	# Changing level
-	#if curr_level != target_level:
-	#	player_switch_level()
-
 	# Handle jump logic.
 	if is_on_floor():
 		jumps_left = INIT_JUMPS_LEFT
@@ -119,6 +115,8 @@ func player_update_anim_state():
 	match anim_state:
 		ANIMATION_STATES.IDLE:
 			if Input.is_action_just_pressed("dodge"):
+				if $AnimationPlayer.is_playing():
+					return
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
 				anim_state = ANIMATION_STATES.JUMP
@@ -138,6 +136,8 @@ func player_update_anim_state():
 				anim_state = ANIMATION_STATES.IDLE
 
 		ANIMATION_STATES.JUMP:
+			if $AnimationPlayer.is_playing():
+				return
 			if Input.is_action_just_pressed("dodge"):
 				if changing_ring:
 					return
@@ -149,6 +149,8 @@ func player_update_anim_state():
 					anim_state = ANIMATION_STATES.IDLE
 
 		ANIMATION_STATES.CROUCH:
+			if $AnimationPlayer.is_playing():
+				return
 			if Input.is_action_just_pressed("dodge"):
 				anim_state = ANIMATION_STATES.DODGE
 			elif velocity.y != 0:
@@ -233,6 +235,8 @@ func player_is_dodging() -> bool:
 
 # Devuelve si el jugador se debería mover
 func player_should_move() -> bool:
+	if $AnimationPlayer.is_playing():
+		return false
 	var move_right = Input.is_action_pressed("move_right")
 	var move_left  = Input.is_action_pressed("move_left" )
 	return (move_right != move_left) || player_is_dodging()
@@ -259,6 +263,7 @@ func player_handle_input() -> void:
 		if resetting_alpha:
 			return
 		$AnimationPlayer.play("vanish")
+		god_mode = true
 		await $AnimationPlayer.animation_finished
 		resetting_alpha = true
 		can_go_to_next_height = false
@@ -298,6 +303,7 @@ func player_is_on_platform() -> bool:
 func player_die() -> void:
 	anim_state = ANIMATION_STATES.DIE
 	emit_signal("player_died")
+	$death.play()
  
 func player_revive() -> void:
 	anim_state = ANIMATION_STATES.IDLE
@@ -384,11 +390,13 @@ func player_shoot() -> void:
 				return
 			ammo_pistol -= 1
 			bullet = bullet_pistol
+			$shoot_pistol.play()
 		WEAPON.RIFLE:
 			if ammo_rifle <= 0:
 				return
 			ammo_rifle -= 1
 			bullet = bullet_rifle
+			$shoot_rifle.play()
 
 	hud.set_ammo(ammo_pistol, ammo_rifle)
 
@@ -408,7 +416,13 @@ func player_take_damage(damage: int) -> void:
 		return
 	if player_is_dodging():
 		return
+	
+	if player_is_dead():
+		return
+		
 	health -= damage
+	
+	$damage.play()
 
 	if health < 0:
 		health = 0
@@ -422,6 +436,8 @@ func player_give_health(new_health: int) -> void:
 	health += new_health
 	if health > INIT_HEALTH:
 		health = INIT_HEALTH
+		
+	$heal.play()
 
 	hud.set_health(health)
 	hud.show_more_health(new_health)
@@ -433,6 +449,7 @@ func player_give_ammo(ammo: int) -> void:
 		WEAPON.RIFLE:
 			player_add_ammo(WEAPON.RIFLE, ammo)
 
+	$more_ammo.play()
 	hud.set_ammo(ammo_pistol, ammo_rifle)
 	hud.show_more_ammo(ammo)
 
@@ -501,6 +518,7 @@ func player_init_sprites() -> void:
 	$sprite_pistol.connect("animation_finished", player_on_animation_finished)
 	$sprite_rifle.connect("animation_finished", player_on_animation_finished)
 	$sprite_rifle.hide()
+	$explosion/viewport/animated.material.set_shader_parameter("is_pistol", true)
 
 	$sprite_pistol.play("idle")
 
@@ -600,3 +618,7 @@ func player_set_state(info: MainLogic.PlayerState) -> void:
 	self.ammo_pistol = info.ammo_pistol
 	self.ammo_rifle = info.ammo_rifle
 	self.has_rifle = info.has_rifle
+
+
+func _on_animation_player_animation_finished(anim_name):
+	god_mode = false
