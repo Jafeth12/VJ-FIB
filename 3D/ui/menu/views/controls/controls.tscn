@@ -6,7 +6,7 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_pil4n"]
 font = ExtResource("3_ma0m1")
-font_size = 70
+font_size = 45
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oulj7"]
 bg_color = Color(0.721569, 0.580392, 0.188235, 1)
@@ -40,10 +40,22 @@ grow_vertical = 2
 [node name="controls_text" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 52
-text = "WASD AND KEYS TO MOVE
-SHIFT TO DODGE
+text = "BASIC CONTROLS
+Lateral Movement: A D, Left-arrow Right-arrow
+Jump: W, Space
+Crouch: S, Arrow Down
+Dodge: SHIFT
+Shoot: F , Left mouse button.
+Change gun: TAB
+Interact: E (Open chests, Change ring).
+Next Height and Next Level: R
+Pause menu: ESC
 
-more to come...
+SPECIAL DEBUG CONTROLS
+God mode: G
+Top up: M
+Next Height Shortcut: L
+Reset Position: 0 (zero)
 
 "
 label_settings = SubResource("LabelSettings_pil4n")

@@ -1,6 +1,7 @@
-[gd_scene load_steps=40 format=3 uid="uid://b2rcv7hvcy7a8"]
+[gd_scene load_steps=42 format=3 uid="uid://b2rcv7hvcy7a8"]
 
 [ext_resource type="Script" path="res://entities/enemies/goomba/goomba.gd" id="1_afs03"]
+[ext_resource type="Texture2D" uid="uid://bn8i0a8k1xe8y" path="res://art/enemy/dead_enemy_48x48.png" id="3_gt2xr"]
 [ext_resource type="Texture2D" uid="uid://ctwyf8gbrihh6" path="res://art/enemy/goomba/LightningStriker.png" id="3_usvok"]
 [ext_resource type="PackedScene" uid="uid://ofl3k6wn1rsu" path="res://ui/health_bar_3d.tscn" id="3_w826d"]
 [ext_resource type="AudioStream" uid="uid://cs0345twdx826" path="res://sound/goomba_damage.wav" id="4_lowfm"]
@@ -42,6 +43,10 @@ region = Rect2(336, 96, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_24bcb"]
 atlas = ExtResource("3_usvok")
 region = Rect2(0, 144, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ri8y"]
+atlas = ExtResource("3_gt2xr")
+region = Rect2(0, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_klyg5"]
 atlas = ExtResource("3_usvok")
@@ -134,8 +139,11 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_j3gwe")
 }, {
-"duration": 1.0,
+"duration": 3.0,
 "texture": SubResource("AtlasTexture_24bcb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ri8y")
 }],
 "loop": false,
 "name": &"die",
@@ -235,7 +243,9 @@ transform = Transform3D(3.25, 0, 0, 0, 3.25, 0, 0, 0, 3.25, 0, 0, 0)
 billboard = 2
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_tfk0d")
-animation = &"idle"
+animation = &"die"
+frame = 9
+frame_progress = 1.0
 
 [node name="collision" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_3d2gf")
