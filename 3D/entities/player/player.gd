@@ -291,6 +291,11 @@ func player_handle_input() -> void:
 
 	if Input.is_action_just_pressed("shoot"):
 		player_shoot()
+	
+	if Input.is_action_just_pressed("top_up_ammo"):
+		ammo_pistol = MAX_AMMO_PISTOL
+		ammo_rifle = MAX_AMMO_RIFLE
+		hud.set_ammo(ammo_pistol, ammo_rifle)
 
 func player_is_on_platform() -> bool:
 	return is_on_platform
