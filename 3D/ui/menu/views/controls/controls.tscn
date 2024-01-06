@@ -6,7 +6,7 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_pil4n"]
 font = ExtResource("3_ma0m1")
-font_size = 50
+font_size = 45
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oulj7"]
 bg_color = Color(0.721569, 0.580392, 0.188235, 1)
@@ -54,6 +54,8 @@ Pause menu: ESC
 SPECIAL DEBUG CONTROLS
 God mode: G
 Top up: M
+Next Height Shortcut: L
+Reset Position: 0 (zero)
 
 "
 label_settings = SubResource("LabelSettings_pil4n")
