@@ -253,11 +253,7 @@ func player_move_dir() -> EntityDirection:
 func player_handle_input() -> void:
 	if Input.is_action_just_pressed("god_mode"):
 		god_mode = !god_mode
-	if Input.is_action_just_pressed("dbg_die"):
-		health = 0
-	if Input.is_action_just_pressed("dbg_take_damage"):
-		player_take_damage(20)
-	if Input.is_action_just_pressed("dbg_switch_ring") || (is_on_platform && Input.is_action_just_pressed("interact")):
+	if (is_on_platform && Input.is_action_just_pressed("interact")):
 		player_change_ring_state()
 	if Input.is_action_just_pressed("dbg_next_level") || (can_go_to_next_height && Input.is_action_just_pressed("change_level_height")):
 		if resetting_alpha:
@@ -620,5 +616,5 @@ func player_set_state(info: MainLogic.PlayerState) -> void:
 	self.has_rifle = info.has_rifle
 
 
-func _on_animation_player_animation_finished(anim_name):
+func _on_animation_player_animation_finished(_anim_name):
 	god_mode = false

@@ -78,17 +78,14 @@ func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirec
 
 # VIRTUAL FUNCTION -> TO BE OVERRIDEN
 func bullet_body_entered(body: Node3D) -> void:
-	# print("body entered in Bullet area")
-	# print(body.get_name())
-
 	if body is GenericEnemy:
-		# print("Bullet hit enemy")
+		# Bullet hit enemy
 		if body.enemy_is_dead():
 			return
 		body.enemy_take_damage(BULLET_DAMAGE)
 
 	elif body is StaticBody3D:
-		# print("Bullet hit wall")
+		# Bullet hit wall
 		pass
 
 	else:

@@ -59,6 +59,6 @@ func enemy_should_attack() -> bool:
 func enemy_is_attack_finished() -> bool:
 	return true # Preventivo. Por si se pone en modo ataque si querer
 
-func goomba_damage_area_entered(body: Node3D):
+func goomba_damage_area_entered(_body: Node3D):
 	if enemy_state != EnemyState.DEAD:
 		player_node.player_take_damage(ATTACK_DAMAGE)

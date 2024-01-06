@@ -3,6 +3,7 @@ extends Control
 func _ready():
 	MusicController.play_menu_music()
 	SceneTransitions.fade_in()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _on_play_button_up() -> void:
 	MainLogic.reset_all()

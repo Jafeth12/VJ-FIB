@@ -6,10 +6,6 @@ var scores: Array = []
 func _ready():
 	scores = MainLogic.get_scores()
 	draw_scores()
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
 	
 func draw_scores():
 	var list = $Panel/list

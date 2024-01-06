@@ -11,6 +11,7 @@ func _ready():
 func _on_resume_button_down() -> void:
 	hide()
 	get_tree().paused = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
 func _on_exit_button_down() -> void:
 	hide()

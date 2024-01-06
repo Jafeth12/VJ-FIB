@@ -143,7 +143,6 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_1o3hq")
 text = "MAIN MENU"
 
 [node name="logo" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.063
