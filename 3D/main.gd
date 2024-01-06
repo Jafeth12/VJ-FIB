@@ -1,7 +1,6 @@
 extends Node
 
 @onready var hud = $CanvasLayer/HUD
-var timer = Timer.new()
 
 var level1 = preload("res://levels/level1.tscn")
 var level2 = preload("res://levels/level2.tscn")

@@ -7,7 +7,7 @@ signal transition_ended()
 func _ready() -> void:
 	animation_player.connect("animation_finished", _on_animation_finished)
 
-func _on_animation_finished(animation):
+func _on_animation_finished(_animation):
 	emit_signal("transition_ended")
 
 func change_scene(path_to_target_scene: String, speed: float = 1.0) -> void:

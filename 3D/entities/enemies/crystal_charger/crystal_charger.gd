@@ -34,7 +34,7 @@ func entity_should_jump() -> bool:
 func entity_jump() -> float:
 	return 0 # Nunca saltará
 
-func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delta: float) -> float:
+func entity_get_new_alpha(current_alpha: float, _direction: EntityDirection, _delta: float) -> float:
 	return current_alpha # Este personaje no se mueve
 
 func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirection:
@@ -81,10 +81,10 @@ func cc_on_animation_finished() -> void:
 		"attack":
 			cc_attack_ended = true
 
-func cc_area_entered(body: Node3D):
+func cc_area_entered(_body: Node3D):
 	cc_player_in_area = true
 
-func cc_area_exited(body: Node3D):
+func cc_area_exited(_body: Node3D):
 	cc_player_in_area = false
 
 func cc_shoot():

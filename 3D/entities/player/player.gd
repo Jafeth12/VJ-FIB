@@ -620,5 +620,5 @@ func player_set_state(info: MainLogic.PlayerState) -> void:
 	self.has_rifle = info.has_rifle
 
 
-func _on_animation_player_animation_finished(anim_name):
+func _on_animation_player_animation_finished(_anim_name):
 	god_mode = false

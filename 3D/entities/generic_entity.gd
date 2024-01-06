@@ -79,10 +79,10 @@ func entity_jump() -> float:
 # VIRTUAL. TO BE OVERRIDEN
 # Retorna el siguiente alpha, en base al alpha
 # actual, la dirección, y el delta
-func entity_get_new_alpha(current_alpha: float, direction: EntityDirection, delta: float) -> float:
+func entity_get_new_alpha(current_alpha: float, _direction: EntityDirection, _delta: float) -> float:
 	return current_alpha
 
 # VIRTUAL. TO BE OVERRIDEN
 # Retorna la siguiente dirección
-func entity_get_new_direction(current_direction: EntityDirection) -> EntityDirection:
+func entity_get_new_direction(_current_direction: EntityDirection) -> EntityDirection:
 	return EntityDirection.LEFT

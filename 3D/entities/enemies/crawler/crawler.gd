@@ -84,9 +84,9 @@ func crawler_area_entered(body: Node3D):
 		return
 	player_in_area = true
 
-func crawler_area_exited(body: Node3D):
+func crawler_area_exited(_body: Node3D):
 	player_in_area = false
 
-func crawler_damage_area_entered(body: Node3D):
+func crawler_damage_area_entered(_body: Node3D):
 	if crawler_is_damaging():
 		player_node.player_take_damage(ATTACK_DAMAGE)
