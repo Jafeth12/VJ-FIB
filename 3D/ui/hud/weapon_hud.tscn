@@ -1,8 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://bo0mmw6euyv7i"]
+[gd_scene load_steps=16 format=3 uid="uid://bo0mmw6euyv7i"]
 
 [ext_resource type="Script" path="res://ui/hud/weapon_hud.gd" id="1_le38h"]
 [ext_resource type="Texture2D" uid="uid://qahy4d50rpws" path="res://art/ui/hud/WeaponHUD.png" id="1_nl0td"]
 [ext_resource type="Texture2D" uid="uid://bvjj3k7thno5u" path="res://art/ui/hud/ammo_icon.png" id="2_x6are"]
+[ext_resource type="FontFile" uid="uid://dqx4qaw4cbk07" path="res://fonts/BellMT/BellMT.ttf" id="4_kujqv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gwxim"]
 
@@ -110,6 +111,10 @@ void light() {
 shader = SubResource("Shader_ar4ug")
 shader_parameter/disabled = false
 
+[sub_resource type="LabelSettings" id="LabelSettings_5njjt"]
+font = ExtResource("4_kujqv")
+font_size = 32
+
 [node name="weapon_hud" type="Control"]
 texture_filter = 1
 layout_mode = 3
@@ -160,3 +165,4 @@ offset_right = 80.0
 offset_bottom = 122.0
 text = "30
 "
+label_settings = SubResource("LabelSettings_5njjt")
